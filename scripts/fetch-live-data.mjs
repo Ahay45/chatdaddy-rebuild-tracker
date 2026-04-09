@@ -47,8 +47,8 @@ async function getTreeRecursive(sha) {
 async function run() {
   console.log(`📡  Fetching module structure from ${OWNER}/${REPO}@${BRANCH}...`)
 
-  // 1. Get latest commit sha on branch
-  const branchData = await githubGet(`/branches/${encodeURIComponent(BRANCH)}`)
+  // 1. Get latest commit sha on branch (branch names with slashes must not be encoded)
+  const branchData = await githubGet(`/branches/${BRANCH}`)
   const commitSha = branchData.commit.sha
   const commitDate = branchData.commit.commit.author.date
   const commitMessage = branchData.commit.commit.message.split('\n')[0]
@@ -104,7 +104,7 @@ async function run() {
   let registeredRoutes = []
   if (routerPath) {
     const routerContent = await githubGet(
-      `/contents/src/app/router.tsx?ref=${encodeURIComponent(BRANCH)}`
+      `/contents/src/app/router.tsx?ref=${BRANCH}`
     )
     const decoded = Buffer.from(routerContent.content, 'base64').toString('utf-8')
     // Extract path: '/xxx' from createRoute calls
