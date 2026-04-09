@@ -12,13 +12,14 @@ import {
   alpha,
   useTheme,
 } from '@mui/material'
-import { ChevronDown, ChevronUp, GitCommit, RefreshCw, Clock } from 'lucide-react'
+import { ChevronDown, ChevronUp, GitCommit, RefreshCw, Clock, Zap } from 'lucide-react'
 import {
   TRACKED_MODULES,
   getOverallStats,
   liveMeta,
   type TrackedModule,
   type ModuleStatus,
+  type RecentCommit,
 } from './data/modules'
 
 // ─── Status config ────────────────────────────────────────────────────────────
@@ -123,6 +124,115 @@ const LiveBanner = memo(function LiveBanner() {
           <strong>chatdaddy/frontend-dashboard-v2</strong>.
         </Typography>
       )}
+    </Box>
+  )
+})
+
+// ─── EOD Summary ─────────────────────────────────────────────────────────────
+
+function summariseCommit(msg: string): string {
+  // Strip conventional commit prefix (feat:, fix:, chore(x):, etc.)
+  return msg.replace(/^(feat|fix|chore|refactor|style|docs|test|ci|build)(\([^)]+\))?:\s*/i, '')
+}
+
+function groupByDay(commits: RecentCommit[]) {
+  const groups: Record<string, RecentCommit[]> = {}
+  for (const c of commits) {
+    const day = new Date(c.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
+    if (!groups[day]) groups[day] = []
+    groups[day].push(c)
+  }
+  return groups
+}
+
+const EodSummary = memo(function EodSummary() {
+  const { palette } = useTheme()
+  const [open, setOpen] = useState(true)
+  const commits = liveMeta.recentCommits
+  if (!commits.length) return null
+
+  const grouped = groupByDay(commits)
+  const days = Object.keys(grouped)
+
+  return (
+    <Box sx={{ mb: 3 }}>
+      {/* Header row */}
+      <Box
+        onClick={() => setOpen((v) => !v)}
+        sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, cursor: 'pointer', userSelect: 'none' }}
+      >
+        <Zap size={14} color="#F59E0B" />
+        <Typography sx={{ fontWeight: 700, fontSize: '0.8125rem', color: 'text.primary' }}>
+          Recent Updates
+        </Typography>
+        <Chip
+          label={`${commits.length} commits`}
+          size="small"
+          sx={{ height: 18, fontSize: '0.5625rem', fontWeight: 700, bgcolor: alpha('#F59E0B', 0.1), color: '#F59E0B', borderRadius: '5px' }}
+        />
+        <IconButton size="small" sx={{ ml: 'auto', p: 0.25, color: 'text.secondary' }}>
+          {open ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+        </IconButton>
+      </Box>
+
+      <Collapse in={open}>
+        <Box
+          sx={{
+            borderRadius: '16px',
+            border: `1px solid ${palette.divider}`,
+            bgcolor: palette.background.paper,
+            overflow: 'hidden',
+          }}
+        >
+          {days.map((day, di) => (
+            <Box key={day}>
+              {/* Day label */}
+              <Box
+                sx={{
+                  px: 2, py: 0.75,
+                  bgcolor: alpha(palette.background.default, 0.6),
+                  borderBottom: `1px solid ${palette.divider}`,
+                  borderTop: di > 0 ? `1px solid ${palette.divider}` : 'none',
+                }}
+              >
+                <Typography sx={{ fontSize: '0.6875rem', fontWeight: 700, color: 'text.secondary', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                  {day}
+                </Typography>
+              </Box>
+
+              {/* Commits for this day */}
+              {grouped[day].map((c, i) => (
+                <Box
+                  key={c.sha}
+                  sx={{
+                    display: 'flex', alignItems: 'flex-start', gap: 1.5,
+                    px: 2, py: 1,
+                    borderBottom: i < grouped[day].length - 1 ? `1px solid ${alpha(palette.divider, 0.5)}` : 'none',
+                  }}
+                >
+                  {/* Dot */}
+                  <Box sx={{ pt: 0.5, flexShrink: 0 }}>
+                    <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: '#10B981' }} />
+                  </Box>
+
+                  {/* Message */}
+                  <Typography sx={{ flex: 1, fontSize: '0.8125rem', color: 'text.primary', lineHeight: 1.5 }}>
+                    {summariseCommit(c.message)}
+                  </Typography>
+
+                  {/* SHA */}
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, flexShrink: 0 }}>
+                    <GitCommit size={11} color="#9CA3AF" />
+                    <Typography sx={{ fontSize: '0.625rem', fontFamily: 'monospace', color: 'text.secondary' }}>
+                      {c.sha}
+                    </Typography>
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+          ))}
+        </Box>
+      </Collapse>
     </Box>
   )
 })
@@ -408,6 +518,9 @@ export default function App() {
 
         {/* Live banner */}
         <LiveBanner />
+
+        {/* EOD summary */}
+        <EodSummary />
 
         {/* Overall stats */}
         <OverallProgress />

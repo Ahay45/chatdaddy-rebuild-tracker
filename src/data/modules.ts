@@ -27,6 +27,13 @@ export interface TrackedModule {
   notes: string
 }
 
+export interface RecentCommit {
+  sha: string
+  message: string
+  date: string
+  author: string
+}
+
 export interface LiveMeta {
   fetchedAt: string | null
   branch: string
@@ -36,6 +43,7 @@ export interface LiveMeta {
     message: string
     date: string
   }
+  recentCommits: RecentCommit[]
   registeredRoutes: string[]
 }
 
@@ -45,6 +53,7 @@ export const liveMeta: LiveMeta = {
   fetchedAt: liveData.fetchedAt,
   branch: liveData.branch,
   commit: liveData.commit,
+  recentCommits: (liveData.recentCommits as RecentCommit[]) ?? [],
   registeredRoutes: liveData.registeredRoutes,
 }
 

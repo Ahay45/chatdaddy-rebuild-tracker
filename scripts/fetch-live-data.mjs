@@ -99,7 +99,16 @@ async function run() {
     }
   }
 
-  // 4. Also check router.tsx for registered routes
+  // 4. Fetch recent commits (last 10) for EOD summary
+  const commitsData = await githubGet(`/commits?sha=${BRANCH}&per_page=10`)
+  const recentCommits = commitsData.map((c) => ({
+    sha: c.sha.slice(0, 7),
+    message: c.commit.message.split('\n')[0],
+    date: c.commit.author.date,
+    author: c.commit.author.name,
+  }))
+
+  // 5. Also check router.tsx for registered routes
   const routerPath = allPaths.find((p) => p === 'src/app/router.tsx')
   let registeredRoutes = []
   if (routerPath) {
@@ -112,7 +121,7 @@ async function run() {
     registeredRoutes = [...routeMatches].map((m) => m[1])
   }
 
-  // 5. Write output
+  // 6. Write output
   const output = {
     fetchedAt: new Date().toISOString(),
     branch: BRANCH,
@@ -122,6 +131,7 @@ async function run() {
       message: commitMessage,
       date: commitDate,
     },
+    recentCommits,
     registeredRoutes,
     modules,
   }
