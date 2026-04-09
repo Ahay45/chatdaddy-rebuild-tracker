@@ -130,20 +130,59 @@ const LiveBanner = memo(function LiveBanner() {
 
 // ─── EOD Summary ─────────────────────────────────────────────────────────────
 
-function summariseCommit(msg: string): string {
-  // Strip conventional commit prefix (feat:, fix:, chore(x):, etc.)
-  return msg.replace(/^(feat|fix|chore|refactor|style|docs|test|ci|build)(\([^)]+\))?:\s*/i, '')
+type CommitType = 'feature' | 'fix' | 'other'
+
+interface CategorisedCommit extends RecentCommit {
+  type: CommitType
+  scope: string | null
+  summary: string
 }
 
-function groupByDay(commits: RecentCommit[]) {
-  const groups: Record<string, RecentCommit[]> = {}
-  for (const c of commits) {
-    const day = new Date(c.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
-    if (!groups[day]) groups[day] = []
-    groups[day].push(c)
-  }
-  return groups
+function categorise(commits: RecentCommit[]): CategorisedCommit[] {
+  return commits.map((c) => {
+    const match = c.message.match(/^(feat|fix|chore|refactor|style|docs|test|ci|build)(?:\(([^)]+)\))?:\s*(.+)/i)
+    if (!match) return { ...c, type: 'other' as CommitType, scope: null, summary: c.message.split('\n')[0] }
+    const prefix = match[1].toLowerCase()
+    const scope = match[2] ?? null
+    const summary = match[3]
+    const type: CommitType = prefix === 'feat' ? 'feature' : prefix === 'fix' ? 'fix' : 'other'
+    return { ...c, type, scope, summary }
+  })
 }
+
+const TYPE_CONFIG: Record<CommitType, { label: string; color: string; dot: string }> = {
+  feature: { label: 'Features Added', color: '#10B981', dot: '#10B981' },
+  fix:     { label: 'Bug Fixes',      color: '#F59E0B', dot: '#F59E0B' },
+  other:   { label: 'Other Changes',  color: '#6B7280', dot: '#9CA3AF' },
+}
+
+const CommitRow = memo(function CommitRow({ c }: { c: CategorisedCommit }) {
+  const { palette } = useTheme()
+  const cfg = TYPE_CONFIG[c.type]
+  return (
+    <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5, px: 2, py: 0.875, borderBottom: `1px solid ${alpha(palette.divider, 0.5)}`, '&:last-child': { borderBottom: 'none' } }}>
+      <Box sx={{ pt: '6px', flexShrink: 0 }}>
+        <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: cfg.dot }} />
+      </Box>
+      <Box sx={{ flex: 1, minWidth: 0 }}>
+        <Typography sx={{ fontSize: '0.8125rem', color: 'text.primary', lineHeight: 1.5 }}>
+          {c.scope && (
+            <Box component="span" sx={{ fontWeight: 700, color: cfg.color, mr: 0.5 }}>
+              {c.scope}:
+            </Box>
+          )}
+          {c.summary}
+        </Typography>
+      </Box>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, flexShrink: 0 }}>
+        <GitCommit size={11} color="#9CA3AF" />
+        <Typography sx={{ fontSize: '0.625rem', fontFamily: 'monospace', color: 'text.secondary' }}>
+          {c.sha}
+        </Typography>
+      </Box>
+    </Box>
+  )
+})
 
 const EodSummary = memo(function EodSummary() {
   const { palette } = useTheme()
@@ -151,86 +190,55 @@ const EodSummary = memo(function EodSummary() {
   const commits = liveMeta.recentCommits
   if (!commits.length) return null
 
-  const grouped = groupByDay(commits)
-  const days = Object.keys(grouped)
+  const categorised = categorise(commits)
+  const features = categorised.filter((c) => c.type === 'feature')
+  const fixes = categorised.filter((c) => c.type === 'fix')
+  const others = categorised.filter((c) => c.type === 'other')
+
+  const sections = ([
+    { type: 'feature' as CommitType, items: features },
+    { type: 'fix' as CommitType, items: fixes },
+    { type: 'other' as CommitType, items: others },
+  ] as const).filter((s) => s.items.length > 0)
 
   return (
     <Box sx={{ mb: 3 }}>
-      {/* Header row */}
       <Box
         onClick={() => setOpen((v) => !v)}
-        sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, cursor: 'pointer', userSelect: 'none' }}
+        sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.25, cursor: 'pointer', userSelect: 'none' }}
       >
         <Zap size={14} color="#F59E0B" />
         <Typography sx={{ fontWeight: 700, fontSize: '0.8125rem', color: 'text.primary' }}>
-          Recent Updates
+          EOD Update
         </Typography>
-        <Chip
-          label={`${commits.length} commits`}
-          size="small"
-          sx={{ height: 18, fontSize: '0.5625rem', fontWeight: 700, bgcolor: alpha('#F59E0B', 0.1), color: '#F59E0B', borderRadius: '5px' }}
-        />
+        <Chip label={`${commits.length} commits`} size="small" sx={{ height: 18, fontSize: '0.5625rem', fontWeight: 700, bgcolor: alpha('#F59E0B', 0.1), color: '#F59E0B', borderRadius: '5px' }} />
         <IconButton size="small" sx={{ ml: 'auto', p: 0.25, color: 'text.secondary' }}>
           {open ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
         </IconButton>
       </Box>
 
       <Collapse in={open}>
-        <Box
-          sx={{
-            borderRadius: '16px',
-            border: `1px solid ${palette.divider}`,
-            bgcolor: palette.background.paper,
-            overflow: 'hidden',
-          }}
-        >
-          {days.map((day, di) => (
-            <Box key={day}>
-              {/* Day label */}
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+          {sections.map(({ type, items }) => {
+            const cfg = TYPE_CONFIG[type]
+            return (
               <Box
-                sx={{
-                  px: 2, py: 0.75,
-                  bgcolor: alpha(palette.background.default, 0.6),
-                  borderBottom: `1px solid ${palette.divider}`,
-                  borderTop: di > 0 ? `1px solid ${palette.divider}` : 'none',
-                }}
+                key={type}
+                sx={{ borderRadius: '14px', border: `1px solid ${alpha(cfg.color, 0.2)}`, bgcolor: palette.background.paper, overflow: 'hidden' }}
               >
-                <Typography sx={{ fontSize: '0.6875rem', fontWeight: 700, color: 'text.secondary', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                  {day}
-                </Typography>
-              </Box>
-
-              {/* Commits for this day */}
-              {grouped[day].map((c, i) => (
-                <Box
-                  key={c.sha}
-                  sx={{
-                    display: 'flex', alignItems: 'flex-start', gap: 1.5,
-                    px: 2, py: 1,
-                    borderBottom: i < grouped[day].length - 1 ? `1px solid ${alpha(palette.divider, 0.5)}` : 'none',
-                  }}
-                >
-                  {/* Dot */}
-                  <Box sx={{ pt: 0.5, flexShrink: 0 }}>
-                    <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: '#10B981' }} />
-                  </Box>
-
-                  {/* Message */}
-                  <Typography sx={{ flex: 1, fontSize: '0.8125rem', color: 'text.primary', lineHeight: 1.5 }}>
-                    {summariseCommit(c.message)}
+                {/* Section header */}
+                <Box sx={{ px: 2, py: 0.875, bgcolor: alpha(cfg.color, 0.05), borderBottom: `1px solid ${alpha(cfg.color, 0.15)}`, display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Typography sx={{ fontSize: '0.6875rem', fontWeight: 700, color: cfg.color, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                    {cfg.label}
                   </Typography>
-
-                  {/* SHA */}
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, flexShrink: 0 }}>
-                    <GitCommit size={11} color="#9CA3AF" />
-                    <Typography sx={{ fontSize: '0.625rem', fontFamily: 'monospace', color: 'text.secondary' }}>
-                      {c.sha}
-                    </Typography>
-                  </Box>
+                  <Chip label={items.length} size="small" sx={{ height: 16, fontSize: '0.5625rem', fontWeight: 700, bgcolor: alpha(cfg.color, 0.12), color: cfg.color, borderRadius: '4px', ml: 'auto' }} />
                 </Box>
-              ))}
-            </Box>
-          ))}
+
+                {/* Commit rows */}
+                {items.map((c) => <CommitRow key={c.sha} c={c} />)}
+              </Box>
+            )
+          })}
         </Box>
       </Collapse>
     </Box>
