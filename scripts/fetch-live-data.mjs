@@ -17,10 +17,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const OWNER = 'chatdaddy'
 const REPO = 'frontend-dashboard-v2'
 const BRANCH = 'akil/review'
-const TOKEN = process.env.GITHUB_PAT
+const TOKEN = process.env.GH_PAT
 
 if (!TOKEN) {
-  console.error('❌  GITHUB_PAT env var is required')
+  console.error('❌  GH_PAT env var is required')
   process.exit(1)
 }
 

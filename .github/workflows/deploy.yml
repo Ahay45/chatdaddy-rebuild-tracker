@@ -36,7 +36,7 @@ jobs:
 
       - name: Fetch live data from chatdaddy/frontend-dashboard-v2
         env:
-          GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
+          GH_PAT: ${{ secrets.GH_PAT }}
         # continue-on-error so the build still works if PAT is missing
         continue-on-error: true
         run: node scripts/fetch-live-data.mjs
