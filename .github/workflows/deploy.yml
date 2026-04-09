@@ -1,8 +1,12 @@
-name: Deploy to GitHub Pages
+name: Sync & Deploy
 
 on:
   push:
     branches: [main]
+  schedule:
+    # Sync every 30 minutes
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -21,15 +25,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-      - run: npm ci
-      - run: npm run build
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Fetch live data from chatdaddy/frontend-dashboard-v2
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
+        # continue-on-error so the build still works if PAT is missing
+        continue-on-error: true
+        run: node scripts/fetch-live-data.mjs
+
+      - name: Build
+        run: npm run build
+
       - uses: actions/configure-pages@v4
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
+
       - id: deployment
         uses: actions/deploy-pages@v4

@@ -1,3 +1,5 @@
+import liveData from './live-data.json'
+
 export type ModuleStatus = 'done' | 'in-progress' | 'not-started' | 'deferred'
 
 export interface SubFeature {
@@ -11,30 +13,75 @@ export interface TrackedModule {
   icon: string
   category: 'core' | 'engage' | 'tools' | 'commerce' | 'admin' | 'missing'
   status: ModuleStatus
+  /** 0–100 */
   progress: number
   oldFileCount: number
+  /** Auto-filled from live GitHub scan */
   newFileCount: number
   hasStore: boolean
   hasQueries: boolean
   hasRoute: boolean
+  /** true if module folder exists but is empty (just .gitkeep) */
+  isEmpty: boolean
   subFeatures: SubFeature[]
   notes: string
 }
 
-export const TRACKED_MODULES: TrackedModule[] = [
-  // ── Core ────────────────────────────────────────────────────────────────────
+export interface LiveMeta {
+  fetchedAt: string | null
+  branch: string
+  commit: {
+    sha: string
+    shortSha: string
+    message: string
+    date: string
+  }
+  registeredRoutes: string[]
+}
+
+// ─── Live data from GitHub scan ───────────────────────────────────────────────
+
+export const liveMeta: LiveMeta = {
+  fetchedAt: liveData.fetchedAt,
+  branch: liveData.branch,
+  commit: liveData.commit,
+  registeredRoutes: liveData.registeredRoutes,
+}
+
+// Keyed by module id — filled by the GitHub Actions fetch script
+const liveModules = liveData.modules as Record<
+  string,
   {
-    id: 'auth',
+    fileCount: number
+    hasStore: boolean
+    hasQueries: boolean
+    hasRoute: boolean
+    isEmpty: boolean
+  }
+>
+
+// ─── Static config (sub-features, notes, categories — updated manually) ──────
+
+interface StaticConfig {
+  label: string
+  icon: string
+  category: TrackedModule['category']
+  status: ModuleStatus
+  progress: number
+  oldFileCount: number
+  subFeatures: SubFeature[]
+  notes: string
+}
+
+const STATIC: Record<string, StaticConfig> = {
+  // ── Core ─────────────────────────────────────────────────────────────────────
+  auth: {
     label: 'Auth',
     icon: '🔐',
     category: 'core',
     status: 'done',
     progress: 95,
     oldFileCount: 14,
-    newFileCount: 4,
-    hasStore: true,
-    hasQueries: true,
-    hasRoute: true,
     subFeatures: [
       { name: 'Login page', done: true },
       { name: 'Protected route guard', done: true },
@@ -43,18 +90,13 @@ export const TRACKED_MODULES: TrackedModule[] = [
     ],
     notes: 'Login complete. Signup/onboarding not rebuilt yet.',
   },
-  {
-    id: 'inbox',
+  inbox: {
     label: 'Inbox',
     icon: '💬',
     category: 'core',
     status: 'done',
     progress: 95,
     oldFileCount: 62,
-    newFileCount: 14,
-    hasStore: true,
-    hasQueries: true,
-    hasRoute: true,
     subFeatures: [
       { name: 'Chat list (virtualized)', done: true },
       { name: 'Message thread', done: true },
@@ -70,18 +112,13 @@ export const TRACKED_MODULES: TrackedModule[] = [
     ],
     notes: 'Core messaging fully functional. Notes and global search not yet built.',
   },
-  {
-    id: 'crm',
+  crm: {
     label: 'Contacts / CRM',
     icon: '👥',
     category: 'core',
     status: 'done',
     progress: 90,
     oldFileCount: 34,
-    newFileCount: 12,
-    hasStore: true,
-    hasQueries: true,
-    hasRoute: true,
     subFeatures: [
       { name: 'Contacts list', done: true },
       { name: 'Contact detail panel', done: true },
@@ -96,18 +133,13 @@ export const TRACKED_MODULES: TrackedModule[] = [
     ],
     notes: 'Audience segmentation consolidated here. Bulk ops and pipeline config pending.',
   },
-  {
-    id: 'channels',
+  channels: {
     label: 'Channels',
     icon: '🔌',
     category: 'core',
     status: 'done',
     progress: 95,
     oldFileCount: 28,
-    newFileCount: 13,
-    hasStore: false,
-    hasQueries: true,
-    hasRoute: true,
     subFeatures: [
       { name: 'Channels list', done: true },
       { name: 'Add channel dialog', done: true },
@@ -123,18 +155,13 @@ export const TRACKED_MODULES: TrackedModule[] = [
     ],
     notes: 'All 7 onboarding flows present.',
   },
-  {
-    id: 'calls',
+  calls: {
     label: 'Calls',
     icon: '📞',
     category: 'core',
     status: 'done',
     progress: 85,
     oldFileCount: 18,
-    newFileCount: 5,
-    hasStore: false,
-    hasQueries: true,
-    hasRoute: true,
     subFeatures: [
       { name: 'Call list (DataGrid)', done: true },
       { name: 'Call stats', done: true },
@@ -145,18 +172,13 @@ export const TRACKED_MODULES: TrackedModule[] = [
     ],
     notes: 'Call history and stats done. Live calling (Twilio) not integrated yet.',
   },
-  {
-    id: 'dashboard',
+  dashboard: {
     label: 'Dashboard',
     icon: '📊',
     category: 'core',
     status: 'done',
     progress: 80,
     oldFileCount: 22,
-    newFileCount: 5,
-    hasStore: false,
-    hasQueries: true,
-    hasRoute: true,
     subFeatures: [
       { name: 'Stats cards', done: true },
       { name: 'Onboarding checklist', done: true },
@@ -166,19 +188,14 @@ export const TRACKED_MODULES: TrackedModule[] = [
     ],
     notes: 'Getting-started version built. Full analytics charts not yet ported.',
   },
-  // ── Engage ──────────────────────────────────────────────────────────────────
-  {
-    id: 'automation',
+  // ── Engage ────────────────────────────────────────────────────────────────────
+  automation: {
     label: 'Automation',
     icon: '⚙️',
     category: 'engage',
     status: 'in-progress',
     progress: 70,
     oldFileCount: 31,
-    newFileCount: 12,
-    hasStore: false,
-    hasQueries: true,
-    hasRoute: true,
     subFeatures: [
       { name: 'Message flows panel', done: true },
       { name: 'Keyword reply panel', done: true },
@@ -193,18 +210,13 @@ export const TRACKED_MODULES: TrackedModule[] = [
     ],
     notes: 'List/management views done. Visual canvas (FlowBuilder) is deferred — P3.',
   },
-  {
-    id: 'broadcasts',
+  broadcasts: {
     label: 'Marketing / Broadcasts',
     icon: '📢',
     category: 'engage',
     status: 'done',
     progress: 90,
     oldFileCount: 19,
-    newFileCount: 9,
-    hasStore: false,
-    hasQueries: true,
-    hasRoute: true,
     subFeatures: [
       { name: 'Broadcasts panel', done: true },
       { name: 'Campaigns panel', done: true },
@@ -215,19 +227,14 @@ export const TRACKED_MODULES: TrackedModule[] = [
     ],
     notes: 'Core broadcast/campaign management done. Analytics view pending.',
   },
-  // ── Tools ───────────────────────────────────────────────────────────────────
-  {
-    id: 'tools',
+  // ── Tools ─────────────────────────────────────────────────────────────────────
+  tools: {
     label: 'Tools',
     icon: '🔧',
     category: 'tools',
     status: 'done',
     progress: 85,
     oldFileCount: 22,
-    newFileCount: 10,
-    hasStore: false,
-    hasQueries: true,
-    hasRoute: true,
     subFeatures: [
       { name: 'Forms panel', done: true },
       { name: 'Form detail dialog', done: true },
@@ -240,18 +247,13 @@ export const TRACKED_MODULES: TrackedModule[] = [
     ],
     notes: 'Forms + QR + Widget + Zapier consolidated from 4 old modules.',
   },
-  {
-    id: 'ai',
+  ai: {
     label: 'AI / Chatbot',
     icon: '🤖',
     category: 'tools',
     status: 'done',
     progress: 80,
     oldFileCount: 17,
-    newFileCount: 7,
-    hasStore: false,
-    hasQueries: true,
-    hasRoute: true,
     subFeatures: [
       { name: 'AI chatbot panel', done: true },
       { name: 'Knowledge base panel', done: true },
@@ -263,18 +265,13 @@ export const TRACKED_MODULES: TrackedModule[] = [
     ],
     notes: 'Core chatbot + knowledge base done. NLP and AI CRM profile pending.',
   },
-  {
-    id: 'appstore',
+  appstore: {
     label: 'App Store',
     icon: '🏪',
     category: 'tools',
     status: 'done',
     progress: 75,
     oldFileCount: 8,
-    newFileCount: 4,
-    hasStore: false,
-    hasQueries: true,
-    hasRoute: true,
     subFeatures: [
       { name: 'App store list', done: true },
       { name: 'Add service dialog', done: true },
@@ -283,19 +280,14 @@ export const TRACKED_MODULES: TrackedModule[] = [
     ],
     notes: 'Marketplace listing done. Deep integration config pages not built.',
   },
-  // ── Commerce ────────────────────────────────────────────────────────────────
-  {
-    id: 'shops',
+  // ── Commerce ──────────────────────────────────────────────────────────────────
+  shops: {
     label: 'Shops / Commerce',
     icon: '🛍️',
     category: 'commerce',
     status: 'done',
     progress: 85,
     oldFileCount: 38,
-    newFileCount: 9,
-    hasStore: false,
-    hasQueries: true,
-    hasRoute: true,
     subFeatures: [
       { name: 'Orders panel', done: true },
       { name: 'Order detail drawer', done: true },
@@ -308,19 +300,14 @@ export const TRACKED_MODULES: TrackedModule[] = [
     ],
     notes: 'Orders + Products + Payments + Shipping consolidated. Subscriptions pending.',
   },
-  // ── Admin ───────────────────────────────────────────────────────────────────
-  {
-    id: 'settings',
+  // ── Admin ─────────────────────────────────────────────────────────────────────
+  settings: {
     label: 'Settings',
     icon: '⚙️',
     category: 'admin',
     status: 'done',
     progress: 95,
     oldFileCount: 14,
-    newFileCount: 8,
-    hasStore: false,
-    hasQueries: true,
-    hasRoute: true,
     subFeatures: [
       { name: 'Profile settings', done: true },
       { name: 'Team settings', done: true },
@@ -331,18 +318,13 @@ export const TRACKED_MODULES: TrackedModule[] = [
     ],
     notes: 'All 6 tabs complete. Billing moved here from standalone module.',
   },
-  {
-    id: 'admin',
+  admin: {
     label: 'Admin Panel',
     icon: '🛡️',
     category: 'admin',
     status: 'done',
     progress: 95,
     oldFileCount: 31,
-    newFileCount: 12,
-    hasStore: false,
-    hasQueries: true,
-    hasRoute: true,
     subFeatures: [
       { name: 'Teams panel', done: true },
       { name: 'Users panel', done: true },
@@ -357,19 +339,14 @@ export const TRACKED_MODULES: TrackedModule[] = [
     ],
     notes: 'All 10 admin panels present and wired.',
   },
-  // ── Missing / Deferred ───────────────────────────────────────────────────────
-  {
-    id: 'flow-builder',
+  // ── Missing / Deferred ────────────────────────────────────────────────────────
+  'flow-builder': {
     label: 'Visual Flow Builder',
     icon: '🗺️',
     category: 'missing',
     status: 'deferred',
     progress: 0,
     oldFileCount: 198,
-    newFileCount: 0,
-    hasStore: false,
-    hasQueries: false,
-    hasRoute: false,
     subFeatures: [
       { name: 'Canvas / ReactFlow integration', done: false },
       { name: 'Node types (message, condition, delay…)', done: false },
@@ -380,18 +357,13 @@ export const TRACKED_MODULES: TrackedModule[] = [
     ],
     notes: 'Intentionally deferred (P3). Largest old module (198 files). Empty stub only.',
   },
-  {
-    id: 'notifications',
+  notifications: {
     label: 'Notifications Center',
     icon: '🔔',
     category: 'missing',
     status: 'not-started',
     progress: 15,
     oldFileCount: 27,
-    newFileCount: 0,
-    hasStore: false,
-    hasQueries: false,
-    hasRoute: false,
     subFeatures: [
       { name: 'Notification settings (in Settings)', done: true },
       { name: 'Notification center / inbox', done: false },
@@ -400,18 +372,13 @@ export const TRACKED_MODULES: TrackedModule[] = [
     ],
     notes: 'Only notification settings built. Full notification center not started.',
   },
-  {
-    id: 'onboarding',
+  onboarding: {
     label: 'Onboarding Flows',
     icon: '🚀',
     category: 'missing',
     status: 'not-started',
     progress: 20,
     oldFileCount: 32,
-    newFileCount: 0,
-    hasStore: false,
-    hasQueries: false,
-    hasRoute: false,
     subFeatures: [
       { name: 'Channel onboarding dialogs (in Channels)', done: true },
       { name: 'Signup / registration flow', done: false },
@@ -421,18 +388,13 @@ export const TRACKED_MODULES: TrackedModule[] = [
     ],
     notes: 'AuthOnboarding + Onboarding + Onboardingv2 from old repo not rebuilt.',
   },
-  {
-    id: 'billing',
+  billing: {
     label: 'Billing / Subscriptions',
     icon: '💳',
     category: 'missing',
     status: 'in-progress',
     progress: 30,
     oldFileCount: 23,
-    newFileCount: 0,
-    hasStore: false,
-    hasQueries: false,
-    hasRoute: false,
     subFeatures: [
       { name: 'Billing settings tab (in Settings)', done: true },
       { name: 'Subscription management', done: false },
@@ -443,7 +405,48 @@ export const TRACKED_MODULES: TrackedModule[] = [
     ],
     notes: 'Standalone /billing route redirects to Settings. Full billing module not built.',
   },
-]
+}
+
+// ─── Merge static config + live data ─────────────────────────────────────────
+
+export const TRACKED_MODULES: TrackedModule[] = Object.entries(STATIC).map(([id, cfg]) => {
+  const live = liveModules[id]
+  return {
+    id,
+    ...cfg,
+    newFileCount: live?.fileCount ?? 0,
+    hasStore: live?.hasStore ?? false,
+    hasQueries: live?.hasQueries ?? false,
+    hasRoute: live?.hasRoute ?? false,
+    isEmpty: live?.isEmpty ?? true,
+  }
+})
+
+// Also surface any NEW modules detected in live data that aren't in STATIC yet
+const unknownModules = Object.keys(liveModules).filter((id) => !STATIC[id])
+for (const id of unknownModules) {
+  const live = liveModules[id]
+  if (!live.isEmpty) {
+    TRACKED_MODULES.push({
+      id,
+      label: id.charAt(0).toUpperCase() + id.slice(1).replace(/-/g, ' '),
+      icon: '🆕',
+      category: 'core',
+      status: 'in-progress',
+      progress: 0,
+      oldFileCount: 0,
+      newFileCount: live.fileCount,
+      hasStore: live.hasStore,
+      hasQueries: live.hasQueries,
+      hasRoute: live.hasRoute,
+      isEmpty: live.isEmpty,
+      subFeatures: [],
+      notes: 'New module detected from live scan — add to static config to track sub-features.',
+    })
+  }
+}
+
+// ─── Derived stats ────────────────────────────────────────────────────────────
 
 export function getOverallStats() {
   const total = TRACKED_MODULES.length
