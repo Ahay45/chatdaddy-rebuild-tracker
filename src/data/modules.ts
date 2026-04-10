@@ -874,19 +874,40 @@ const STATIC: Record<string, StaticConfig> = {
   },
 }
 
+// ─── Derive progress + status from sub-features ──────────────────────────────
+
+function deriveProgress(subFeatures: SubFeature[]): number {
+  if (!subFeatures.length) return 0
+  const done = subFeatures.filter((f) => f.done).length
+  return Math.round((done / subFeatures.length) * 100)
+}
+
+function deriveStatus(progress: number, previousStatus: ModuleStatus): ModuleStatus {
+  // Deferred is a deliberate decision — never auto-change it
+  if (previousStatus === 'deferred') return 'deferred'
+  if (progress === 0) return 'not-started'
+  if (progress === 100) return 'done'
+  return 'in-progress'
+}
+
 // ─── Merge static config + live data ─────────────────────────────────────────
 
 export const TRACKED_MODULES: TrackedModule[] = Object.entries(STATIC).map(([id, cfg]) => {
   const live = liveModules[id]
+  const subFeatures = live ? autoCheckSubFeatures(cfg.subFeatures, live) : cfg.subFeatures
+  const progress = deriveProgress(subFeatures)
+  const status = deriveStatus(progress, cfg.status)
   return {
     id,
     ...cfg,
+    status,
+    progress,
+    subFeatures,
     newFileCount: live?.fileCount ?? 0,
     hasStore: live?.hasStore ?? false,
     hasQueries: live?.hasQueries ?? false,
     hasRoute: live?.hasRoute ?? false,
     isEmpty: live?.isEmpty ?? true,
-    subFeatures: live ? autoCheckSubFeatures(cfg.subFeatures, live) : cfg.subFeatures,
   }
 })
 
@@ -903,7 +924,7 @@ for (const id of unknownModules) {
       label: id.charAt(0).toUpperCase() + id.slice(1).replace(/-/g, ' '),
       icon: '🆕',
       category: 'core',
-      status: 'in-progress',
+      status: live.hasRoute ? 'in-progress' : 'not-started',
       progress: 0,
       oldFileCount: 0,
       newFileCount: live.fileCount,
