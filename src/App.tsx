@@ -1,4 +1,4 @@
-import { memo, useMemo, useState } from 'react'
+import { memo, useMemo, useRef, useState } from 'react'
 import {
   Box,
   Typography,
@@ -12,7 +12,7 @@ import {
   alpha,
   useTheme,
 } from '@mui/material'
-import { ChevronDown, ChevronUp, GitCommit, RefreshCw, Clock, Zap } from 'lucide-react'
+import { ChevronDown, ChevronUp, ChevronLeft, ChevronRight, GitCommit, RefreshCw, Clock, Zap } from 'lucide-react'
 import {
   TRACKED_MODULES,
   getOverallStats,
@@ -20,7 +20,6 @@ import {
   type TrackedModule,
   type ModuleStatus,
   type RecentCommit,
-  type CommitDay,
 } from './data/modules'
 
 // ─── Status config ────────────────────────────────────────────────────────────
@@ -152,22 +151,22 @@ function categorise(commits: RecentCommit[]): CategorisedCommit[] {
 }
 
 const TYPE_CONFIG: Record<CommitType, { label: string; color: string; dot: string }> = {
-  feature: { label: 'Added',     color: '#10B981', dot: '#10B981' },
-  fix:     { label: 'Fixed',     color: '#F59E0B', dot: '#F59E0B' },
-  other:   { label: 'Other',     color: '#6B7280', dot: '#9CA3AF' },
+  feature: { label: 'Added',  color: '#10B981', dot: '#10B981' },
+  fix:     { label: 'Fixed',  color: '#F59E0B', dot: '#F59E0B' },
+  other:   { label: 'Other',  color: '#6B7280', dot: '#9CA3AF' },
 }
 
-function formatDayLabel(dateStr: string): string {
-  // dateStr = "YYYY-MM-DD" (UTC)
+function getDayMeta(dateStr: string) {
   const [y, m, d] = dateStr.split('-').map(Number)
   const date = new Date(Date.UTC(y, m - 1, d))
-  const today = new Date()
-  const todayUtc = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()))
+  const now = new Date()
+  const todayUtc = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
   const diffDays = Math.round((todayUtc.getTime() - date.getTime()) / 86400000)
-  const label = date.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
-  if (diffDays === 0) return `Today · ${label}`
-  if (diffDays === 1) return `Yesterday · ${label}`
-  return label
+  const weekday = date.toLocaleDateString('en-GB', { weekday: 'short', timeZone: 'UTC' })
+  const dayNum = date.toLocaleDateString('en-GB', { day: 'numeric', timeZone: 'UTC' })
+  const month = date.toLocaleDateString('en-GB', { month: 'short', timeZone: 'UTC' })
+  const full = date.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
+  return { diffDays, weekday, dayNum, month, full, isToday: diffDays === 0 }
 }
 
 const CommitRow = memo(function CommitRow({ c }: { c: CategorisedCommit }) {
@@ -198,81 +197,66 @@ const CommitRow = memo(function CommitRow({ c }: { c: CategorisedCommit }) {
   )
 })
 
-const DaySection = memo(function DaySection({ day, defaultOpen }: { day: CommitDay; defaultOpen: boolean }) {
+function CommitSections({ commits }: { commits: RecentCommit[] }) {
   const { palette } = useTheme()
-  const [open, setOpen] = useState(defaultOpen)
-  const categorised = categorise(day.commits)
-  const features = categorised.filter((c) => c.type === 'feature')
-  const fixes = categorised.filter((c) => c.type === 'fix')
-  const others = categorised.filter((c) => c.type === 'other')
-  const sections = ([
-    { type: 'feature' as CommitType, items: features },
-    { type: 'fix' as CommitType, items: fixes },
-    { type: 'other' as CommitType, items: others },
-  ] as const).filter((s) => s.items.length > 0)
+  const categorised = categorise(commits)
+  const sections = (
+    [
+      { type: 'feature' as CommitType, items: categorised.filter((c) => c.type === 'feature') },
+      { type: 'fix' as CommitType, items: categorised.filter((c) => c.type === 'fix') },
+      { type: 'other' as CommitType, items: categorised.filter((c) => c.type === 'other') },
+    ] as const
+  ).filter((s) => s.items.length > 0)
 
   return (
-    <Box sx={{ mb: 2 }}>
-      {/* Day header */}
-      <Box
-        onClick={() => setOpen((v) => !v)}
-        sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, cursor: 'pointer', userSelect: 'none' }}
-      >
-        <Typography sx={{ fontSize: '0.75rem', fontWeight: 700, color: 'text.primary' }}>
-          {formatDayLabel(day.date)}
-        </Typography>
-        <Chip
-          label={`${day.commits.length} commit${day.commits.length !== 1 ? 's' : ''}`}
-          size="small"
-          sx={{ height: 17, fontSize: '0.5625rem', fontWeight: 700, bgcolor: alpha('#0F5BFF', 0.08), color: '#0F5BFF', borderRadius: '5px' }}
-        />
-        {features.length > 0 && (
-          <Chip label={`+${features.length} added`} size="small" sx={{ height: 17, fontSize: '0.5625rem', fontWeight: 700, bgcolor: alpha('#10B981', 0.08), color: '#10B981', borderRadius: '5px' }} />
-        )}
-        {fixes.length > 0 && (
-          <Chip label={`${fixes.length} fixed`} size="small" sx={{ height: 17, fontSize: '0.5625rem', fontWeight: 700, bgcolor: alpha('#F59E0B', 0.08), color: '#F59E0B', borderRadius: '5px' }} />
-        )}
-        <IconButton size="small" sx={{ ml: 'auto', p: 0.25, color: 'text.secondary' }}>
-          {open ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-        </IconButton>
-      </Box>
-
-      <Collapse in={open}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.25 }}>
-          {sections.map(({ type, items }) => {
-            const cfg = TYPE_CONFIG[type]
-            return (
-              <Box
-                key={type}
-                sx={{ borderRadius: '12px', border: `1px solid ${alpha(cfg.color, 0.2)}`, bgcolor: palette.background.paper, overflow: 'hidden' }}
-              >
-                <Box sx={{ px: 2, py: 0.75, bgcolor: alpha(cfg.color, 0.05), borderBottom: `1px solid ${alpha(cfg.color, 0.12)}`, display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Typography sx={{ fontSize: '0.625rem', fontWeight: 700, color: cfg.color, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                    {cfg.label}
-                  </Typography>
-                  <Chip label={items.length} size="small" sx={{ height: 15, fontSize: '0.5rem', fontWeight: 700, bgcolor: alpha(cfg.color, 0.12), color: cfg.color, borderRadius: '4px', ml: 'auto' }} />
-                </Box>
-                {items.map((c) => <CommitRow key={c.sha} c={c} />)}
-              </Box>
-            )
-          })}
-        </Box>
-      </Collapse>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.25 }}>
+      {sections.map(({ type, items }) => {
+        const cfg = TYPE_CONFIG[type]
+        return (
+          <Box key={type} sx={{ borderRadius: '12px', border: `1px solid ${alpha(cfg.color, 0.2)}`, bgcolor: palette.background.paper, overflow: 'hidden' }}>
+            <Box sx={{ px: 2, py: 0.75, bgcolor: alpha(cfg.color, 0.05), borderBottom: `1px solid ${alpha(cfg.color, 0.12)}`, display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography sx={{ fontSize: '0.625rem', fontWeight: 700, color: cfg.color, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                {cfg.label}
+              </Typography>
+              <Chip label={items.length} size="small" sx={{ height: 15, fontSize: '0.5rem', fontWeight: 700, bgcolor: alpha(cfg.color, 0.12), color: cfg.color, borderRadius: '4px', ml: 'auto' }} />
+            </Box>
+            {items.map((c) => <CommitRow key={c.sha} c={c} />)}
+          </Box>
+        )
+      })}
     </Box>
   )
-})
+}
 
 const EodSummary = memo(function EodSummary() {
+  const { palette } = useTheme()
   const days = liveMeta.commitsByDay.length
     ? liveMeta.commitsByDay
     : liveMeta.recentCommits.length
       ? [{ date: liveMeta.recentCommits[0].date.slice(0, 10), commits: liveMeta.recentCommits }]
       : []
 
+  // selectedIdx=0 → most recent day (today if commits today)
+  const [selectedIdx, setSelectedIdx] = useState(0)
+  const carouselRef = useRef<HTMLDivElement>(null)
+
   if (!days.length) return null
+
+  const today = days[selectedIdx]
+  const pastDays = days.slice(1)
+  const todayMeta = getDayMeta(days[0].date)
+  const selectedMeta = getDayMeta(today.date)
+  const cats = categorise(today.commits)
+  const featCount = cats.filter((c) => c.type === 'feature').length
+  const fixCount = cats.filter((c) => c.type === 'fix').length
+
+  function scrollCarousel(dir: -1 | 1) {
+    carouselRef.current?.scrollBy({ left: dir * 180, behavior: 'smooth' })
+  }
 
   return (
     <Box sx={{ mb: 3 }}>
+      {/* Section title */}
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.75 }}>
         <Zap size={14} color="#F59E0B" />
         <Typography sx={{ fontWeight: 700, fontSize: '0.8125rem', color: 'text.primary' }}>
@@ -282,9 +266,122 @@ const EodSummary = memo(function EodSummary() {
           — what was added &amp; updated each day
         </Typography>
       </Box>
-      {days.map((day, i) => (
-        <DaySection key={day.date} day={day} defaultOpen={i === 0} />
-      ))}
+
+      {/* ── Today / selected highlight ── */}
+      <Box
+        sx={{
+          borderRadius: '16px',
+          border: `1.5px solid ${selectedIdx === 0 && todayMeta.isToday ? alpha('#0F5BFF', 0.35) : alpha(palette.divider, 1)}`,
+          bgcolor: palette.background.paper,
+          mb: 2,
+          overflow: 'hidden',
+        }}
+      >
+        {/* Header */}
+        <Box
+          sx={{
+            px: 2.5, py: 1.5,
+            bgcolor: selectedIdx === 0 && todayMeta.isToday ? alpha('#0F5BFF', 0.05) : alpha(palette.background.default, 0.6),
+            borderBottom: `1px solid ${palette.divider}`,
+            display: 'flex', alignItems: 'center', gap: 1.5, flexWrap: 'wrap',
+          }}
+        >
+          {selectedIdx === 0 && todayMeta.isToday && (
+            <Chip
+              label="TODAY"
+              size="small"
+              sx={{ height: 20, fontSize: '0.5625rem', fontWeight: 800, letterSpacing: '0.08em', bgcolor: '#0F5BFF', color: '#fff', borderRadius: '6px' }}
+            />
+          )}
+          <Typography sx={{ fontWeight: 700, fontSize: '0.875rem', color: 'text.primary' }}>
+            {selectedMeta.full}
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 0.75, ml: 'auto', flexWrap: 'wrap' }}>
+            <Chip label={`${today.commits.length} commits`} size="small" sx={{ height: 18, fontSize: '0.5625rem', fontWeight: 700, bgcolor: alpha('#0F5BFF', 0.08), color: '#0F5BFF', borderRadius: '5px' }} />
+            {featCount > 0 && <Chip label={`+${featCount} added`} size="small" sx={{ height: 18, fontSize: '0.5625rem', fontWeight: 700, bgcolor: alpha('#10B981', 0.1), color: '#10B981', borderRadius: '5px' }} />}
+            {fixCount > 0 && <Chip label={`${fixCount} fixed`} size="small" sx={{ height: 18, fontSize: '0.5625rem', fontWeight: 700, bgcolor: alpha('#F59E0B', 0.1), color: '#F59E0B', borderRadius: '5px' }} />}
+          </Box>
+        </Box>
+        {/* Commits */}
+        <Box sx={{ p: 1.5 }}>
+          <CommitSections commits={today.commits} />
+        </Box>
+      </Box>
+
+      {/* ── Past days carousel ── */}
+      {pastDays.length > 0 && (
+        <Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+            <Typography sx={{ fontSize: '0.6875rem', fontWeight: 700, color: 'text.secondary', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+              Previous Days
+            </Typography>
+            <Box sx={{ ml: 'auto', display: 'flex', gap: 0.5 }}>
+              <IconButton size="small" onClick={() => scrollCarousel(-1)} sx={{ p: 0.5, color: 'text.secondary', border: `1px solid ${palette.divider}`, borderRadius: '8px', bgcolor: palette.background.paper }}>
+                <ChevronLeft size={14} />
+              </IconButton>
+              <IconButton size="small" onClick={() => scrollCarousel(1)} sx={{ p: 0.5, color: 'text.secondary', border: `1px solid ${palette.divider}`, borderRadius: '8px', bgcolor: palette.background.paper }}>
+                <ChevronRight size={14} />
+              </IconButton>
+            </Box>
+          </Box>
+
+          <Box
+            ref={carouselRef}
+            sx={{
+              display: 'flex', gap: 1.25, overflowX: 'auto', pb: 0.5,
+              scrollbarWidth: 'none', '&::-webkit-scrollbar': { display: 'none' },
+            }}
+          >
+            {pastDays.map((day, i) => {
+              const meta = getDayMeta(day.date)
+              const dc = categorise(day.commits)
+              const fc = dc.filter((c) => c.type === 'feature').length
+              const fx = dc.filter((c) => c.type === 'fix').length
+              const isSelected = selectedIdx === i + 1
+              return (
+                <Box
+                  key={day.date}
+                  onClick={() => setSelectedIdx(i + 1)}
+                  sx={{
+                    flexShrink: 0, width: 120, borderRadius: '14px', cursor: 'pointer', userSelect: 'none',
+                    border: `1.5px solid ${isSelected ? '#0F5BFF' : palette.divider}`,
+                    bgcolor: isSelected ? alpha('#0F5BFF', 0.05) : palette.background.paper,
+                    p: 1.5, transition: 'all 150ms ease',
+                    '&:hover': { borderColor: alpha('#0F5BFF', 0.4), bgcolor: alpha('#0F5BFF', 0.03) },
+                  }}
+                >
+                  <Typography sx={{ fontSize: '0.625rem', fontWeight: 700, color: 'text.secondary', textTransform: 'uppercase', letterSpacing: '0.05em', mb: 0.25 }}>
+                    {meta.weekday}
+                  </Typography>
+                  <Typography sx={{ fontSize: '1.375rem', fontWeight: 800, color: isSelected ? '#0F5BFF' : 'text.primary', lineHeight: 1 }}>
+                    {meta.dayNum}
+                  </Typography>
+                  <Typography sx={{ fontSize: '0.625rem', color: 'text.secondary', mb: 1 }}>
+                    {meta.month}
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.4 }}>
+                    <Typography sx={{ fontSize: '0.5625rem', color: '#6B7280' }}>
+                      {day.commits.length} commit{day.commits.length !== 1 ? 's' : ''}
+                    </Typography>
+                    {fc > 0 && (
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                        <Box sx={{ width: 5, height: 5, borderRadius: '50%', bgcolor: '#10B981', flexShrink: 0 }} />
+                        <Typography sx={{ fontSize: '0.5625rem', color: '#10B981', fontWeight: 600 }}>+{fc} added</Typography>
+                      </Box>
+                    )}
+                    {fx > 0 && (
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                        <Box sx={{ width: 5, height: 5, borderRadius: '50%', bgcolor: '#F59E0B', flexShrink: 0 }} />
+                        <Typography sx={{ fontSize: '0.5625rem', color: '#F59E0B', fontWeight: 600 }}>{fx} fixed</Typography>
+                      </Box>
+                    )}
+                  </Box>
+                </Box>
+              )
+            })}
+          </Box>
+        </Box>
+      )}
     </Box>
   )
 })
