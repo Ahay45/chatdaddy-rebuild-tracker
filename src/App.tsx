@@ -406,6 +406,82 @@ const EodSummary = memo(function EodSummary() {
   )
 })
 
+// ─── Today's module activity map ─────────────────────────────────────────────
+
+// Maps commit scope/keyword → module id(s)
+const SCOPE_TO_MODULE: Record<string, string[]> = {
+  inbox:        ['inbox'],
+  crm:          ['crm'],
+  contacts:     ['crm'],
+  channel:      ['channels'],
+  channels:     ['channels'],
+  calls:        ['calls'],
+  call:         ['calls'],
+  dashboard:    ['dashboard'],
+  analytics:    ['dashboard'],
+  automation:   ['automation'],
+  flow:         ['automation', 'flow-builder'],
+  flows:        ['automation', 'flow-builder'],
+  keyword:      ['automation'],
+  broadcast:    ['broadcasts'],
+  broadcasts:   ['broadcasts'],
+  marketing:    ['broadcasts'],
+  campaign:     ['campaigns'],
+  campaigns:    ['campaigns'],
+  tools:        ['tools'],
+  forms:        ['tools'],
+  form:         ['tools'],
+  qr:           ['tools'],
+  widget:       ['tools'],
+  zapier:       ['tools'],
+  coupon:       ['tools'],
+  ai:           ['ai'],
+  chatbot:      ['ai'],
+  'knowledge-base': ['ai'],
+  kb:           ['ai'],
+  appstore:     ['appstore'],
+  app:          ['appstore'],
+  shops:        ['shops'],
+  shop:         ['shops'],
+  orders:       ['shops'],
+  products:     ['shops'],
+  settings:     ['settings'],
+  billing:      ['billing'],
+  admin:        ['admin'],
+  auth:         ['auth'],
+  onboarding:   ['onboarding'],
+  notifications: ['notifications'],
+  notification: ['notifications'],
+  webhook:      ['notifications'],
+  i18n:         ['localization'],
+  locale:       ['localization'],
+}
+
+function buildTodayActivityMap(): Map<string, number> {
+  const map = new Map<string, number>()
+  const todayCommits = liveMeta.commitsByDay[0]?.commits ?? []
+  for (const c of todayCommits) {
+    // extract scope from "feat(scope): ..." or fall back to scanning full message
+    const scopeMatch = c.message.match(/^[a-z]+\(([^)]+)\):/i)
+    const candidates: string[] = []
+    if (scopeMatch) {
+      candidates.push(scopeMatch[1].toLowerCase())
+    } else {
+      // scan message words for known module keywords
+      const words = c.message.toLowerCase().replace(/[^a-z0-9-]/g, ' ').split(/\s+/)
+      candidates.push(...words)
+    }
+    const hit = new Set<string>()
+    for (const cand of candidates) {
+      const mods = SCOPE_TO_MODULE[cand]
+      if (mods) mods.forEach((m) => { if (!hit.has(m)) { hit.add(m); map.set(m, (map.get(m) ?? 0) + 1) } })
+    }
+  }
+  return map
+}
+
+const todayActivityMap = buildTodayActivityMap()
+
 // ─── StatPill ─────────────────────────────────────────────────────────────────
 
 const StatPill = memo(function StatPill({
@@ -504,24 +580,25 @@ const OverallProgress = memo(function OverallProgress() {
 
 // ─── ModuleCard ───────────────────────────────────────────────────────────────
 
-const ModuleCard = memo(function ModuleCard({ module: m }: { module: TrackedModule }) {
+const ModuleCard = memo(function ModuleCard({ module: m, todayCount }: { module: TrackedModule; todayCount: number }) {
   const { palette } = useTheme()
   const [expanded, setExpanded] = useState(false)
   const { label: statusLabel, color: statusColor } = STATUS_CONFIG[m.status]
   const doneSubs = m.subFeatures.filter((f) => f.done).length
+  const hasActivity = todayCount > 0
 
   return (
     <Box
       sx={{
         borderRadius: '16px',
-        border: `1px solid ${palette.divider}`,
+        border: `1.5px solid ${hasActivity ? alpha('#F59E0B', 0.5) : palette.divider}`,
         bgcolor: palette.background.paper,
         overflow: 'hidden',
         transition: 'box-shadow 150ms ease, border-color 150ms ease',
-        '&:hover': { boxShadow: '0 4px 20px rgba(0,0,0,0.06)', borderColor: alpha(statusColor, 0.35) },
+        '&:hover': { boxShadow: '0 4px 20px rgba(0,0,0,0.06)', borderColor: hasActivity ? alpha('#F59E0B', 0.7) : alpha(statusColor, 0.35) },
       }}
     >
-      <Box sx={{ height: 3, bgcolor: statusColor, opacity: m.status === 'not-started' ? 0.4 : 1 }} />
+      <Box sx={{ height: 3, bgcolor: hasActivity ? '#F59E0B' : statusColor, opacity: m.status === 'not-started' && !hasActivity ? 0.4 : 1 }} />
 
       <Box sx={{ p: 2 }}>
         {/* Header */}
@@ -532,6 +609,15 @@ const ModuleCard = memo(function ModuleCard({ module: m }: { module: TrackedModu
           >
             {m.label}
           </Typography>
+          {hasActivity && (
+            <Tooltip title={`${todayCount} commit${todayCount !== 1 ? 's' : ''} today`} arrow>
+              <Chip
+                label={`+${todayCount}`}
+                size="small"
+                sx={{ height: 20, fontSize: '0.625rem', fontWeight: 800, bgcolor: '#F59E0B', color: '#fff', borderRadius: '6px', flexShrink: 0, cursor: 'default' }}
+              />
+            </Tooltip>
+          )}
           <Chip
             label={statusLabel}
             size="small"
@@ -739,7 +825,7 @@ export default function App() {
                 </Typography>
               </Box>
               <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 1.5 }}>
-                {mods.map((m) => <ModuleCard key={m.id} module={m} />)}
+                {mods.map((m) => <ModuleCard key={m.id} module={m} todayCount={todayActivityMap.get(m.id) ?? 0} />)}
               </Box>
             </Box>
           )
