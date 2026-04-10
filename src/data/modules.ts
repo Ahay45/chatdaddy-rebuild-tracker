@@ -69,12 +69,56 @@ const liveModules = liveData.modules as Record<
   string,
   {
     fileCount: number
+    componentCount: number
     hasStore: boolean
     hasQueries: boolean
     hasRoute: boolean
     isEmpty: boolean
+    files: string[]
   }
 >
+
+// ─── Auto-derive sub-feature done state from live file scan ──────────────────
+
+function contentWords(s: string): string[] {
+  return (s.toLowerCase().replace(/\(.*?\)/g, '').match(/[a-z]{3,}/g) ?? [])
+}
+
+function normaliseBasename(filePath: string): string {
+  return (filePath.split('/').pop() ?? '')
+    .replace(/\.(tsx?|jsx?)$/, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, '')
+}
+
+function fileMatchesSubFeature(featureName: string, fileBasename: string): boolean {
+  const fw = contentWords(featureName)
+  const fb = fileBasename // already normalised
+  if (!fw.length) return false
+  const hits = fw.filter((w) => fb.includes(w)).length
+  return hits >= Math.min(2, fw.length)
+}
+
+function autoCheckSubFeatures(
+  subFeatures: SubFeature[],
+  live: { files: string[]; hasStore: boolean; hasQueries: boolean; hasRoute: boolean },
+): SubFeature[] {
+  const componentBasenames = live.files
+    .filter((p) => (p.endsWith('.tsx') || p.endsWith('.ts')) && p.includes('/components/'))
+    .map(normaliseBasename)
+
+  return subFeatures.map((f) => {
+    if (f.done) return f // already confirmed done manually — keep
+    const norm = contentWords(f.name).join('')
+    // Special structural signals
+    if (norm.includes('store') && live.hasStore) return { ...f, done: true }
+    if ((norm.includes('quer') || norm.includes('api')) && live.hasQueries) return { ...f, done: true }
+    if ((norm.includes('route') || norm.includes('page')) && live.hasRoute) return { ...f, done: true }
+    // Component file match
+    const matched = componentBasenames.some((bn) => fileMatchesSubFeature(f.name, bn))
+    return matched ? { ...f, done: true } : f
+  })
+}
 
 // ─── Static config (sub-features, notes, categories — updated manually) ──────
 
@@ -463,6 +507,7 @@ export const TRACKED_MODULES: TrackedModule[] = Object.entries(STATIC).map(([id,
     hasQueries: live?.hasQueries ?? false,
     hasRoute: live?.hasRoute ?? false,
     isEmpty: live?.isEmpty ?? true,
+    subFeatures: live ? autoCheckSubFeatures(cfg.subFeatures, live) : cfg.subFeatures,
   }
 })
 
