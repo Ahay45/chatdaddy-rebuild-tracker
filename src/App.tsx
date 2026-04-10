@@ -236,19 +236,18 @@ const EodSummary = memo(function EodSummary() {
       ? [{ date: liveMeta.recentCommits[0].date.slice(0, 10), commits: liveMeta.recentCommits }]
       : []
 
-  // selectedIdx=0 → most recent day (today if commits today)
-  const [selectedIdx, setSelectedIdx] = useState(0)
+  // null = nothing expanded; index into pastDays
+  const [expandedPast, setExpandedPast] = useState<number | null>(null)
   const carouselRef = useRef<HTMLDivElement>(null)
 
   if (!days.length) return null
 
-  const today = days[selectedIdx]
+  const todayDay = days[0]
   const pastDays = days.slice(1)
-  const todayMeta = getDayMeta(days[0].date)
-  const selectedMeta = getDayMeta(today.date)
-  const cats = categorise(today.commits)
-  const featCount = cats.filter((c) => c.type === 'feature').length
-  const fixCount = cats.filter((c) => c.type === 'fix').length
+  const todayMeta = getDayMeta(todayDay.date)
+  const todayCats = categorise(todayDay.commits)
+  const todayFeat = todayCats.filter((c) => c.type === 'feature').length
+  const todayFix = todayCats.filter((c) => c.type === 'fix').length
 
   function scrollCarousel(dir: -1 | 1) {
     carouselRef.current?.scrollBy({ left: dir * 180, behavior: 'smooth' })
@@ -267,44 +266,38 @@ const EodSummary = memo(function EodSummary() {
         </Typography>
       </Box>
 
-      {/* ── Today / selected highlight ── */}
+      {/* ── Today highlight (always shown) ── */}
       <Box
         sx={{
           borderRadius: '16px',
-          border: `1.5px solid ${selectedIdx === 0 && todayMeta.isToday ? alpha('#0F5BFF', 0.35) : alpha(palette.divider, 1)}`,
+          border: `1.5px solid ${todayMeta.isToday ? alpha('#0F5BFF', 0.35) : alpha(palette.divider, 1)}`,
           bgcolor: palette.background.paper,
           mb: 2,
           overflow: 'hidden',
         }}
       >
-        {/* Header */}
         <Box
           sx={{
             px: 2.5, py: 1.5,
-            bgcolor: selectedIdx === 0 && todayMeta.isToday ? alpha('#0F5BFF', 0.05) : alpha(palette.background.default, 0.6),
+            bgcolor: todayMeta.isToday ? alpha('#0F5BFF', 0.05) : alpha(palette.background.default, 0.6),
             borderBottom: `1px solid ${palette.divider}`,
             display: 'flex', alignItems: 'center', gap: 1.5, flexWrap: 'wrap',
           }}
         >
-          {selectedIdx === 0 && todayMeta.isToday && (
-            <Chip
-              label="TODAY"
-              size="small"
-              sx={{ height: 20, fontSize: '0.5625rem', fontWeight: 800, letterSpacing: '0.08em', bgcolor: '#0F5BFF', color: '#fff', borderRadius: '6px' }}
-            />
+          {todayMeta.isToday && (
+            <Chip label="TODAY" size="small" sx={{ height: 20, fontSize: '0.5625rem', fontWeight: 800, letterSpacing: '0.08em', bgcolor: '#0F5BFF', color: '#fff', borderRadius: '6px' }} />
           )}
           <Typography sx={{ fontWeight: 700, fontSize: '0.875rem', color: 'text.primary' }}>
-            {selectedMeta.full}
+            {todayMeta.full}
           </Typography>
           <Box sx={{ display: 'flex', gap: 0.75, ml: 'auto', flexWrap: 'wrap' }}>
-            <Chip label={`${today.commits.length} commits`} size="small" sx={{ height: 18, fontSize: '0.5625rem', fontWeight: 700, bgcolor: alpha('#0F5BFF', 0.08), color: '#0F5BFF', borderRadius: '5px' }} />
-            {featCount > 0 && <Chip label={`+${featCount} added`} size="small" sx={{ height: 18, fontSize: '0.5625rem', fontWeight: 700, bgcolor: alpha('#10B981', 0.1), color: '#10B981', borderRadius: '5px' }} />}
-            {fixCount > 0 && <Chip label={`${fixCount} fixed`} size="small" sx={{ height: 18, fontSize: '0.5625rem', fontWeight: 700, bgcolor: alpha('#F59E0B', 0.1), color: '#F59E0B', borderRadius: '5px' }} />}
+            <Chip label={`${todayDay.commits.length} commits`} size="small" sx={{ height: 18, fontSize: '0.5625rem', fontWeight: 700, bgcolor: alpha('#0F5BFF', 0.08), color: '#0F5BFF', borderRadius: '5px' }} />
+            {todayFeat > 0 && <Chip label={`+${todayFeat} added`} size="small" sx={{ height: 18, fontSize: '0.5625rem', fontWeight: 700, bgcolor: alpha('#10B981', 0.1), color: '#10B981', borderRadius: '5px' }} />}
+            {todayFix > 0 && <Chip label={`${todayFix} fixed`} size="small" sx={{ height: 18, fontSize: '0.5625rem', fontWeight: 700, bgcolor: alpha('#F59E0B', 0.1), color: '#F59E0B', borderRadius: '5px' }} />}
           </Box>
         </Box>
-        {/* Commits */}
         <Box sx={{ p: 1.5 }}>
-          <CommitSections commits={today.commits} />
+          <CommitSections commits={todayDay.commits} />
         </Box>
       </Box>
 
@@ -328,7 +321,7 @@ const EodSummary = memo(function EodSummary() {
           <Box
             ref={carouselRef}
             sx={{
-              display: 'flex', gap: 1.25, overflowX: 'auto', pb: 0.5,
+              display: 'flex', gap: 1.25, overflowX: 'auto', pb: 1,
               scrollbarWidth: 'none', '&::-webkit-scrollbar': { display: 'none' },
             }}
           >
@@ -337,15 +330,15 @@ const EodSummary = memo(function EodSummary() {
               const dc = categorise(day.commits)
               const fc = dc.filter((c) => c.type === 'feature').length
               const fx = dc.filter((c) => c.type === 'fix').length
-              const isSelected = selectedIdx === i + 1
+              const isExpanded = expandedPast === i
               return (
                 <Box
                   key={day.date}
-                  onClick={() => setSelectedIdx(i + 1)}
+                  onClick={() => setExpandedPast(isExpanded ? null : i)}
                   sx={{
                     flexShrink: 0, width: 120, borderRadius: '14px', cursor: 'pointer', userSelect: 'none',
-                    border: `1.5px solid ${isSelected ? '#0F5BFF' : palette.divider}`,
-                    bgcolor: isSelected ? alpha('#0F5BFF', 0.05) : palette.background.paper,
+                    border: `1.5px solid ${isExpanded ? '#0F5BFF' : palette.divider}`,
+                    bgcolor: isExpanded ? alpha('#0F5BFF', 0.05) : palette.background.paper,
                     p: 1.5, transition: 'all 150ms ease',
                     '&:hover': { borderColor: alpha('#0F5BFF', 0.4), bgcolor: alpha('#0F5BFF', 0.03) },
                   }}
@@ -353,7 +346,7 @@ const EodSummary = memo(function EodSummary() {
                   <Typography sx={{ fontSize: '0.625rem', fontWeight: 700, color: 'text.secondary', textTransform: 'uppercase', letterSpacing: '0.05em', mb: 0.25 }}>
                     {meta.weekday}
                   </Typography>
-                  <Typography sx={{ fontSize: '1.375rem', fontWeight: 800, color: isSelected ? '#0F5BFF' : 'text.primary', lineHeight: 1 }}>
+                  <Typography sx={{ fontSize: '1.375rem', fontWeight: 800, color: isExpanded ? '#0F5BFF' : 'text.primary', lineHeight: 1 }}>
                     {meta.dayNum}
                   </Typography>
                   <Typography sx={{ fontSize: '0.625rem', color: 'text.secondary', mb: 1 }}>
@@ -380,6 +373,33 @@ const EodSummary = memo(function EodSummary() {
               )
             })}
           </Box>
+
+          {/* Expanded past day detail — shown below carousel */}
+          <Collapse in={expandedPast !== null} unmountOnExit>
+            {expandedPast !== null && (
+              <Box
+                sx={{
+                  mt: 1.5, borderRadius: '14px',
+                  border: `1px solid ${alpha('#0F5BFF', 0.2)}`,
+                  bgcolor: palette.background.paper, overflow: 'hidden',
+                }}
+              >
+                <Box sx={{ px: 2, py: 1.25, bgcolor: alpha('#0F5BFF', 0.04), borderBottom: `1px solid ${palette.divider}`, display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Typography sx={{ fontWeight: 700, fontSize: '0.8125rem', color: 'text.primary' }}>
+                    {getDayMeta(pastDays[expandedPast].date).full}
+                  </Typography>
+                  <Chip
+                    label={`${pastDays[expandedPast].commits.length} commits`}
+                    size="small"
+                    sx={{ height: 17, fontSize: '0.5625rem', fontWeight: 700, bgcolor: alpha('#0F5BFF', 0.08), color: '#0F5BFF', borderRadius: '5px', ml: 'auto' }}
+                  />
+                </Box>
+                <Box sx={{ p: 1.5 }}>
+                  <CommitSections commits={pastDays[expandedPast].commits} />
+                </Box>
+              </Box>
+            )}
+          </Collapse>
         </Box>
       )}
     </Box>
