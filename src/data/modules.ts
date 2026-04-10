@@ -34,6 +34,11 @@ export interface RecentCommit {
   author: string
 }
 
+export interface CommitDay {
+  date: string // "YYYY-MM-DD"
+  commits: RecentCommit[]
+}
+
 export interface LiveMeta {
   fetchedAt: string | null
   branch: string
@@ -44,6 +49,7 @@ export interface LiveMeta {
     date: string
   }
   recentCommits: RecentCommit[]
+  commitsByDay: CommitDay[]
   registeredRoutes: string[]
 }
 
@@ -54,6 +60,7 @@ export const liveMeta: LiveMeta = {
   branch: liveData.branch,
   commit: liveData.commit,
   recentCommits: (liveData.recentCommits as RecentCommit[]) ?? [],
+  commitsByDay: ((liveData as unknown as { commitsByDay?: CommitDay[] }).commitsByDay) ?? [],
   registeredRoutes: liveData.registeredRoutes,
 }
 

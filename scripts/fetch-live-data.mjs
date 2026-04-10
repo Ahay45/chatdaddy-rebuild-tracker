@@ -99,14 +99,25 @@ async function run() {
     }
   }
 
-  // 4. Fetch recent commits (last 10) for EOD summary
-  const commitsData = await githubGet(`/commits?sha=${BRANCH}&per_page=10`)
+  // 4. Fetch recent commits (last 50) for daily summary
+  const commitsData = await githubGet(`/commits?sha=${BRANCH}&per_page=50`)
   const recentCommits = commitsData.map((c) => ({
     sha: c.sha.slice(0, 7),
     message: c.commit.message.split('\n')[0],
     date: c.commit.author.date,
     author: c.commit.author.name,
   }))
+
+  // Group commits by UTC date (YYYY-MM-DD), newest day first
+  const dayMap = new Map()
+  for (const c of recentCommits) {
+    const day = c.date.slice(0, 10)
+    if (!dayMap.has(day)) dayMap.set(day, [])
+    dayMap.get(day).push(c)
+  }
+  const commitsByDay = [...dayMap.entries()]
+    .sort((a, b) => b[0].localeCompare(a[0]))
+    .map(([date, commits]) => ({ date, commits }))
 
   // 5. Also check router.tsx for registered routes
   const routerPath = allPaths.find((p) => p === 'src/app/router.tsx')
@@ -132,6 +143,7 @@ async function run() {
       date: commitDate,
     },
     recentCommits,
+    commitsByDay,
     registeredRoutes,
     modules,
   }

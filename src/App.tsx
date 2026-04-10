@@ -20,6 +20,7 @@ import {
   type TrackedModule,
   type ModuleStatus,
   type RecentCommit,
+  type CommitDay,
 } from './data/modules'
 
 // ─── Status config ────────────────────────────────────────────────────────────
@@ -128,7 +129,7 @@ const LiveBanner = memo(function LiveBanner() {
   )
 })
 
-// ─── EOD Summary ─────────────────────────────────────────────────────────────
+// ─── Daily Digest ─────────────────────────────────────────────────────────────
 
 type CommitType = 'feature' | 'fix' | 'other'
 
@@ -151,9 +152,22 @@ function categorise(commits: RecentCommit[]): CategorisedCommit[] {
 }
 
 const TYPE_CONFIG: Record<CommitType, { label: string; color: string; dot: string }> = {
-  feature: { label: 'Features Added', color: '#10B981', dot: '#10B981' },
-  fix:     { label: 'Bug Fixes',      color: '#F59E0B', dot: '#F59E0B' },
-  other:   { label: 'Other Changes',  color: '#6B7280', dot: '#9CA3AF' },
+  feature: { label: 'Added',     color: '#10B981', dot: '#10B981' },
+  fix:     { label: 'Fixed',     color: '#F59E0B', dot: '#F59E0B' },
+  other:   { label: 'Other',     color: '#6B7280', dot: '#9CA3AF' },
+}
+
+function formatDayLabel(dateStr: string): string {
+  // dateStr = "YYYY-MM-DD" (UTC)
+  const [y, m, d] = dateStr.split('-').map(Number)
+  const date = new Date(Date.UTC(y, m - 1, d))
+  const today = new Date()
+  const todayUtc = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()))
+  const diffDays = Math.round((todayUtc.getTime() - date.getTime()) / 86400000)
+  const label = date.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
+  if (diffDays === 0) return `Today · ${label}`
+  if (diffDays === 1) return `Yesterday · ${label}`
+  return label
 }
 
 const CommitRow = memo(function CommitRow({ c }: { c: CategorisedCommit }) {
@@ -184,17 +198,13 @@ const CommitRow = memo(function CommitRow({ c }: { c: CategorisedCommit }) {
   )
 })
 
-const EodSummary = memo(function EodSummary() {
+const DaySection = memo(function DaySection({ day, defaultOpen }: { day: CommitDay; defaultOpen: boolean }) {
   const { palette } = useTheme()
-  const [open, setOpen] = useState(true)
-  const commits = liveMeta.recentCommits
-  if (!commits.length) return null
-
-  const categorised = categorise(commits)
+  const [open, setOpen] = useState(defaultOpen)
+  const categorised = categorise(day.commits)
   const features = categorised.filter((c) => c.type === 'feature')
   const fixes = categorised.filter((c) => c.type === 'fix')
   const others = categorised.filter((c) => c.type === 'other')
-
   const sections = ([
     { type: 'feature' as CommitType, items: features },
     { type: 'fix' as CommitType, items: fixes },
@@ -202,45 +212,79 @@ const EodSummary = memo(function EodSummary() {
   ] as const).filter((s) => s.items.length > 0)
 
   return (
-    <Box sx={{ mb: 3 }}>
+    <Box sx={{ mb: 2 }}>
+      {/* Day header */}
       <Box
         onClick={() => setOpen((v) => !v)}
-        sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.25, cursor: 'pointer', userSelect: 'none' }}
+        sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, cursor: 'pointer', userSelect: 'none' }}
       >
-        <Zap size={14} color="#F59E0B" />
-        <Typography sx={{ fontWeight: 700, fontSize: '0.8125rem', color: 'text.primary' }}>
-          EOD Update
+        <Typography sx={{ fontSize: '0.75rem', fontWeight: 700, color: 'text.primary' }}>
+          {formatDayLabel(day.date)}
         </Typography>
-        <Chip label={`${commits.length} commits`} size="small" sx={{ height: 18, fontSize: '0.5625rem', fontWeight: 700, bgcolor: alpha('#F59E0B', 0.1), color: '#F59E0B', borderRadius: '5px' }} />
+        <Chip
+          label={`${day.commits.length} commit${day.commits.length !== 1 ? 's' : ''}`}
+          size="small"
+          sx={{ height: 17, fontSize: '0.5625rem', fontWeight: 700, bgcolor: alpha('#0F5BFF', 0.08), color: '#0F5BFF', borderRadius: '5px' }}
+        />
+        {features.length > 0 && (
+          <Chip label={`+${features.length} added`} size="small" sx={{ height: 17, fontSize: '0.5625rem', fontWeight: 700, bgcolor: alpha('#10B981', 0.08), color: '#10B981', borderRadius: '5px' }} />
+        )}
+        {fixes.length > 0 && (
+          <Chip label={`${fixes.length} fixed`} size="small" sx={{ height: 17, fontSize: '0.5625rem', fontWeight: 700, bgcolor: alpha('#F59E0B', 0.08), color: '#F59E0B', borderRadius: '5px' }} />
+        )}
         <IconButton size="small" sx={{ ml: 'auto', p: 0.25, color: 'text.secondary' }}>
           {open ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
         </IconButton>
       </Box>
 
       <Collapse in={open}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.25 }}>
           {sections.map(({ type, items }) => {
             const cfg = TYPE_CONFIG[type]
             return (
               <Box
                 key={type}
-                sx={{ borderRadius: '14px', border: `1px solid ${alpha(cfg.color, 0.2)}`, bgcolor: palette.background.paper, overflow: 'hidden' }}
+                sx={{ borderRadius: '12px', border: `1px solid ${alpha(cfg.color, 0.2)}`, bgcolor: palette.background.paper, overflow: 'hidden' }}
               >
-                {/* Section header */}
-                <Box sx={{ px: 2, py: 0.875, bgcolor: alpha(cfg.color, 0.05), borderBottom: `1px solid ${alpha(cfg.color, 0.15)}`, display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Typography sx={{ fontSize: '0.6875rem', fontWeight: 700, color: cfg.color, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                <Box sx={{ px: 2, py: 0.75, bgcolor: alpha(cfg.color, 0.05), borderBottom: `1px solid ${alpha(cfg.color, 0.12)}`, display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Typography sx={{ fontSize: '0.625rem', fontWeight: 700, color: cfg.color, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
                     {cfg.label}
                   </Typography>
-                  <Chip label={items.length} size="small" sx={{ height: 16, fontSize: '0.5625rem', fontWeight: 700, bgcolor: alpha(cfg.color, 0.12), color: cfg.color, borderRadius: '4px', ml: 'auto' }} />
+                  <Chip label={items.length} size="small" sx={{ height: 15, fontSize: '0.5rem', fontWeight: 700, bgcolor: alpha(cfg.color, 0.12), color: cfg.color, borderRadius: '4px', ml: 'auto' }} />
                 </Box>
-
-                {/* Commit rows */}
                 {items.map((c) => <CommitRow key={c.sha} c={c} />)}
               </Box>
             )
           })}
         </Box>
       </Collapse>
+    </Box>
+  )
+})
+
+const EodSummary = memo(function EodSummary() {
+  const days = liveMeta.commitsByDay.length
+    ? liveMeta.commitsByDay
+    : liveMeta.recentCommits.length
+      ? [{ date: liveMeta.recentCommits[0].date.slice(0, 10), commits: liveMeta.recentCommits }]
+      : []
+
+  if (!days.length) return null
+
+  return (
+    <Box sx={{ mb: 3 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.75 }}>
+        <Zap size={14} color="#F59E0B" />
+        <Typography sx={{ fontWeight: 700, fontSize: '0.8125rem', color: 'text.primary' }}>
+          Daily Updates
+        </Typography>
+        <Typography sx={{ fontSize: '0.6875rem', color: 'text.secondary' }}>
+          — what was added &amp; updated each day
+        </Typography>
+      </Box>
+      {days.map((day, i) => (
+        <DaySection key={day.date} day={day} defaultOpen={i === 0} />
+      ))}
     </Box>
   )
 })
