@@ -3,8 +3,11 @@ name: Sync & Deploy
 on:
   push:
     branches: [main]
+  # Triggered instantly via webhook from chatdaddy/frontend-dashboard-v2 on push to akil/review
+  repository_dispatch:
+    types: [v2-push]
   schedule:
-    # Sync every 30 minutes
+    # Fallback sync every 30 minutes (catches anything the webhook misses)
     - cron: '*/30 * * * *'
   workflow_dispatch:
 
