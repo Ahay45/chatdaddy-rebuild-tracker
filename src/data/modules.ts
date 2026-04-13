@@ -161,7 +161,7 @@ const STATIC: Record<string, StaticConfig> = {
     icon: '💬',
     category: 'core',
     status: 'in-progress',
-    progress: 88,
+    progress: 91,
     oldFileCount: 62,
     subFeatures: [
       // Chat list
@@ -211,14 +211,14 @@ const STATIC: Record<string, StaticConfig> = {
 
       // Compose
       { name: 'Compose bar (text input)', done: true },
-      { name: 'File / attachment upload', done: false },
-      { name: 'Message scheduling (date/time picker)', done: false },
+      { name: 'File / attachment upload', done: true },
+      { name: 'Message scheduling (date/time picker)', done: true },
       { name: 'Scheduled messages toggle/visibility', done: false },
       { name: 'Button builder in compose (up to 3)', done: true },
-      { name: 'Template message selection', done: false },
+      { name: 'Template message selection', done: true },
       { name: 'Signature editor and management', done: true },
       { name: 'Variable / dynamic text insertion', done: true },
-      { name: 'Audio recording in compose', done: false },
+      { name: 'Audio recording in compose', done: true },
       { name: 'WhatsApp Pay / payment request', done: false },
       { name: 'WhatsApp Shop / catalog send', done: false },
 
@@ -251,7 +251,7 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Image lightbox / media viewer', done: true },
       { name: 'Message bubbles redesign (SaaS aesthetic)', done: true },
     ],
-    notes: 'Inbox is nearly complete. Added: channel selector, search, filter presets, active filter chips, scroll-to-bottom, all message types (link preview, interactive buttons, poll, product, order, sticker, reactions, transcription, location, vCard), forward/delete/react, bulk tag/export, full contact profile panel (notes, tags, tickets, orders, active-hours chart, group participants), compose button builder, signature, variables, inbox settings modal. Remaining: template selection, audio recording, WhatsApp Pay/Shop, drag-and-drop profile sections.',
+    notes: 'Inbox is nearly complete. Added: file/attachment upload, scheduling, template picker, audio recording. Remaining: scheduled messages view, WhatsApp Pay, catalog send, drag-and-drop profile sections.',
   },
 
   crm: {
