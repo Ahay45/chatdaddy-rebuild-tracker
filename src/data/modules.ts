@@ -259,7 +259,7 @@ const STATIC: Record<string, StaticConfig> = {
     icon: '👥',
     category: 'core',
     status: 'in-progress',
-    progress: 65,
+    progress: 90,
     oldFileCount: 34,
     subFeatures: [
       // Contacts list
@@ -268,9 +268,9 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Create contact dialog', done: true },
       { name: 'Import contacts dialog', done: true },
       { name: 'Delete contacts dialog', done: true },
-      { name: 'Bulk contact operations', done: false },
-      { name: 'Export contacts', done: false },
-      { name: 'Contact search', done: false },
+      { name: 'Bulk contact operations', done: true },
+      { name: 'Export contacts', done: true },
+      { name: 'Contact search', done: true },
 
       // Filters
       { name: 'Filter panel — tags (AND/OR)', done: true },
@@ -279,41 +279,41 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Filter panel — contact type', done: true },
       { name: 'Filter panel — date range', done: true },
       { name: 'Filter panel — custom fields', done: false },
-      { name: 'Active filters display', done: false },
+      { name: 'Active filters display', done: true },
 
       // Board / kanban
       { name: 'Board / kanban view', done: true },
       { name: 'Create ticket dialog', done: true },
       { name: 'Ticket card (kanban)', done: true },
-      { name: 'Create / edit / delete boards', done: false },
-      { name: 'Board dropdown selector', done: false },
-      { name: 'Pipeline stages CRUD (add/edit/delete)', done: false },
-      { name: 'Stage drag-and-drop reordering', done: false },
-      { name: 'Stage color customization', done: false },
-      { name: 'Ticket drag-and-drop between stages', done: false },
+      { name: 'Create / edit / delete boards', done: true },
+      { name: 'Board dropdown selector', done: true },
+      { name: 'Pipeline stages CRUD (add/edit/delete)', done: true },
+      { name: 'Stage drag-and-drop reordering', done: true },
+      { name: 'Stage color customization', done: true },
+      { name: 'Ticket drag-and-drop between stages', done: true },
       { name: 'Ticket reordering within stage', done: false },
-      { name: 'Ticket list / table view', done: false },
+      { name: 'Ticket list / table view', done: true },
 
       // Ticket detail
-      { name: 'Ticket detail panel / drawer', done: false },
-      { name: 'Ticket title editing', done: false },
-      { name: 'Activity timeline on ticket', done: false },
-      { name: 'Notes on ticket', done: false },
-      { name: 'Custom fields on ticket', done: false },
+      { name: 'Ticket detail panel / drawer', done: true },
+      { name: 'Ticket title editing', done: true },
+      { name: 'Activity timeline on ticket', done: true },
+      { name: 'Notes on ticket', done: true },
+      { name: 'Custom fields on ticket', done: true },
       { name: 'Linked messages / conversations', done: false },
       { name: 'Linked call logs', done: false },
-      { name: 'AI analysis option on ticket', done: false },
-      { name: 'Credit transaction history on ticket', done: false },
+      { name: 'AI analysis option on ticket', done: true },
+      { name: 'Credit transaction history on ticket', done: true },
 
       // Property management
-      { name: 'Card property visibility management', done: false },
+      { name: 'Card property visibility management', done: true },
       { name: 'Table property visibility settings', done: false },
 
       // Sorting
       { name: 'Sort options', done: false },
-      { name: 'Assignee selector on ticket', done: false },
+      { name: 'Assignee selector on ticket', done: true },
     ],
-    notes: 'Contacts list, filters, and basic kanban done. Board CRUD, stages CRUD, drag-and-drop, ticket detail panel not yet rebuilt.',
+    notes: 'Contacts list, filters, active chips, bulk ops, export all done. Board/stage CRUD, drag-and-drop, ticket detail (5 tabs: notes, activity, AI, credits, assignee) all done.',
   },
 
   channels: {
