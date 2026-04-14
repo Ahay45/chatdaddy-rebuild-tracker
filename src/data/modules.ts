@@ -161,7 +161,7 @@ const STATIC: Record<string, StaticConfig> = {
     icon: '💬',
     category: 'core',
     status: 'in-progress',
-    progress: 72,
+    progress: 85,
     oldFileCount: 62,
     subFeatures: [
       // ── Chat list ────────────────────────────────────────────────────────────
@@ -285,21 +285,21 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Profile tab — phone number display', done: true },
       { name: 'Profile tab — assignee selector', done: true },
       { name: 'Profile tab — tag selector + add-to-contacts', done: true },
-      { name: 'Profile tab — show all tags modal', done: false },
-      { name: 'Profile tab — message metrics summary (MsgsMetricsView)', done: false },
+      { name: 'Profile tab — show all tags modal', done: true },
+      { name: 'Profile tab — message metrics summary (MsgsMetricsView)', done: true },
       { name: 'Profile tab — custom fields accordion (display + edit)', done: true },
       { name: 'Profile tab — manage custom fields dialog', done: false },
       { name: 'Profile tab — active hours chart', done: true },
       { name: 'Profile tab — linked tickets / CRM board', done: true },
       { name: 'Profile tab — linked orders (EasySend)', done: true },
       { name: 'Profile tab — group participants list', done: true },
-      { name: 'Profile tab — admin panel section (admin-only)', done: false },
+      { name: 'Profile tab — admin panel section (admin-only)', done: true },
       { name: 'Profile tab — drag-and-drop reorderable sections', done: false },
       { name: 'Notes tab (internal team notes)', done: true },
-      { name: 'Automation tab — active automations list', done: false },
-      { name: 'Automation tab — pending bot fire records', done: false },
-      { name: 'Automation tab — pause / resume bot', done: false },
-      { name: 'Automation tab — bot picker for manual trigger', done: false },
+      { name: 'Automation tab — active automations list', done: true },
+      { name: 'Automation tab — pending bot fire records', done: true },
+      { name: 'Automation tab — pause / resume bot', done: true },
+      { name: 'Automation tab — bot picker for manual trigger', done: true },
 
       // ── Compose extras ────────────────────────────────────────────────────
       { name: 'Internal note compose mode (toggle to send internal note vs message)', done: false },
@@ -319,20 +319,20 @@ const STATIC: Record<string, StaticConfig> = {
 
       // ── Inbox Settings modal ──────────────────────────────────────────────
       { name: 'Inbox settings modal (gear icon)', done: true },
-      { name: 'Setting — Incognito mode (read without marking read)', done: false },
-      { name: 'Setting — Show channel name vs phone number', done: false },
-      { name: 'Setting — Full date format toggle', done: false },
-      { name: 'Setting — Hide scheduled messages toggle', done: false },
-      { name: 'Setting — Include archived chats by default', done: false },
-      { name: 'Setting — Warn on message flow edit', done: false },
-      { name: 'Setting — AI auto-suggest replies toggle', done: false },
+      { name: 'Setting — Incognito mode (read without marking read)', done: true },
+      { name: 'Setting — Show channel name vs phone number', done: true },
+      { name: 'Setting — Full date format toggle', done: true },
+      { name: 'Setting — Hide scheduled messages toggle', done: true },
+      { name: 'Setting — Include archived chats by default', done: true },
+      { name: 'Setting — Warn on message flow edit', done: true },
+      { name: 'Setting — AI auto-suggest replies toggle', done: true },
 
       // ── Misc ──────────────────────────────────────────────────────────────
       { name: 'Image lightbox / media viewer', done: true },
       { name: 'Message bubbles redesign (SaaS aesthetic)', done: true },
       { name: 'Profile image view', done: true },
     ],
-    notes: 'Major batch complete (commit 17b6051): saved tag/assignee filter presets, ListMessageView, SubjectLineView, ClarifyTextView, AosEvalBadge, deleted message reveal, AttachmentPreviewBar, SimpleAudioPlayer, OrderMessageSelector, TemplateVariableInputDialog, ScheduleMessagePopover, MsgFlowWarningModal, WindowStatusBadges (24h+FEP), FilteredMessagesPanel, FetchFromPlatformButton, ExportChatDialog, ExportMediaDialog, ChatHeaderActions (mute/refresh/archive/read/clear/export), ReplySuggestionsPanel with schedule+chatbox, star/bookmark, useWindowStatus, useSavedTagFilters, useSavedAssigneeFilters, useReplySuggestions. Remaining: WhatsApp Pay, catalog send, admin panel, automation tab, inbox settings toggles, profile extras.',
+    notes: 'Batch 2 complete (commit 8d6d2c6): Automation tab (active automations, scheduled bot actions, bot picker, pause/resume), InboxSettings (7 toggles: incognito, channel name, date format, hide scheduled, include archived, warn on flow edit, AI auto-suggest), Profile extras (show all tags modal, message metrics 2x2 grid, admin panel with copyable IDs + raw JSON). Remaining: WhatsApp Pay, catalog send, internal note compose mode, private reply, WA inline connection pages, profile drag-to-reorder.',
   },
 
   crm: {
