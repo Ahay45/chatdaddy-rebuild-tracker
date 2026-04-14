@@ -378,42 +378,79 @@ const STATIC: Record<string, StaticConfig> = {
 
   dashboard: {
     label: 'Dashboard',
+    icon: '🏠',
+    category: 'core',
+    status: 'in-progress',
+    progress: 0,
+    oldFileCount: 12,
+    subFeatures: [
+      // Header / summary cards
+      { name: 'Dashboard header with team name and greeting', done: true },
+      { name: 'Summary KPI cards (contacts, channels, bots, credits)', done: true },
+      { name: 'Trial achievement banner (credits + progress ring)', done: true },
+      // Onboarding checklist
+      { name: 'Onboarding / getting-started checklist (accordion)', done: true },
+      { name: 'Onboarding progress bar and step completion', done: true },
+      { name: 'Onboarding steps team-wide tracking', done: false },
+      // Channel recommendations
+      { name: 'Channel recommendation cards (connect first channel)', done: true },
+      { name: 'Initial landing page (no channels connected state)', done: true },
+      // Exploring / feature discovery
+      { name: 'Exploring / feature discovery section (ExploringCard grid)', done: false },
+      // Quick metrics (GettingStarted metrics section)
+      { name: 'Quick metric cards (messages sent/received, reply speed, time saved)', done: true },
+      // Mobile
+      { name: 'Mobile view buttons (View Inbox shortcut)', done: false },
+      // Feature announcements
+      { name: 'Feature update announcement modal (auto-show once per session)', done: false },
+    ],
+    notes: 'Dashboard = the "getting-started" home page (route: /getting-started). Has header, trial banner, onboarding checklist, channel recs, exploring section, and quick KPI cards. Separate from the full Analytics page.',
+  },
+
+  analytics: {
+    label: 'Analytics',
     icon: '📊',
     category: 'core',
     status: 'in-progress',
-    progress: 52,
+    progress: 0,
     oldFileCount: 22,
     subFeatures: [
-      { name: 'Stats / KPI cards', done: true },
-      { name: 'Onboarding / getting-started checklist', done: true },
-      { name: 'Channel recommendation cards', done: true },
-      { name: 'Add widget dialog (searchable metric picker + viz selector)', done: true },
+      // Widget grid
       { name: 'Dashboard layout manager (drag-and-drop, resize widgets)', done: true },
+      { name: 'Add widget dialog (searchable metric picker + viz selector)', done: true },
+      // Dashboard management
       { name: 'New dashboard creation modal (with default widgets toggle)', done: true },
       { name: 'Dashboard delete', done: true },
       { name: 'Dashboard rename (inline edit)', done: true },
       { name: 'Dashboard sharing (per-user and team-level permissions)', done: true },
       { name: 'Request edit access (non-owner flow)', done: false },
+      // Time / grouping controls
       { name: 'Time period / date range selector', done: true },
       { name: 'Aggregate selector (day / week / month grouping)', done: true },
+      { name: 'Dashboard channel and tag filters bar', done: true },
+      // Chart widget types
       { name: 'Line chart widget', done: true },
       { name: 'Pie chart widget', done: true },
       { name: 'Bar chart widget', done: true },
       { name: 'Snapshot / KPI comparison widget', done: true },
       { name: 'Table / data grid widget', done: true },
       { name: 'Funnel chart widget', done: false },
+      // Per-widget features
       { name: 'Per-widget metric breakdown (by user, tag, channel, automation)', done: true },
-      { name: 'Per-widget filter', done: true },
-      { name: 'Metric comparison period vs previous period', done: true },
+      { name: 'Per-widget filter popover', done: true },
+      { name: 'Metric comparison: period vs previous period', done: true },
       { name: 'Per-widget CSV data export', done: true },
-      { name: 'Dashboard PNG export (html-to-image)', done: true },
       { name: 'Widget-level error retry', done: true },
-      { name: 'Dashboard performance tabs (Chat / Agent)', done: false },
-      { name: 'Dashboard channel and tag filters bar', done: true },
-      { name: 'Team analytics view (agent performance table)', done: true },
+      // Performance tabs
+      { name: 'Performance tabs header (Chat / Agent)', done: false },
+      { name: 'Chat performance tab (widget grid)', done: true },
+      { name: 'Agent performance tab (agent table)', done: true },
+      { name: 'Marketing performance tab', done: false },
+      { name: 'Sales performance tab', done: false },
+      // Export
+      { name: 'Dashboard PNG export (html-to-image)', done: true },
     ],
-    progress: 82,
-    notes: 'Full analytics rebuild complete. All major features shipped: drag-drop widget grid, 5 widget types, per-widget breakdown selector (None/Agent/Channel/Tag/Automation), per-widget filter popover, aggregate pills (Day/Week/Month), period-vs-period comparison on LineChart+Snapshot, per-widget CSV export, dashboard PNG export (html-to-image), inline dashboard rename (double-click), sharing dialog, global filter bar (channel/tag/agent chips), widget error retry. Remaining: funnel chart, request-edit-access flow, dashboard performance tabs.',
+    notes: 'Analytics = the full chart dashboard page (route: /analytics). Separate from the home Dashboard page. All core features shipped: drag-drop grid, 5 widget types, per-widget breakdown/filter/CSV/retry, aggregate pills, period comparison, sharing, export. Remaining: funnel chart, request-edit-access, marketing/sales performance tabs.',
   },
 
   // ── Engage ───────────────────────────────────────────────────────────────────
@@ -886,6 +923,20 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Locale context provider', done: false },
     ],
     notes: 'Old app supports 4 languages. V2 has no i18n wired yet.',
+  },
+
+  'help-support': {
+    label: 'Help & Support',
+    icon: '🆘',
+    category: 'missing',
+    status: 'not-started',
+    progress: 0,
+    oldFileCount: 1,
+    subFeatures: [
+      { name: 'Help center iframe embed (chatdaddy-helpcenter.chatdaddy.tech)', done: false },
+      { name: 'Help support route (/help-support)', done: false },
+    ],
+    notes: 'Simple iframe embedding the ChatDaddy help center. Old app: src/HelpSupport/index.tsx. Not started in v2.',
   },
 }
 
