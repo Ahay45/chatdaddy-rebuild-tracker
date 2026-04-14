@@ -459,24 +459,29 @@
       ]
     },
     "analytics": {
+      "id": "analytics",
       "fileCount": 15,
+      "componentCount": 12,
       "hasStore": true,
       "hasQueries": true,
       "hasRoute": true,
       "isEmpty": false,
-      "components": [
-        "AddWidgetDialog",
-        "DashboardSelector",
-        "NewDashboardModal",
-        "TeamAnalyticsView",
-        "TimePeriodSelector",
-        "WidgetGrid",
-        "BarChartWidget",
-        "LineChartWidget",
-        "PieChartWidget",
-        "SnapshotWidget",
-        "TableWidget",
-        "WidgetShell"
+      "files": [
+        "src/modules/analytics/index.tsx",
+        "src/modules/analytics/store/analytics.store.ts",
+        "src/modules/analytics/queries/analytics.queries.ts",
+        "src/modules/analytics/components/AddWidgetDialog.tsx",
+        "src/modules/analytics/components/DashboardSelector.tsx",
+        "src/modules/analytics/components/NewDashboardModal.tsx",
+        "src/modules/analytics/components/TeamAnalyticsView.tsx",
+        "src/modules/analytics/components/TimePeriodSelector.tsx",
+        "src/modules/analytics/components/WidgetGrid.tsx",
+        "src/modules/analytics/components/widgets/BarChartWidget.tsx",
+        "src/modules/analytics/components/widgets/LineChartWidget.tsx",
+        "src/modules/analytics/components/widgets/PieChartWidget.tsx",
+        "src/modules/analytics/components/widgets/SnapshotWidget.tsx",
+        "src/modules/analytics/components/widgets/TableWidget.tsx",
+        "src/modules/analytics/components/widgets/WidgetShell.tsx"
       ]
     }
   }
