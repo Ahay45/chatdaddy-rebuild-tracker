@@ -514,13 +514,13 @@ const STATIC: Record<string, StaticConfig> = {
     icon: '🏠',
     category: 'core',
     status: 'in-progress',
-    progress: 0,
+    progress: 85,
     oldFileCount: 12,
     subFeatures: [
       // Header / summary cards
       { name: 'Dashboard header with team name and greeting', done: true },
       { name: 'Summary KPI cards (contacts, channels, bots, credits)', done: true },
-      { name: 'Trial achievement banner (credits + progress ring)', done: false },
+      { name: 'Trial achievement banner (credits + progress ring)', done: true },
       // Onboarding checklist
       { name: 'Onboarding / getting-started checklist (accordion)', done: true },
       { name: 'Onboarding progress bar and step completion', done: true },
@@ -529,17 +529,17 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Channel recommendation cards (connect first channel)', done: true },
       { name: 'Initial landing page (no channels connected state)', done: true },
       // Exploring / feature discovery
-      { name: 'Exploring / feature discovery section (ExploringCard grid)', done: false },
+      { name: 'Exploring / feature discovery section (ExploringCard grid)', done: true },
       // Quick metrics (GettingStarted metrics section)
       { name: 'Quick metric cards (messages sent/received, reply speed, time saved)', done: true },
       // Mobile
-      { name: 'Mobile view buttons (View Inbox shortcut)', done: false },
+      { name: 'Mobile view buttons (View Inbox shortcut)', done: true },
       // Feature announcements
-      { name: 'Feature update announcement modal (auto-show once per session)', done: false },
-      { name: 'Support analytics dialog (SupportAnalyticsDialog)', done: false },
-      { name: 'WABA intro event listener (WABAIntroModal trigger on first WABA connect)', done: false },
+      { name: 'Feature update announcement modal (auto-show once per session)', done: true },
+      { name: 'Support analytics dialog (SupportAnalyticsDialog)', done: true },
+      { name: 'WABA intro event listener (WABAIntroModal trigger on first WABA connect)', done: true },
     ],
-    notes: 'Dashboard = the "getting-started" home page (route: /getting-started). Has header, trial banner, onboarding checklist, channel recs, exploring section, and quick KPI cards. Separate from the full Analytics page.',
+    notes: 'Dashboard = the "getting-started" home page (route: /getting-started). Has header, trial banner (credit ring + 5 stat tiles), onboarding checklist, channel recs, exploring section (8 cards, desktop-only), mobile quick-access buttons, feature update modal (auto-show once per session), support analytics dialog, WABA intro listener (5-step onboarding dialog). Separate from the full Analytics page.',
   },
 
   analytics: {
