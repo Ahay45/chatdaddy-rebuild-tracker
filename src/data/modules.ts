@@ -161,28 +161,35 @@ const STATIC: Record<string, StaticConfig> = {
     icon: '💬',
     category: 'core',
     status: 'in-progress',
-    progress: 91,
+    progress: 0,
     oldFileCount: 62,
     subFeatures: [
-      // Chat list
+      // ── Chat list ────────────────────────────────────────────────────────────
       { name: 'Chat list (virtualized scroll)', done: true },
       { name: 'Unread count badges', done: true },
       { name: 'Assignee display on chat row', done: true },
       { name: 'Tag chips on chat row', done: true },
       { name: 'Account / channel selector in header', done: true },
       { name: 'Search messages and contacts', done: true },
-      { name: 'Pinned filter presets', done: true },
+      { name: 'Pinned filter presets (top bar)', done: true },
+      { name: 'Pin filter dialog (create / edit named filters)', done: true },
+      { name: 'No channels empty state', done: true },
+      { name: 'Feature carousel / onboarding tooltip', done: false },
 
-      // Filters
+      // ── Filters (left panel) ──────────────────────────────────────────────
       { name: 'Filter panel — channels', done: true },
       { name: 'Filter panel — tags (AND/OR)', done: true },
       { name: 'Filter panel — assignee', done: true },
       { name: 'Filter panel — date range', done: true },
+      { name: 'Filter panel — unread / groups / individuals / archived quick filters', done: true },
       { name: 'Filter panel — ticket/CRM stage', done: false },
       { name: 'Filter panel — custom fields', done: false },
       { name: 'Active filter display chips', done: true },
+      { name: 'Saved tag filter presets (useSavedTagFilters)', done: false },
+      { name: 'Saved assignee filter presets (useSavedAssigneeFilters)', done: false },
+      { name: 'Manage channels dialog from filter panel', done: false },
 
-      // Message thread
+      // ── Message thread ────────────────────────────────────────────────────
       { name: 'Message thread (chronological)', done: true },
       { name: 'Date dividers in thread', done: true },
       { name: 'Auto-scroll to latest message', done: true },
@@ -190,8 +197,10 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Load more messages (pagination)', done: true },
       { name: 'Quoted / reply message preview', done: true },
       { name: 'Message status indicators (sent/delivered/read)', done: true },
+      { name: 'Search within conversation (FilteredMessages)', done: false },
+      { name: 'Fetch messages from platform button (FetchMsgsFromPlatformView)', done: false },
 
-      // Message types
+      // ── Message types ─────────────────────────────────────────────────────
       { name: 'Text message bubble', done: true },
       { name: 'Image message', done: true },
       { name: 'Video message', done: true },
@@ -201,57 +210,113 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Location message', done: true },
       { name: 'Contact card (vCard)', done: true },
       { name: 'Interactive buttons message', done: true },
-      { name: 'Poll message with options', done: true },
+      { name: 'Interactive list message (ListView)', done: false },
+      { name: 'Poll message with options + voter tooltip', done: true },
       { name: 'Product / catalog message', done: true },
       { name: 'Order message with details', done: true },
       { name: 'Message reactions display', done: true },
       { name: 'Sticker message', done: true },
-      { name: 'Voice-to-text transcription', done: true },
+      { name: 'Voice-to-text transcription (TranscriptionView)', done: true },
+      { name: 'Email subject line display (SubjectView)', done: false },
       { name: 'Unsupported message type fallback', done: true },
+      { name: 'Deleted message reveal toggle', done: false },
+      { name: 'AI clarify text view (ClarifyTextView)', done: false },
+      { name: 'AOS eval popover (AI quality score per message)', done: false },
 
-      // Compose
+      // ── Compose ───────────────────────────────────────────────────────────
       { name: 'Compose bar (text input)', done: true },
       { name: 'File / attachment upload', done: true },
+      { name: 'Attachment preview before send (AttachmentPreview)', done: false },
       { name: 'Message scheduling (date/time picker)', done: true },
       { name: 'Scheduled messages toggle/visibility', done: false },
       { name: 'Button builder in compose (up to 3)', done: true },
       { name: 'Template message selection', done: true },
+      { name: 'Template variable input dialog (TemplateVariableInput)', done: false },
       { name: 'Signature editor and management', done: true },
       { name: 'Variable / dynamic text insertion', done: true },
       { name: 'Audio recording in compose', done: true },
-      { name: 'WhatsApp Pay / payment request', done: false },
+      { name: 'Simple audio player in compose (SimpleAudioPlayer)', done: false },
+      { name: 'Order message selector in compose (OrderMessageSelector)', done: false },
+      { name: 'WhatsApp Pay / payment request (PaymentRequestor)', done: false },
       { name: 'WhatsApp Shop / catalog send', done: false },
+      { name: 'WABA 24h messaging window status tooltip', done: false },
+      { name: 'WABA Free Entry Point (FEP) window status tooltip', done: false },
+      { name: 'Message window expired warning + template CTA', done: false },
+      { name: 'Compose dropdown toolbar (emoji, attach, more options)', done: true },
+      { name: 'Message flow warning modal (MsgFlowWarningModal)', done: false },
+      { name: 'AI auto-suggest replies panel (useReplySuggestions)', done: false },
+      { name: 'AI reply suggestion schedule option', done: false },
+      { name: 'AI reply open chatbox action', done: false },
 
-      // Message actions
+      // ── Message actions (per-message context menu) ────────────────────────
       { name: 'Message context menu', done: true },
+      { name: 'Reply to message', done: true },
       { name: 'Forward message to other contacts', done: true },
       { name: 'Delete message (with confirmation)', done: true },
       { name: 'React to message', done: true },
+      { name: 'Copy message text', done: false },
+      { name: 'Star / bookmark message', done: false },
+      { name: 'Reveal deleted message toggle', done: false },
 
-      // Bulk operations
+      // ── Chat-level actions (profile actions menu) ─────────────────────────
+      { name: 'Pin / unpin chat', done: false },
+      { name: 'Mute / unmute notifications', done: false },
+      { name: 'Mark as read / unread', done: false },
+      { name: 'Archive / unarchive chat', done: false },
+      { name: 'Clear all pending messages', done: false },
+      { name: 'Clear all cancelled messages', done: false },
+      { name: 'Refresh messages', done: false },
+      { name: 'Export chat history (CSV)', done: false },
+      { name: 'Export media of last 48 hours', done: false },
+      { name: 'Export group members', done: false },
+      { name: 'Delete chat', done: false },
+      { name: 'Manage custom fields (from chat actions menu)', done: false },
+      { name: 'Search within conversation toggle', done: false },
+
+      // ── Bulk operations ───────────────────────────────────────────────────
       { name: 'Bulk action bar (select all)', done: true },
       { name: 'Bulk assign', done: true },
       { name: 'Bulk tag', done: true },
       { name: 'Bulk export', done: true },
 
-      // Right panel — Contact profile
-      { name: 'Contact profile side panel', done: true },
-      { name: 'Custom fields display and edit', done: true },
-      { name: 'Contact active-hours chart', done: true },
-      { name: 'Contact notes (CRUD)', done: true },
-      { name: 'Contact tags management', done: true },
-      { name: 'Linked tickets / CRM board', done: true },
-      { name: 'Linked orders in profile', done: true },
-      { name: 'Group participants list', done: true },
-      { name: 'Drag-and-drop reorderable profile sections', done: false },
-
-      // Inbox settings / config
-      { name: 'Inbox settings modal (auto-assign, working hours)', done: true },
+      // ── Right panel — Contact profile (tabs) ──────────────────────────────
+      { name: 'Contact profile side panel (collapsible)', done: true },
+      { name: 'Profile tab — contact name (inline edit)', done: true },
+      { name: 'Profile tab — phone number display', done: true },
+      { name: 'Profile tab — assignee selector', done: true },
+      { name: 'Profile tab — tag selector + add-to-contacts', done: true },
+      { name: 'Profile tab — show all tags modal', done: false },
+      { name: 'Profile tab — message metrics summary (MsgsMetricsView)', done: false },
+      { name: 'Profile tab — custom fields accordion (display + edit)', done: true },
+      { name: 'Profile tab — manage custom fields dialog', done: false },
+      { name: 'Profile tab — active hours chart', done: true },
+      { name: 'Profile tab — linked tickets / CRM board', done: true },
+      { name: 'Profile tab — linked orders (EasySend)', done: true },
+      { name: 'Profile tab — group participants list', done: true },
+      { name: 'Profile tab — admin panel section (admin-only)', done: false },
+      { name: 'Profile tab — drag-and-drop reorderable sections', done: false },
       { name: 'Notes tab (internal team notes)', done: true },
+      { name: 'Automation tab — active automations list', done: false },
+      { name: 'Automation tab — pending bot fire records', done: false },
+      { name: 'Automation tab — pause / resume bot', done: false },
+      { name: 'Automation tab — bot picker for manual trigger', done: false },
+
+      // ── Inbox Settings modal ──────────────────────────────────────────────
+      { name: 'Inbox settings modal (gear icon)', done: true },
+      { name: 'Setting — Incognito mode (read without marking read)', done: false },
+      { name: 'Setting — Show channel name vs phone number', done: false },
+      { name: 'Setting — Full date format toggle', done: false },
+      { name: 'Setting — Hide scheduled messages toggle', done: false },
+      { name: 'Setting — Include archived chats by default', done: false },
+      { name: 'Setting — Warn on message flow edit', done: false },
+      { name: 'Setting — AI auto-suggest replies toggle', done: false },
+
+      // ── Misc ──────────────────────────────────────────────────────────────
       { name: 'Image lightbox / media viewer', done: true },
       { name: 'Message bubbles redesign (SaaS aesthetic)', done: true },
+      { name: 'Profile image view', done: true },
     ],
-    notes: 'Inbox is nearly complete. Added: file/attachment upload, scheduling, template picker, audio recording. Remaining: scheduled messages view, WhatsApp Pay, catalog send, drag-and-drop profile sections.',
+    notes: 'Inbox core (chat list, thread, compose, message types, bulk ops, contact profile) is largely done. Missing detail: inbox settings toggles (7 individual settings), chat-level actions menu (pin/mute/archive/export/delete), compose extras (attachment preview, template variable input, order selector, WABA window tooltips, AI suggest panel), profile extras (admin panel, automation tab, show-all-tags modal, message metrics), filter extras (saved presets, manage channels). Full feature count expanded from ~50 to ~110 items.',
   },
 
   crm: {
