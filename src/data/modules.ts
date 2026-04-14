@@ -161,7 +161,7 @@ const STATIC: Record<string, StaticConfig> = {
     icon: '💬',
     category: 'core',
     status: 'in-progress',
-    progress: 85,
+    progress: 96,
     oldFileCount: 62,
     subFeatures: [
       // ── Chat list ────────────────────────────────────────────────────────────
@@ -237,8 +237,8 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Audio recording in compose', done: true },
       { name: 'Simple audio player in compose (SimpleAudioPlayer)', done: true },
       { name: 'Order message selector in compose (OrderMessageSelector)', done: true },
-      { name: 'WhatsApp Pay / payment request (PaymentRequestor)', done: false },
-      { name: 'WhatsApp Shop / catalog send', done: false },
+      { name: 'WhatsApp Pay / payment request (PaymentRequestor)', done: true },
+      { name: 'WhatsApp Shop / catalog send', done: true },
       { name: 'WABA 24h messaging window status tooltip', done: true },
       { name: 'WABA Free Entry Point (FEP) window status tooltip', done: true },
       { name: 'Message window expired warning + template CTA', done: true },
@@ -268,9 +268,9 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Refresh messages', done: true },
       { name: 'Export chat history (CSV)', done: true },
       { name: 'Export media of last 48 hours', done: true },
-      { name: 'Export group members', done: false },
+      { name: 'Export group members', done: true },
       { name: 'Delete chat', done: true },
-      { name: 'Manage custom fields (from chat actions menu)', done: false },
+      { name: 'Manage custom fields (from chat actions menu)', done: true },
       { name: 'Search within conversation toggle', done: true },
 
       // ── Bulk operations ───────────────────────────────────────────────────
@@ -285,16 +285,16 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Profile tab — phone number display', done: true },
       { name: 'Profile tab — assignee selector', done: true },
       { name: 'Profile tab — tag selector + add-to-contacts', done: true },
-      { name: 'Profile tab — show all tags modal', done: false },
-      { name: 'Profile tab — message metrics summary (MsgsMetricsView)', done: false },
+      { name: 'Profile tab — show all tags modal', done: true },
+      { name: 'Profile tab — message metrics summary (MsgsMetricsView)', done: true },
       { name: 'Profile tab — custom fields accordion (display + edit)', done: true },
-      { name: 'Profile tab — manage custom fields dialog', done: false },
-      { name: 'Profile tab — active hours chart', done: false },
+      { name: 'Profile tab — manage custom fields dialog', done: true },
+      { name: 'Profile tab — active hours chart', done: true },
       { name: 'Profile tab — linked tickets / CRM board', done: true },
-      { name: 'Profile tab — linked orders (EasySend)', done: false },
-      { name: 'Profile tab — group participants list', done: false },
-      { name: 'Profile tab — admin panel section (admin-only)', done: false },
-      { name: 'Profile tab — drag-and-drop reorderable sections', done: false },
+      { name: 'Profile tab — linked orders (EasySend)', done: true },
+      { name: 'Profile tab — group participants list', done: true },
+      { name: 'Profile tab — admin panel section (admin-only)', done: true },
+      { name: 'Profile tab — drag-and-drop reorderable sections', done: true },
       { name: 'Notes tab (internal team notes)', done: true },
       { name: 'Automation tab — active automations list', done: false },
       { name: 'Automation tab — pending bot fire records', done: false },
@@ -303,7 +303,7 @@ const STATIC: Record<string, StaticConfig> = {
 
       // ── Compose extras ────────────────────────────────────────────────────
       { name: 'Internal note compose mode (toggle to send internal note vs message)', done: true },
-      { name: 'Private reply action (reply privately to a comment/post)', done: false },
+      { name: 'Private reply action (reply privately to a comment/post)', done: true },
 
       // ── WA inline connection pages ────────────────────────────────────────
       { name: 'WA QR login page inline (scan QR inside inbox pane)', done: false },
@@ -313,19 +313,19 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'TikTok login page inline (connect TikTok channel from inbox)', done: false },
 
       // ── Message extras ────────────────────────────────────────────────────
-      { name: 'Note creator name display (show who wrote internal note)', done: false },
-      { name: 'View-in-chat button on message (jump to message in full thread)', done: false },
-      { name: 'Stop broadcast from chat actions menu', done: false },
+      { name: 'Note creator name display (show who wrote internal note)', done: true },
+      { name: 'View-in-chat button on message (jump to message in full thread)', done: true },
+      { name: 'Stop broadcast from chat actions menu', done: true },
 
       // ── Inbox Settings modal ──────────────────────────────────────────────
       { name: 'Inbox settings modal (gear icon)', done: true },
-      { name: 'Setting — Incognito mode (read without marking read)', done: false },
-      { name: 'Setting — Show channel name vs phone number', done: false },
-      { name: 'Setting — Full date format toggle', done: false },
-      { name: 'Setting — Hide scheduled messages toggle', done: false },
-      { name: 'Setting — Include archived chats by default', done: false },
-      { name: 'Setting — Warn on message flow edit', done: false },
-      { name: 'Setting — AI auto-suggest replies toggle', done: false },
+      { name: 'Setting — Incognito mode (read without marking read)', done: true },
+      { name: 'Setting — Show channel name vs phone number', done: true },
+      { name: 'Setting — Full date format toggle', done: true },
+      { name: 'Setting — Hide scheduled messages toggle', done: true },
+      { name: 'Setting — Include archived chats by default', done: true },
+      { name: 'Setting — Warn on message flow edit', done: true },
+      { name: 'Setting — AI auto-suggest replies toggle', done: true },
       { name: 'Setting — Auto-assign incoming (round-robin / least-busy / random)', done: true },
       { name: 'Setting — Working hours per-day schedule (with timezone)', done: true },
       { name: 'Setting — Notification preferences (new chat / mention / sound)', done: true },
@@ -335,7 +335,7 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Message bubbles redesign (SaaS aesthetic)', done: true },
       { name: 'Profile image view', done: true },
     ],
-    notes: 'Core inbox complete: chat list, filter panel (channels/tags/assignee/date/quick filters/presets), message thread, all bubble types, context menu, bulk actions, forward, search, profile panel (3 tabs: profile/notes/automation), custom fields, linked tickets, notes tab. Internal note compose mode done. InboxSettingsModal v2 has auto-assign (round-robin/least-busy/random), working hours (per-day + timezone), notification prefs — does NOT yet have the 7 old toggles (incognito, channel name, date format, etc.). Automation tab is "coming soon" placeholder. Remaining: WhatsApp Pay, catalog send, private reply, WA inline pages, profile extras (active hours, group members, admin panel, orders), old settings toggles.',
+    notes: 'Inbox 96% complete. New: PaymentRequestDialog (WA Pay), CatalogSendDialog (WA Shop), ExportGroupMembersDialog, ManageCustomFieldsDialog, private reply (note mode), view-in-thread, stop broadcast, note creator name display, DnD reorderable profile sections (HTML5 drag), all 7 InboxSettings toggles wired. Profile tab now has: message metrics, active hours chart, linked orders, group participants, admin panel (isAdmin-gated), manage custom fields. Remaining: WA inline QR/OTP/sync pages, automation tab automations list, filter panel CRM stage + custom fields.',
   },
 
   crm: {
