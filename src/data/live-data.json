@@ -34,7 +34,7 @@
     },
     {
       "sha": "5124d1f",
-      "message": "feat(inbox): wire full filter functionality from v1 — channels, tags AND/OR, assignee, date range",
+      "message": "feat(inbox): wire full filter functionality from v1 \u2014 channels, tags AND/OR, assignee, date range",
       "date": "2026-04-09T06:59:55Z",
       "author": "Ahay45"
     },
@@ -456,6 +456,27 @@
         "src/modules/tools/index.tsx",
         "src/modules/tools/queries",
         "src/modules/tools/queries/tools.queries.ts"
+      ]
+    },
+    "analytics": {
+      "fileCount": 15,
+      "hasStore": true,
+      "hasQueries": true,
+      "hasRoute": true,
+      "isEmpty": false,
+      "components": [
+        "AddWidgetDialog",
+        "DashboardSelector",
+        "NewDashboardModal",
+        "TeamAnalyticsView",
+        "TimePeriodSelector",
+        "WidgetGrid",
+        "BarChartWidget",
+        "LineChartWidget",
+        "PieChartWidget",
+        "SnapshotWidget",
+        "TableWidget",
+        "WidgetShell"
       ]
     }
   }
