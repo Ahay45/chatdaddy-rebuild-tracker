@@ -11,7 +11,7 @@ export interface TrackedModule {
   id: string
   label: string
   icon: string
-  category: 'core' | 'engage' | 'tools' | 'commerce' | 'admin' | 'missing'
+  category: 'core' | 'engage' | 'tools' | 'commerce' | 'admin' | 'missing' | 'platform'
   status: ModuleStatus
   /** 0–100 */
   progress: number
@@ -937,6 +937,83 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Help support route (/help-support)', done: false },
     ],
     notes: 'Simple iframe embedding the ChatDaddy help center. Old app: src/HelpSupport/index.tsx. Not started in v2.',
+  },
+
+  // ── Platform / Infrastructure ────────────────────────────────────────────────
+  'analytics-ux-checklist': {
+    label: 'Analytics & UX Checklist',
+    icon: '🔬',
+    category: 'platform',
+    status: 'not-started',
+    progress: 0,
+    oldFileCount: 0,
+    subFeatures: [
+      // 1. Adoption Tracking
+      { name: 'feature_viewed event', done: false },
+      { name: 'feature_clicked event', done: false },
+      { name: 'Unique users using feature tracked', done: false },
+      { name: 'First-time usage tracked', done: false },
+
+      // 2. Interaction Tracking
+      { name: 'Click events tracked', done: false },
+      { name: 'Dead clicks detected', done: false },
+      { name: 'Rage clicks detected', done: false },
+      { name: 'Hover tracking', done: false },
+      { name: 'Scroll depth tracking', done: false },
+
+      // 3. Engagement Metrics
+      { name: 'Time spent per session tracked', done: false },
+      { name: 'Time to complete task tracked', done: false },
+      { name: 'Idle vs active time tracked', done: false },
+      { name: 'Number of steps taken tracked', done: false },
+
+      // 4. Funnel Tracking (CRITICAL)
+      { name: 'Funnel steps defined per module', done: false },
+      { name: 'Step-by-step conversion tracked', done: false },
+      { name: 'Drop-off points identified', done: false },
+      { name: 'Completion rate tracked', done: false },
+
+      // 5. Errors & Friction
+      { name: 'Error messages tracked', done: false },
+      { name: 'Validation failures tracked', done: false },
+      { name: 'API failures tracked', done: false },
+      { name: 'Loading time tracked', done: false },
+      { name: 'User exits tracked', done: false },
+
+      // 6. UX Quality Signals
+      { name: 'Rage click rate surfaced per module', done: false },
+      { name: 'Dead click rate surfaced per module', done: false },
+      { name: 'Backtracking behavior tracked', done: false },
+      { name: 'Repeated attempts tracked', done: false },
+
+      // 7. Derived Metrics
+      { name: 'Task success rate calculated', done: false },
+      { name: 'Avg completion time calculated', done: false },
+      { name: 'Drop-off rate calculated', done: false },
+      { name: 'UX difficulty score calculated', done: false },
+
+      // Visual Indicators (per-module status display)
+      { name: 'Per-module tracking status badge (✅ / ⚠️ / ❌)', done: false },
+      { name: 'Checklist completion % per module', done: false },
+      { name: 'Critical missing items highlighted (red)', done: false },
+
+      // Smart Insights Layer
+      { name: 'Auto-generated insight: high drop-off detection', done: false },
+      { name: 'Auto-generated insight: clicks without completion', done: false },
+      { name: 'Auto-generated insight: high rage click rate warning', done: false },
+
+      // Data Source Integration
+      { name: 'PostHog / Mixpanel / Amplitude integration ready', done: false },
+      { name: 'Event naming convention enforced (module_feature_action)', done: false },
+      { name: 'Custom event tracking system hookup', done: false },
+
+      // UI / Checklist Shell
+      { name: 'Collapsible category panels UI', done: false },
+      { name: 'Progress bars per checklist category', done: false },
+      { name: 'Color-coded health status (green / yellow / red)', done: false },
+      { name: 'Per-module analytics readiness dashboard view', done: false },
+    ],
+    notes: 'New platform module — no equivalent in old app. Answers: Are we tracking this feature properly? Do users actually use it? Where do they struggle? Is the UX good or broken? Per-module checklist with smart insights layer and data source integration (PostHog/Mixpanel/Amplitude).',
   },
 }
 

@@ -38,6 +38,7 @@ const CATEGORIES = [
   { id: 'commerce', label: 'Commerce', icon: '🛍️' },
   { id: 'admin', label: 'Admin', icon: '🛡️' },
   { id: 'missing', label: 'Missing / Deferred', icon: '⚠️' },
+  { id: 'platform', label: 'Platform / Infra', icon: '🔬' },
 ] as const
 
 type FilterValue = 'all' | ModuleStatus
