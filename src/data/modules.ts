@@ -624,37 +624,37 @@ const STATIC: Record<string, StaticConfig> = {
     label: 'AI / Chatbot',
     icon: '🤖',
     category: 'tools',
-    status: 'in-progress',
-    progress: 60,
+    status: 'complete',
+    progress: 95,
     oldFileCount: 17,
     subFeatures: [
       // Knowledge base
       { name: 'Knowledge base list panel', done: true },
       { name: 'Create KB dialog', done: true },
       { name: 'KB detail panel', done: true },
-      { name: 'KB data source upload (files)', done: false },
-      { name: 'KB website crawl option', done: false },
-      { name: 'KB source table (manage sources)', done: false },
+      { name: 'KB data source upload (files)', done: true },
+      { name: 'KB website crawl option', done: true },
+      { name: 'KB source table (manage sources)', done: true },
       { name: 'KB test / query interface', done: false },
 
       // Chatbot
       { name: 'AI chatbot list panel', done: true },
       { name: 'Create chatbot dialog', done: true },
-      { name: 'Chatbot settings / edit', done: false },
-      { name: 'Link chatbot to channels', done: false },
-      { name: 'Chatbot interactive demo / test chat', done: false },
-      { name: 'AI agent templates modal', done: false },
-      { name: 'Add data section (training data)', done: false },
-      { name: 'File upload with progress tracking', done: false },
+      { name: 'Chatbot settings / edit', done: true },
+      { name: 'Link chatbot to channels', done: true },
+      { name: 'Chatbot interactive demo / test chat', done: true },
+      { name: 'AI agent templates modal', done: true },
+      { name: 'Add data section (training data)', done: true },
+      { name: 'File upload with progress tracking', done: true },
 
       // NLP / keyword
-      { name: 'NLP / intent detection configuration', done: false },
-      { name: 'AI CRM profile integration', done: false },
+      { name: 'NLP / intent detection configuration', done: true },
+      { name: 'AI CRM profile integration', done: true },
 
       // Offline bot
-      { name: 'Offline bot auto-response configuration', done: false },
+      { name: 'Offline bot auto-response configuration', done: true },
     ],
-    notes: 'Chatbot list/create and KB list/create done. KB sources, website crawl, chatbot config, linking to channels, and offline bot not yet rebuilt.',
+    notes: 'Full rebuild complete. KB: sources table, file upload with progress, website crawl with depth selector. Chatbot: card grid, edit drawer (5 tabs: data sources, settings, link channels, test chat, offline bot), NLP/intent config, channel linking, team assignment, offline schedule. AI CRM panel with GPT model selector. 8 agent templates modal. One remaining: KB test/query interface.',
   },
 
   appstore: {
