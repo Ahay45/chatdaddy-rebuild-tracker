@@ -543,7 +543,7 @@ const STATIC: Record<string, StaticConfig> = {
     icon: '📊',
     category: 'core',
     status: 'in-progress',
-    progress: 0,
+    progress: 95,
     oldFileCount: 22,
     subFeatures: [
       // Widget grid
@@ -554,7 +554,7 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Dashboard delete', done: true },
       { name: 'Dashboard rename (inline edit)', done: true },
       { name: 'Dashboard sharing (per-user and team-level permissions)', done: true },
-      { name: 'Request edit access (non-owner flow)', done: false },
+      { name: 'Request edit access (non-owner flow)', done: true },
       // Time / grouping controls
       { name: 'Time period / date range selector', done: true },
       { name: 'Aggregate selector (day / week / month grouping)', done: true },
@@ -565,7 +565,7 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Bar chart widget', done: true },
       { name: 'Snapshot / KPI comparison widget', done: true },
       { name: 'Table / data grid widget', done: true },
-      { name: 'Funnel chart widget', done: false },
+      { name: 'Funnel chart widget', done: true },
       // Per-widget features
       { name: 'Per-widget metric breakdown (by user, tag, channel, automation)', done: true },
       { name: 'Per-widget filter popover', done: true },
@@ -573,30 +573,32 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Per-widget CSV data export', done: true },
       { name: 'Widget-level error retry', done: true },
       // Performance tabs
-      { name: 'Performance tabs header (Chat / Agent)', done: false },
+      { name: 'Performance tabs header (Chat / Agent)', done: true },
       { name: 'Chat performance tab (widget grid)', done: true },
       { name: 'Agent performance tab (agent table)', done: true },
-      { name: 'Marketing performance tab', done: false },
-      { name: 'Sales performance tab', done: false },
-      // Export
+      { name: 'Marketing performance tab', done: true },
+      { name: 'Sales performance tab', done: true },
+      // Export / freshness
       { name: 'Dashboard PNG export (html-to-image)', done: true },
-      { name: 'Last-refreshed live pulsating indicator (shows data freshness)', done: false },
-      { name: 'Smart Analysis button (AI-driven insight generation per dashboard)', done: false },
-      { name: 'Agent performance table — agent name column', done: false },
-      { name: 'Agent performance table — messages sent column', done: false },
-      { name: 'Agent performance table — avg response time column', done: false },
-      { name: 'Agent performance table — CSAT score column', done: false },
-      { name: 'Agent performance table — resolved tickets column', done: false },
-      { name: 'Agent performance table — active hours column', done: false },
-      { name: 'Agent performance table — last active column', done: false },
-      { name: 'Agent performance time period toggle (7d / 30d / custom)', done: false },
-      { name: 'MetricTransformation view (derived/calculated metrics editor)', done: false },
-      { name: 'AnalyticListLayoutViewer (table layout for list metrics)', done: false },
-      { name: 'V1 → V2 migration dialog (migrate old dashboard configs)', done: false },
-      { name: 'Unsupported viewport state (mobile/tablet warning overlay)', done: false },
+      { name: 'Last-refreshed live pulsating indicator (shows data freshness)', done: true },
+      { name: 'Smart Analysis button (AI-driven insight generation per dashboard)', done: true },
+      // Agent table columns
+      { name: 'Agent performance table — agent name column', done: true },
+      { name: 'Agent performance table — messages sent column', done: true },
+      { name: 'Agent performance table — avg response time column', done: true },
+      { name: 'Agent performance table — CSAT score column', done: true },
+      { name: 'Agent performance table — resolved tickets column', done: true },
+      { name: 'Agent performance table — active hours column', done: true },
+      { name: 'Agent performance table — last active column', done: true },
+      { name: 'Agent performance time period toggle (7d / 30d / custom)', done: true },
+      // Metric tools
+      { name: 'MetricTransformation view (derived/calculated metrics editor)', done: true },
+      { name: 'AnalyticListLayoutViewer (table layout for list metrics)', done: true },
+      { name: 'V1 → V2 migration dialog (migrate old dashboard configs)', done: true },
+      { name: 'Unsupported viewport state (mobile/tablet warning overlay)', done: true },
       { name: 'Analytics filter popover (advanced filter for analytics data)', done: false },
     ],
-    notes: 'Analytics = the full chart dashboard page (route: /analytics). Separate from the home Dashboard page. All core features shipped: drag-drop grid, 5 widget types, per-widget breakdown/filter/CSV/retry, aggregate pills, period comparison, sharing, export. Remaining: funnel chart, request-edit-access, marketing/sales performance tabs, smart analysis, agent table columns, MetricTransformation, migration dialog.',
+    notes: 'Batch 2 complete (commit 3113746): funnel chart widget, PerformanceTabs (Chat/Marketing/Sales), SmartAnalysisPanel, LastRefreshedIndicator, RequestEditAccessBanner, MetricTransformationEditor, AnalyticListLayoutViewer, V1MigrationDialog, UnsupportedViewportOverlay, agent table rebuilt with 7 new columns + 7d/30d/custom period toggle. Remaining: analytics filter popover (advanced).',
   },
 
   // ── Engage ───────────────────────────────────────────────────────────────────
