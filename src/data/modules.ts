@@ -365,20 +365,32 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Activity timeline on ticket', done: true },
       { name: 'Notes on ticket', done: true },
       { name: 'Custom fields on ticket', done: true },
-      { name: 'Linked messages / conversations', done: false },
-      { name: 'Linked call logs', done: false },
+      { name: 'Linked messages / conversations on ticket', done: false },
+      { name: 'Linked call logs on ticket', done: false },
       { name: 'AI analysis option on ticket', done: true },
       { name: 'Credit transaction history on ticket', done: true },
+      { name: 'Stripe payment intents history on ticket (admin)', done: false },
+      { name: 'Ticket more options menu (TicketMoreOptions)', done: false },
+      { name: 'Stage update button (inline stage change on ticket)', done: false },
+      { name: 'Board stage selector in ticket detail', done: false },
+      { name: 'Contact selector in ticket detail', done: false },
+      { name: 'Admin section on ticket (credit/Stripe/subscriptions, admin-only)', done: false },
+
+      // Views (named saved views per board)
+      { name: 'Multiple named views per board (create / rename / delete / duplicate)', done: false },
+      { name: 'View settings dialog / slide-in panel', done: false },
+      { name: 'View layout toggle (board vs list per view)', done: false },
 
       // Property management
       { name: 'Card property visibility management', done: true },
-      { name: 'Table property visibility settings', done: false },
+      { name: 'Table property visibility settings (column show/hide)', done: false },
 
-      // Sorting
-      { name: 'Sort options', done: false },
+      // Sorting / AI
+      { name: 'Sort options (sort tickets by field)', done: false },
       { name: 'Assignee selector on ticket', done: true },
+      { name: 'AI CRM profile integration (auto-fill contact data)', done: false },
     ],
-    notes: 'Contacts list, filters, active chips, bulk ops, export all done. Board/stage CRUD, drag-and-drop, ticket detail (5 tabs: notes, activity, AI, credits, assignee) all done.',
+    notes: 'Contacts list, filters, active chips, bulk ops, export all done. Board/stage CRUD, drag-and-drop, ticket detail (5 tabs: notes, activity, AI, credits, assignee) all done. Missing: named views per board, ticket more-options menu, inline stage/contact selectors, admin section, table column visibility, AI CRM profile.',
   },
 
   channels: {
@@ -412,8 +424,11 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Sender ID submission', done: true },
       { name: 'Channel limitations info modal', done: true },
       { name: 'Credit requirements display per channel', done: true },
+      { name: 'Creating account modal (in-progress state during WABA setup)', done: false },
+      { name: 'Advanced info section (channel metadata / debug info)', done: false },
+      { name: 'Credit map display per channel type', done: false },
     ],
-    notes: 'Full rebuild complete. Card grid with brand gradients, animated status dots, auto-polling, ConnectionAlertBanner, ReconnectModal (auto/QR/Facebook), ChannelStatusModal (Status/Limitations/Credits tabs), VerifyPhoneDialog, ChannelProfileDialog, IsvTermsDialog, SenderIdDialog, PendingMessagesModal all built.',
+    notes: 'Full rebuild complete. Card grid with brand gradients, animated status dots, auto-polling, ConnectionAlertBanner, ReconnectModal (auto/QR/Facebook), ChannelStatusModal (Status/Limitations/Credits tabs), VerifyPhoneDialog, ChannelProfileDialog, IsvTermsDialog, SenderIdDialog, PendingMessagesModal all built. Missing: CreatingAccountModal, AdvancedInfo section, credit map.',
   },
 
   calls: {
@@ -437,8 +452,10 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Mobile filter layout for calls', done: false },
       { name: 'Twilio SDK integration', done: true },
       { name: 'Live call UI (in-call controls)', done: true },
+      { name: 'Call from view — inline call initiation from contact profile (CallFromView)', done: false },
+      { name: 'Calls card view — alternative card layout (CallsCardView)', done: false },
     ],
-    notes: 'Full rebuild complete. CallPopup (dark floating overlay, mute/hold/hangup/timer/notes), CallUsingModal (channel selector + record toggle), VerifyNumberDialog (2-stage verification), ManageChannelsDialog (add/edit/delete channels), Zustand calls.store with Twilio Device lifecycle, quick-dial toolbar in list page.',
+    notes: 'Full rebuild complete. CallPopup (dark floating overlay, mute/hold/hangup/timer/notes), CallUsingModal (channel selector + record toggle), VerifyNumberDialog (2-stage verification), ManageChannelsDialog (add/edit/delete channels), Zustand calls.store with Twilio Device lifecycle, quick-dial toolbar in list page. Missing: CallFromView (inline from contact profile), CallsCardView.',
   },
 
   dashboard: {
@@ -565,11 +582,40 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Flow folder organization', done: true },
       { name: 'Flow import / export', done: true },
       { name: 'Unsaved changes tracking', done: true },
-      { name: 'Conflict detection', done: false },
+      { name: 'Conflict detection (concurrent edit detection)', done: false },
       { name: 'Flow analytics / performance metrics', done: true },
       { name: 'AI flow builder interface', done: true },
+
+      // Extra nodes
+      { name: 'App integration node (connect external service action)', done: false },
+      { name: 'Shape / annotation node (visual labels on canvas)', done: false },
+      { name: 'Phone number node (EditPhoneNumberNode)', done: false },
+
+      // Extra flow-level dialogs / modals
+      { name: 'Share bot / flow modal (generate shareable link or QR)', done: false },
+      { name: 'Flow metadata modal (name, industry, language, thumbnail)', done: false },
+      { name: 'Global bot preview modal (preview flow response in-app)', done: false },
+      { name: 'Flow save errors modal (validation summary before save)', done: false },
+      { name: 'Create / rename bot modal', done: false },
+      { name: 'Select existing form modal (attach form to flow node)', done: false },
+      { name: 'Zapier automation modal (link Zap to flow action)', done: false },
+      { name: 'Export flow confirmation modal', done: false },
+      { name: 'Selection context menu (right-click multi-node operations)', done: false },
+
+      // Collaboration / UX
+      { name: 'Guided tour / onboarding tour for flow builder', done: false },
+      { name: 'Comments / collaboration panel on flow', done: false },
+      { name: 'Attachments and media effects panel (for message nodes)', done: false },
+      { name: 'Customization menu (flow-level visual customization)', done: false },
+      { name: 'Recipients list panel (contacts enrolled in flow)', done: false },
+
+      // Template approval
+      { name: 'Template approval flow (submit / approve WABA templates)', done: false },
+
+      // Survey
+      { name: 'Survey popup node (in-flow NPS / survey trigger)', done: false },
     ],
-    notes: 'Full rebuild complete. Keyword reply: trigger config, time frames per day, copy-to-all, execution history. Flow builder: ReactFlow canvas, 9 node types (Trigger/Message/Condition/Delay/Input/Email/Webhook/BotTarget/End), node editor panel, sidebar palette, toolbar (save/undo/export/import), flow analytics, unsaved tracking. AI Builder: plain-English flow generation, 4-step wizard, cinematic dark UI.',
+    notes: 'Keyword reply, visual builder (9 nodes), AI builder all done. Missing: AppNode, ShapeNode, PhoneNumberNode, ShareBotModal, FlowMetaDataModal, GlobalPreviewModal, SaveErrorsModal, RenameBotModal, ZapierModal, GuidedTour, CommentsPanel, template approval flow, survey popup, recipients list.',
   },
 
   broadcasts: {
@@ -602,8 +648,12 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Broadcast speed warning modal', done: true },
       { name: 'Broadcast analytics — delivery heatmap', done: true },
       { name: 'Broadcast analytics — cost efficiency card', done: true },
+      { name: 'Contact active hours section (best send time per contact)', done: false },
+      { name: 'Advanced settings config (sender rotation, retry logic)', done: false },
+      { name: 'Basic settings config (name, schedule, channel — step component)', done: false },
+      { name: 'Select contacts section (audience builder with segment preview)', done: false },
     ],
-    notes: 'All 7 missing features implemented: view recipients modal (with status filter + search), recurring settings (daily/weekly/monthly), speed config cards (Safest/Safe/Normal/Fast), WABA Tier 250 restriction on Fast, speed warning modal with risk list, delivery heatmap (7×24 grid), and cost efficiency card with RadialBar ring + sparkline.',
+    notes: 'All analytics and speed features done. Missing: contact active hours, advanced settings config (sender rotation, retry), structured basic settings step component, audience segment preview.',
   },
 
   campaigns: {
@@ -641,48 +691,58 @@ const STATIC: Record<string, StaticConfig> = {
     progress: 60,
     oldFileCount: 22,
     subFeatures: [
-      // Forms
+      // ── Forms ─────────────────────────────────────────────────────────────
       { name: 'Forms list panel', done: true },
       { name: 'Form detail dialog', done: true },
       { name: 'Create form dialog', done: true },
-      { name: 'Form question types (text, choice, etc.)', done: false },
-      { name: 'Conditional question logic', done: false },
-      { name: 'Form preview', done: false },
+      { name: 'Form question add / edit (per-question type config)', done: false },
+      { name: 'Form question types (text, multiple choice, rating, date)', done: false },
+      { name: 'Conditional question logic (ConditionsModal — show/hide based on answer)', done: false },
+      { name: 'Form preview (live render before publish)', done: false },
       { name: 'View form submissions', done: true },
       { name: 'Form submission analytics', done: false },
-      { name: 'Share / embed form link', done: false },
+      { name: 'Share / embed form link (copy URL / embed snippet)', done: false },
       { name: 'Form template selection', done: false },
+      { name: 'Submit form public page (Forms/SubmitForm — user-facing form fill)', done: false },
 
-      // QR Code
+      // ── QR Code ───────────────────────────────────────────────────────────
       { name: 'QR code generator panel', done: true },
+      { name: 'QR code type selector (default vs custom)', done: false },
+      { name: 'QR promotional message input', done: false },
+      { name: 'QR background photo upload', done: false },
+      { name: 'QR dimension preset selector (Instagram post/story, Facebook post, custom)', done: false },
       { name: 'iOS QR code download', done: false },
       { name: 'Android QR code download', done: false },
 
-      // Widget builder
+      // ── Widget builder ────────────────────────────────────────────────────
       { name: 'Widget builder panel', done: true },
-      { name: 'Widget basic settings', done: false },
-      { name: 'Widget button settings', done: false },
-      { name: 'Widget code preview / copy', done: false },
+      { name: 'Widget basic settings (greeting text, position, brand color)', done: false },
+      { name: 'Widget button settings (CTA label, icon)', done: false },
+      { name: 'Widget info / platform setup instructions', done: false },
+      { name: 'Widget code preview / copy snippet', done: false },
 
-      // Zapier
+      // ── Zapier ────────────────────────────────────────────────────────────
       { name: 'Zapier panel', done: true },
-      { name: 'Zapier OAuth flow', done: false },
-      { name: 'Zapier token management', done: false },
+      { name: 'Zapier OAuth flow (TokenRedirectHandler)', done: false },
+      { name: 'Zapier token management (revoke / refresh)', done: false },
 
-      // Custom fields
-      { name: 'Custom fields manager', done: false },
-      { name: 'Custom field types configuration', done: false },
+      // ── Custom fields ─────────────────────────────────────────────────────
+      { name: 'Custom fields manager (list + reorder)', done: false },
+      { name: 'Add / edit custom field (AddEditCustomField — type, label, required)', done: false },
+      { name: 'Custom field type components (text, number, date, select, checkbox)', done: false },
       { name: 'Custom fields in inbox contact profile', done: false },
       { name: 'Custom fields in CRM tickets', done: false },
 
-      // Coupon campaigns
+      // ── Coupon campaigns ──────────────────────────────────────────────────
       { name: 'Coupon campaigns list', done: false },
-      { name: 'Create / edit coupon campaign', done: false },
-      { name: 'Coupon redemption tracking', done: false },
-      { name: 'Coupon terms and conditions', done: false },
-      { name: 'Coupon redeem interface', done: false },
+      { name: 'Create / edit coupon campaign (AddEditCouponCampaign)', done: false },
+      { name: 'View coupon campaign detail (ViewCouponCampaign)', done: false },
+      { name: 'Coupon display / card view (CouponDisplay)', done: false },
+      { name: 'Coupon redemption settings', done: false },
+      { name: 'Coupon terms and conditions config', done: false },
+      { name: 'Redeem coupon interface (public redemption page)', done: false },
     ],
-    notes: 'Forms, QR, Widget, Zapier panels exist. Conditional form logic, widget customization, Zapier OAuth, custom fields, and coupon campaigns not yet rebuilt.',
+    notes: 'Forms, QR, Widget, Zapier panels exist as shells. All sub-feature detail (form question types/conditions/preview/analytics, QR type/promo/dimensions, widget config tabs, Zapier OAuth, custom field CRUD+types, coupon CRUD) not yet rebuilt.',
   },
 
   ai: {
@@ -718,8 +778,13 @@ const STATIC: Record<string, StaticConfig> = {
 
       // Offline bot
       { name: 'Offline bot auto-response configuration', done: true },
+
+      // Extra
+      { name: 'KB test / query interface (test KB with sample questions)', done: false },
+      { name: 'Enhanced intro / onboarding for AI chatbot (EnhancedIntro)', done: false },
+      { name: 'AI chatbot provider context (multi-bot session management)', done: false },
     ],
-    notes: 'Full rebuild complete. KB: sources table, file upload with progress, website crawl with depth selector. Chatbot: card grid, edit drawer (5 tabs: data sources, settings, link channels, test chat, offline bot), NLP/intent config, channel linking, team assignment, offline schedule. AI CRM panel with GPT model selector. 8 agent templates modal. One remaining: KB test/query interface.',
+    notes: 'Full rebuild complete. KB: sources table, file upload with progress, website crawl with depth selector. Chatbot: card grid, edit drawer (5 tabs: data sources, settings, link channels, test chat, offline bot), NLP/intent config, channel linking, team assignment, offline schedule. AI CRM panel with GPT model selector. 8 agent templates modal. Missing: KB test interface, EnhancedIntro, multi-bot provider context.',
   },
 
   appstore: {
@@ -739,11 +804,13 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Installed apps management', done: true },
       { name: 'App update checks', done: true },
       { name: 'App removal / disconnect', done: true },
-      { name: 'Integration detail / deep config pages', done: false },
+      { name: 'Integration detail / deep config pages (per-app custom settings)', done: false },
       { name: 'Payment integrations config', done: true },
       { name: 'Chrome extension login', done: true },
+      { name: 'EasySend records view (order/payment record history)', done: false },
+      { name: 'Add default trigger for notification services', done: false },
     ],
-    notes: 'Full rebuild complete. 18-app catalog with category + country filters, 5-step installer drawer (overview, permissions, config, OAuth, complete), OAuth modal with callback URL handler, installed apps card list with toggle/remove/update checks, payment integrations grid (15 providers, country flags, connect/toggle), Chrome extension panel with masked token + copy + install steps. Remaining: integration deep config pages (per-app custom settings).',
+    notes: 'Full rebuild complete. 18-app catalog with category + country filters, 5-step installer drawer (overview, permissions, config, OAuth, complete), OAuth modal with callback URL handler, installed apps card list with toggle/remove/update checks, payment integrations grid (15 providers, country flags, connect/toggle), Chrome extension panel with masked token + copy + install steps. Missing: deep config pages, EasySend records view, default trigger setup.',
   },
 
   // ── Commerce ─────────────────────────────────────────────────────────────────
@@ -755,43 +822,49 @@ const STATIC: Record<string, StaticConfig> = {
     progress: 65,
     oldFileCount: 38,
     subFeatures: [
-      // Orders
+      // ── Orders ───────────────────────────────────────────────────────────
       { name: 'Orders list panel', done: true },
       { name: 'Order detail drawer', done: true },
-      { name: 'Order status chips display', done: false },
-      { name: 'Order filter / search', done: false },
-      { name: 'Order status tracking', done: false },
-      { name: 'Custom order menu', done: false },
+      { name: 'Order status chips display (visual status tags per order)', done: false },
+      { name: 'Order filter / search (OrderFilterMenu + OrderFilterDisplay)', done: false },
+      { name: 'Order status tracking workflow', done: false },
+      { name: 'Custom order menu (custom order type configuration)', done: false },
+      { name: 'Order table item row (OrderTableItem — compact row renderer)', done: false },
 
-      // Products
+      // ── Products ──────────────────────────────────────────────────────────
       { name: 'Products list panel', done: true },
       { name: 'Create / edit product dialog', done: true },
       { name: 'Product image / media upload', done: false },
-      { name: 'Product categories management', done: false },
-      { name: 'Product category selector', done: false },
+      { name: 'Product categories management (ManageCategories)', done: false },
+      { name: 'Product category selector (ProductCategorySelect)', done: false },
       { name: 'Product pricing and currency selector', done: false },
-      { name: 'Product import from CSV', done: false },
+      { name: 'Product import from CSV (ProductImportCsv)', done: false },
+      { name: 'Product import from outside platform (OutsidePlatformImport)', done: false },
       { name: 'Product visibility / status toggle', done: false },
 
-      // Payments
+      // ── Shop setup ────────────────────────────────────────────────────────
+      { name: 'Shop setup / onboarding wizard (multi-step stepper)', done: false },
+      { name: 'Shop profile / settings modal (ShopSettingsModal)', done: false },
+      { name: 'Shop type selection (ProductShopType)', done: false },
+      { name: 'Create shop metadata (initial store config — name, logo, description)', done: false },
+      { name: 'Shop dashboard with URL display + copy', done: false },
+      { name: 'Shop management panel (payments, products, shipping, details tabs)', done: false },
+      { name: 'Shop details section (ShopDetails — logo, name, description edit)', done: false },
+      { name: 'Products onboarding step (ProductsOnboarding)', done: false },
+
+      // ── Payments ──────────────────────────────────────────────────────────
       { name: 'Payments panel', done: true },
-      { name: 'Payment processing setup', done: false },
+      { name: 'Payment processing setup (provider selection + credentials)', done: false },
       { name: 'Stripe integration', done: false },
 
-      // Shipping
+      // ── Shipping ──────────────────────────────────────────────────────────
       { name: 'Shipping panel', done: true },
-      { name: 'Shipping details configuration', done: false },
+      { name: 'Shipping details configuration (ShippingDetails)', done: false },
 
-      // Shop setup
-      { name: 'Shop setup / onboarding wizard', done: false },
-      { name: 'Shop profile / settings modal', done: false },
-      { name: 'Shop type selection', done: false },
-
-      // Subscriptions
-      { name: 'Subscriptions / billing cycles', done: false },
-      { name: 'Shop onboarding product step', done: false },
+      // ── Subscriptions ─────────────────────────────────────────────────────
+      { name: 'Subscriptions / billing cycles (Subscriptions module)', done: false },
     ],
-    notes: 'Orders, products (basic), payments, and shipping panels exist. Product categories, CSV import, shop setup wizard, Stripe, and subscriptions not yet rebuilt.',
+    notes: 'Orders, products (basic), payments, shipping panels exist as shells. Missing: full order workflow (status chips, filter, custom menu), product categories, CSV import, outside-platform import, shop onboarding wizard, ShopSettingsModal, shop management tabs, Stripe, subscriptions.',
   },
 
   // ── Admin ────────────────────────────────────────────────────────────────────
@@ -809,16 +882,24 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Notifications settings (app alerts)', done: true },
       { name: 'Billing settings tab', done: true },
       { name: 'Developer / API token management', done: true },
-      { name: 'Generate API token modal', done: false },
-      { name: 'Webhook URL display and management', done: false },
+      { name: 'Generate API token modal (GenerateTokenModal)', done: false },
+      { name: 'API token list (show / copy / revoke tokens)', done: false },
+      { name: 'Add / edit API token drawer (ApiToken/AddEdit)', done: false },
+      { name: 'Webhook URL display and management (Developer → Webhooks tab)', done: false },
+      { name: 'Create / edit webhook modal (UpsertWebhookModal)', done: false },
       { name: 'Webhook credentials management', done: false },
       { name: 'OAuth modal for external apps', done: false },
+      { name: 'App notifications settings (nested notification table with per-event toggles)', done: false },
+      { name: 'Notification walkthrough / setup guide (NotificationWalkThrough)', done: false },
+      { name: 'Quick replies management (Settings/QuickReplies — create / edit / delete)', done: false },
       { name: 'Reset password modal', done: false },
       { name: 'Credit display / credit map', done: false },
-      { name: 'External platform manager (e-commerce)', done: false },
+      { name: 'External platform manager (e-commerce platform connections)', done: false },
       { name: 'Support service setup', done: false },
+      { name: 'Plan migration modal (migrate to new credit-based billing)', done: false },
+      { name: 'Subscriptions tab (non-credit billing view)', done: false },
     ],
-    notes: 'All 6 main tabs exist. Webhook management, OAuth, token generation modal, and credit display not yet rebuilt.',
+    notes: 'All 6 main tabs exist. Missing detail: token generation + list + drawer, webhook CRUD, notification walkthrough, quick replies, reset password, credit map, external platform manager, plan migration modal.',
   },
 
   admin: {
@@ -839,23 +920,46 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Preferences panel', done: true },
       { name: 'Team data panel', done: true },
       { name: 'Credits panel', done: true },
-      { name: 'Announcements — markdown editor', done: false },
-      { name: 'Announcements — action button config', done: false },
-      { name: 'Announcements — preview modal', done: false },
-      { name: 'Users — edit team membership', done: false },
-      { name: 'Users — partnership selector', done: false },
+      // Announcements detail
+      { name: 'Announcements — markdown editor (MarkdownEditor)', done: false },
+      { name: 'Announcements — action button config (ActionButton)', done: false },
+      { name: 'Announcements — more settings section (MoreSettings)', done: false },
+      { name: 'Announcements — preview modal (PreviewModal)', done: false },
+
+      // Users detail
+      { name: 'Users — edit team membership dialog (EditTeamMembership)', done: false },
+      { name: 'Users — partnership selector dropdown', done: false },
+      { name: 'Users — contact details view (ContactDetails)', done: false },
+      { name: 'Users — team selector dropdown (TeamSelector)', done: false },
+
+      // Coupons detail
+      { name: 'Coupons — add coupon form (AddCoupon)', done: false },
       { name: 'Coupons — redemption list view', done: false },
-      { name: 'Credits — manage support plan', done: false },
-      { name: 'Credits — migrate credits modal', done: false },
+
+      // Credits detail
+      { name: 'Credits — credit details card (CreditDetailsCard)', done: false },
+      { name: 'Credits — manage support plan (ManageSupportPlan)', done: false },
+      { name: 'Credits — migrate credits modal (MigrateModal)', done: false },
+
+      // Preferences detail
       { name: 'Preferences — notification preference table', done: false },
-      { name: 'Preferences — Stripe preferences', done: false },
-      { name: 'Pricing editor (plan JSON management)', done: false },
-      { name: 'Survey management', done: false },
-      { name: 'Company analytics dashboard', done: false },
-      { name: 'Company insights / BI data', done: false },
+      { name: 'Preferences — Stripe preferences panel', done: false },
+      { name: 'Preferences — purchase tier preferences', done: false },
+      { name: 'Preferences — recurring consumption preferences', done: false },
+      { name: 'Preferences — single consumption preferences', done: false },
+      { name: 'Preferences — unlock preferences', done: false },
+      { name: 'Preferences — misc preferences section', done: false },
+
+      // Standalone panels
+      { name: 'Pricing editor (plan JSON management, sections)', done: false },
+      { name: 'Survey management (list + add/edit surveys)', done: false },
+      { name: 'Feature updates panel (FeatureUpdates)', done: false },
+      { name: 'Company analytics dashboard (paid teams, WABA teams table, CSV export)', done: false },
+      { name: 'Company insights / BI data panel', done: false },
+      { name: 'Team data analytics (benchmarks, export modal, filters)', done: false },
       { name: 'Plan tracking / usage monitoring', done: false },
     ],
-    notes: 'All 10 base panels present. Detail features within each panel (markdown editor, redemption lists, pricing editor, surveys, company analytics) not yet rebuilt.',
+    notes: 'All 10 base panels present. Missing detail: Announcements (markdown, action button, more settings, preview), Users (membership edit, partnership, contact details, team selector), Credits (details card, support plan, migrate modal), Preferences (7 sub-sections), Pricing editor, Surveys, FeatureUpdates, CompanyAnalytics, TeamDataAnalytics.',
   },
 
   // ── Missing / Deferred ───────────────────────────────────────────────────────
@@ -901,23 +1005,38 @@ const STATIC: Record<string, StaticConfig> = {
     oldFileCount: 27,
     subFeatures: [
       { name: 'Notifications settings tab (in Settings)', done: true },
-      { name: 'E-commerce webhook service list', done: false },
-      { name: 'Add / edit notification webhook', done: false },
-      { name: 'Notification trigger accordion', done: false },
-      { name: 'Trigger condition rows and groups', done: false },
-      { name: 'Condition diagnostics', done: false },
-      { name: 'Webhook URL display + copy', done: false },
+      // Notification list + detail
+      { name: 'Notification / webhook service list (ListLayout with tracked services)', done: false },
+      { name: 'View notification / webhook detail (ViewNotifications)', done: false },
+      // Add / edit flow
+      { name: 'Add / edit notification container (multi-step setup)', done: false },
+      { name: 'Add / edit notification sections (NotificationSettingsRender)', done: false },
+      { name: 'Shop selection render (ShopSelectionRender — link to shop)', done: false },
+      // Triggers
+      { name: 'Trigger accordion (expand event types per service)', done: false },
+      { name: 'Trigger condition section (add / edit condition groups)', done: false },
+      { name: 'Condition row (field / operator / value per rule)', done: false },
+      { name: 'Condition diagnostics (test / validate conditions)', done: false },
+      { name: 'Add default trigger (auto-populate default events on create)', done: false },
+      // Credentials / URL
+      { name: 'Show webhook URL dialog (copy webhook endpoint)', done: false },
+      { name: 'Update credentials dialog (enter API keys for service)', done: false },
+      { name: 'Service setup instructions modal (per-platform setup guide)', done: false },
+      { name: 'Add supported service dialog', done: false },
+      // Platform integrations
       { name: 'Shopify integration', done: false },
       { name: 'WooCommerce integration', done: false },
       { name: 'Shopee integration', done: false },
       { name: 'Shopline integration', done: false },
       { name: 'Shopage integration', done: false },
-      { name: 'Webhook credentials management', done: false },
-      { name: 'Service setup instructions modal', done: false },
-      { name: 'OAuth callback handler (for external services)', done: false },
-      { name: 'Real-time notification badge (app-wide)', done: false },
+      { name: 'EasySend records view (order/payment log)', done: false },
+      { name: 'OAuth callback handler (external service auth redirect)', done: false },
+      { name: 'Shop images management (ShopImages)', done: false },
+      // App-wide
+      { name: 'Real-time notification badge (app-wide unread count)', done: false },
+      { name: 'External platform manager banner', done: false },
     ],
-    notes: 'Only app notification settings tab built. Full e-commerce webhook integrations (Shopify, WooCommerce, Shopee, Shopline) not started.',
+    notes: 'Only app notification settings tab built. Full e-commerce webhook module (service list, add/edit flow, trigger/condition UI, platform integrations, credentials dialogs, OAuth handler) not started.',
   },
 
   onboarding: {
@@ -930,17 +1049,43 @@ const STATIC: Record<string, StaticConfig> = {
     subFeatures: [
       { name: 'Channel onboarding dialogs (in Channels)', done: true },
       { name: 'Getting started checklist (in Dashboard)', done: true },
-      { name: 'Signup / registration flow', done: false },
+      // Signup / auth scenes
+      { name: 'Signup phone scene (enter phone number)', done: false },
+      { name: 'Signup OTP scene (SignupOtpScene — verify phone)', done: false },
       { name: 'OTP verification (SMS + email)', done: false },
-      { name: 'Team setup wizard', done: false },
-      { name: 'Company information setup step', done: false },
-      { name: 'Phone number setup step', done: false },
-      { name: 'Notification setup step', done: false },
-      { name: 'Coexist / migration flow', done: false },
-      { name: 'Trial achievement banner', done: false },
-      { name: 'Onboarding progress tracking (team-wide)', done: false },
+      { name: 'Forget password flow', done: false },
+      // Onboarding wizard scenes
+      { name: 'Onboarding role scene (what is your role)', done: false },
+      { name: 'Onboarding goals scene (what do you want to achieve)', done: false },
+      { name: 'Onboarding business — company name scene', done: false },
+      { name: 'Onboarding business — industry scene', done: false },
+      { name: 'Onboarding business — team size scene', done: false },
+      { name: 'Onboarding business — website scene', done: false },
+      { name: 'Onboarding channels scene (connect first channel step)', done: false },
+      { name: 'Onboarding sources scene (how did you hear about us)', done: false },
+      { name: 'Onboarding team invite scene', done: false },
+      { name: 'Onboarding customising scene (personalisation step)', done: false },
+      { name: 'Company information setup (CompanyInformation.tsx)', done: false },
+      { name: 'Get phone number modal (GetPhoneNumberModal)', done: false },
+      { name: 'Notification setup step (NotificationSetup)', done: false },
+      // Coexist / migration
+      { name: 'Coexist landing scene (migration entry point)', done: false },
+      { name: 'Coexist platform scene (pick source platform)', done: false },
+      { name: 'Coexist API question scene (enter old API credentials)', done: false },
+      { name: 'Coexist verify scene (validate migration credentials)', done: false },
+      { name: 'Coexist connect Meta scene (Facebook re-auth for migration)', done: false },
+      { name: 'Coexist confirm scene (review and confirm migration)', done: false },
+      { name: 'Coexist congratulations scene (migration success)', done: false },
+      // Gamified onboarding
+      { name: 'Gamified onboarding Stage 1 (GamifiedOnboarding)', done: false },
+      { name: 'Gamified onboarding Stage 2', done: false },
+      // AI onboarding
+      { name: 'AI agent builder onboarding (AgentBuilder entry point)', done: false },
+      // Progress / banner
+      { name: 'Trial achievement banner (credits + progress ring)', done: false },
+      { name: 'Onboarding progress tracking (team-wide step completion)', done: false },
     ],
-    notes: 'Channel and dashboard onboarding done. Full signup, OTP, team setup wizard, and coexist flow not started.',
+    notes: 'Channel and dashboard onboarding done. Missing: full signup flow (phone, OTP, forget password), onboarding wizard (10 scenes), coexist migration (7 scenes), gamified onboarding (2 stages), AI agent builder onboarding, trial banner.',
   },
 
   billing: {
@@ -952,24 +1097,51 @@ const STATIC: Record<string, StaticConfig> = {
     oldFileCount: 23,
     subFeatures: [
       { name: 'Billing settings tab (in Settings)', done: true },
-      { name: 'Plan selection / comparison table', done: false },
-      { name: 'Addon purchases', done: false },
-      { name: 'Plan / addon card display', done: false },
-      { name: 'Plan state chip (active / trial / expired)', done: false },
-      { name: 'Subscription list', done: false },
-      { name: 'Subscription data table', done: false },
+      // Billing page tabs / navigation
+      { name: 'Billing tabs menu (usage-plan / purchase-history / transaction-history)', done: false },
+      // Usage plan scenes
+      { name: 'Current usage plan scene (active plan card)', done: false },
+      { name: 'Current usage plan scene — mobile layout', done: false },
+      { name: 'Manage plan scene (plan comparison + upgrade / downgrade)', done: false },
+      { name: 'Manage plan scene — mobile layout', done: false },
+      { name: 'Plan migration wizard (migrate to credit billing)', done: false },
+      { name: 'Power-ups scene (add-ons: extra channels, teammates, messages)', done: false },
+      { name: 'Power-ups scene — mobile layout', done: false },
+      { name: 'Add credits scene (top-up credit balance)', done: false },
+      { name: 'Annual vs monthly billing toggle', done: false },
+      { name: 'Plan state chip (active / trial / expired / cancelled badge)', done: false },
+      { name: 'Plan / addon card display (MarqueePlanCard)', done: false },
+      { name: 'Features and usage card (per-feature limit display)', done: false },
+      { name: 'Auto top-up card (automatic credit refill config)', done: false },
+      // Purchase / transaction history
+      { name: 'Credit purchase history scene', done: false },
+      { name: 'Credit purchase history — mobile layout', done: false },
+      { name: 'Credit transaction history scene', done: false },
+      { name: 'Credit transaction history — mobile layout', done: false },
+      { name: 'Charge filter popover (filter by charge type)', done: false },
+      { name: 'Service filter popover (filter by service/channel)', done: false },
+      { name: 'Status filter popover (filter by payment status)', done: false },
       { name: 'Invoice history', done: false },
+      // Credits
+      { name: 'Buy credits interface (credit package picker)', done: false },
+      { name: 'Credit step card (step-by-step purchase flow)', done: false },
+      { name: 'Zero credits upsell page (ran out of credits CTA)', done: false },
+      { name: 'Credit billing view (usage-based billing details)', done: false },
+      { name: 'Non-credit billing view (legacy flat billing)', done: false },
+      // Subscriptions
+      { name: 'Subscription data table (list current subscriptions)', done: false },
+      { name: 'Subscriptions layout manager', done: false },
       { name: 'Payment methods management', done: false },
-      { name: 'Plan upgrade / downgrade flow', done: false },
-      { name: 'Feature-locked pages (plan gating)', done: false },
-      { name: 'Buy credits interface', done: false },
-      { name: 'Zero credits upsell page', done: false },
-      { name: 'Credit transaction tracking', done: false },
-      { name: 'Stripe checkout integration', done: false },
-      { name: 'Credit billing view', done: false },
-      { name: 'Non-credit billing view', done: false },
+      // Stripe / checkout
+      { name: 'Stripe checkout integration (redirectToCheckout)', done: false },
+      { name: 'Coupon / discount code entry + validation', done: false },
+      { name: 'Usage plan components (Stripe extra-channel/teammate cards)', done: false },
+      // Feature gating
+      { name: 'Feature-locked page (FeatureLockedPage — paywall for plan-gated features)', done: false },
+      // Guided tour
+      { name: 'Billing guided tour (step-by-step walkthrough of billing page)', done: false },
     ],
-    notes: 'Only billing settings tab exists. Full billing module (plans, addons, invoices, credits, Stripe) not started.',
+    notes: 'Only billing settings tab exists. Full billing module is a complex 35+ item build: usage plan scenes, power-ups, credit top-up, purchase/transaction history, Stripe checkout, subscriptions table, feature-gating pages, and guided tour.',
   },
 
   localization: {
