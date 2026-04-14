@@ -547,7 +547,7 @@ const STATIC: Record<string, StaticConfig> = {
     icon: '📊',
     category: 'core',
     status: 'in-progress',
-    progress: 95,
+    progress: 98,
     oldFileCount: 22,
     subFeatures: [
       // Widget grid
@@ -556,13 +556,13 @@ const STATIC: Record<string, StaticConfig> = {
       // Dashboard management
       { name: 'New dashboard creation modal (with default widgets toggle)', done: true },
       { name: 'Dashboard delete', done: true },
-      { name: 'Dashboard rename (inline edit)', done: false },
-      { name: 'Dashboard sharing (per-user and team-level permissions)', done: false },
-      { name: 'Request edit access (non-owner flow)', done: false },
+      { name: 'Dashboard rename (inline edit)', done: true },
+      { name: 'Dashboard sharing (per-user and team-level permissions)', done: true },
+      { name: 'Request edit access (non-owner flow)', done: true },
       // Time / grouping controls
       { name: 'Time period / date range selector', done: true },
-      { name: 'Aggregate selector (day / week / month grouping)', done: false },
-      { name: 'Dashboard channel and tag filters bar', done: false },
+      { name: 'Aggregate selector (day / week / month grouping)', done: true },
+      { name: 'Dashboard channel and tag filters bar', done: true },
       // Chart widget types
       { name: 'Line chart widget', done: true },
       { name: 'Pie chart widget', done: true },
@@ -571,21 +571,21 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Table / data grid widget', done: true },
       { name: 'Funnel chart widget', done: false },
       // Per-widget features
-      { name: 'Per-widget metric breakdown (by user, tag, channel, automation)', done: false },
-      { name: 'Per-widget filter popover', done: false },
+      { name: 'Per-widget metric breakdown (by user, tag, channel, automation)', done: true },
+      { name: 'Per-widget filter popover', done: true },
       { name: 'Metric comparison: period vs previous period', done: false },
-      { name: 'Per-widget CSV data export', done: false },
-      { name: 'Widget-level error retry', done: false },
+      { name: 'Per-widget CSV data export', done: true },
+      { name: 'Widget-level error retry', done: true },
       // Performance tabs
       { name: 'Performance tabs header (Chat / Agent)', done: true },
       { name: 'Chat performance tab (widget grid)', done: true },
       { name: 'Agent performance tab (agent table)', done: true },
-      { name: 'Marketing performance tab', done: false },
-      { name: 'Sales performance tab', done: false },
+      { name: 'Marketing performance tab', done: true },
+      { name: 'Sales performance tab', done: true },
       // Export / freshness
-      { name: 'Dashboard PNG export (html-to-image)', done: false },
-      { name: 'Last-refreshed live pulsating indicator (shows data freshness)', done: false },
-      { name: 'Smart Analysis button (AI-driven insight generation per dashboard)', done: false },
+      { name: 'Dashboard PNG export (html-to-image)', done: true },
+      { name: 'Last-refreshed live pulsating indicator (shows data freshness)', done: true },
+      { name: 'Smart Analysis button (AI-driven insight generation per dashboard)', done: true },
       // Agent table columns
       { name: 'Agent performance table — agent name column', done: true },
       { name: 'Agent performance table — messages sent column', done: true },
@@ -596,13 +596,13 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Agent performance table — last active column', done: true },
       { name: 'Agent performance time period toggle (7d / 30d / custom)', done: true },
       // Metric tools
-      { name: 'MetricTransformation view (derived/calculated metrics editor)', done: false },
-      { name: 'AnalyticListLayoutViewer (table layout for list metrics)', done: false },
-      { name: 'V1 → V2 migration dialog (migrate old dashboard configs)', done: false },
-      { name: 'Unsupported viewport state (mobile/tablet warning overlay)', done: false },
-      { name: 'Analytics filter popover (advanced filter for analytics data)', done: false },
+      { name: 'MetricTransformation view (derived/calculated metrics editor)', done: true },
+      { name: 'AnalyticListLayoutViewer (table layout for list metrics)', done: true },
+      { name: 'V1 → V2 migration dialog (migrate old dashboard configs)', done: true },
+      { name: 'Unsupported viewport state (mobile/tablet warning overlay)', done: true },
+      { name: 'Analytics filter popover (advanced filter for analytics data)', done: true },
     ],
-    notes: 'Widget grid with 5 chart types (line/pie/bar/snapshot/table), add widget dialog, dashboard selector (create/delete), time period selector, agent performance table (7 columns + period toggle), team analytics view all confirmed. Remaining: funnel chart, per-widget breakdown/filter/CSV/retry, marketing/sales tabs, rename/share/edit-access, aggregate selector, channel+tag filters bar, PNG export, smart analysis, MetricTransformation, AnalyticListLayout, V1 migration dialog, unsupported viewport overlay, analytics filter popover.',
+    notes: 'All 19 requested features complete. ShareDashboard now wired to updateDashboardMetadata API with DashboardMetadataPermissions (allMembers + per-user lvl1_view/lvl2_edit). Dashboard rename inline (double-click tab), aggregate selector (day/week/month pills in TimePeriodSelector), filter bar (channels/tags/agents), per-widget breakdown/filter/CSV/retry in WidgetShell, Marketing+Sales tabs with KPI grids, PNG export via html-to-image, last-refreshed pulsating dot, Smart Analysis panel, MetricTransformation editor, AnalyticListLayoutViewer, V1 migration dialog, unsupported viewport overlay. Remaining: funnel chart widget, metric period comparison.',
   },
 
   // ── Engage ───────────────────────────────────────────────────────────────────
