@@ -1609,14 +1609,14 @@ const STATIC: Record<string, StaticConfig> = {
     label: 'Help & Support',
     icon: '🆘',
     category: 'missing',
-    status: 'not-started',
-    progress: 0,
+    status: 'done',
+    progress: 100,
     oldFileCount: 1,
     subFeatures: [
-      { name: 'Help center iframe embed (chatdaddy-helpcenter.chatdaddy.tech)', done: false },
-      { name: 'Help support route (/help-support)', done: false },
+      { name: 'Help center iframe embed (chatdaddy-helpcenter.chatdaddy.tech)', done: true },
+      { name: 'Help support route (/help-support)', done: true },
     ],
-    notes: 'Simple iframe embedding the ChatDaddy help center. Old app: src/HelpSupport/index.tsx. Not started in v2.',
+    notes: 'Built in src/modules/help/index.tsx: iframe embed of chatdaddy-helpcenter.chatdaddy.tech with loading overlay, error state + retry, reload button (spinning icon), compact/expand toggle, open-in-new-tab. Route: /help-support (lazy-loaded, authenticated).',
   },
 
   // ── Platform / Infrastructure ────────────────────────────────────────────────
