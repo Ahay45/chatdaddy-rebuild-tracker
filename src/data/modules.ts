@@ -1597,8 +1597,12 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Portuguese (ptg) locale', done: true },
       { name: 'Language selector UI', done: true },
       { name: 'Locale context provider', done: true },
+      { name: 't() wired into Sidebar nav labels', done: true },
+      { name: 't() wired into Settings tab labels', done: true },
+      { name: 't() wired into PreferencesSettings', done: true },
+      { name: 't() wired into Navbar notification tooltip', done: true },
     ],
-    notes: '4-locale i18n system with Zustand store, animated LanguageSelector dialog, and Preferences tab in Settings.',
+    notes: '4-locale i18n system with Zustand store, animated LanguageSelector dialog, and Preferences tab in Settings. t() is now actively wired into sidebar nav labels, settings tabs (Personal Profile, Team, Members, Notifications, Quick Replies, Integrations, Billing, Developer, Preferences), PreferencesSettings headings, and Navbar tooltip — switching language now changes visible app text.',
   },
 
   'help-support': {
