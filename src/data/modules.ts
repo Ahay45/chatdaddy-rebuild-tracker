@@ -193,7 +193,7 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Pin filter dialog — name input (max 20 chars, uniqueness validation)', done: true },
       { name: 'Pin filter dialog — max 10 filters limit enforcement', done: true },
       { name: 'Pin filter dialog — convertRulesToFilters / convertFiltersToRules round-trip', done: true },
-      { name: 'Pinned filters backend CRUD (PinnedFiltersApi — create / update / delete)', done: false },
+      { name: 'Pinned filters backend CRUD (PinnedFiltersApi — create / update / delete)', done: true },
       { name: 'Pin to top bar toggle from sidebar filter row', done: false },
       { name: 'No channels empty state', done: true },
       { name: 'Feature carousel / onboarding tooltip', done: false },
