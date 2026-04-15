@@ -1368,33 +1368,252 @@ const STATIC: Record<string, StaticConfig> = {
     label: 'Visual Flow Builder',
     icon: '🗺️',
     category: 'missing',
-    status: 'deferred',
+    status: 'not-started',
     progress: 0,
     oldFileCount: 198,
     subFeatures: [
-      { name: 'Canvas with ReactFlow (drag-and-drop)', done: false },
-      { name: 'Message node', done: false },
-      { name: 'Condition node (AND/OR groups, operators)', done: false },
-      { name: 'Delay node (date / duration / weekday)', done: false },
-      { name: 'Input / data collection node', done: false },
-      { name: 'Email node', done: false },
-      { name: 'Form embed node', done: false },
-      { name: 'Webhook / URL node', done: false },
-      { name: 'Bot target node', done: false },
-      { name: 'App integration nodes', done: false },
-      { name: 'Trigger node (frequency, throttle, audience, time zone)', done: false },
-      { name: 'Node editor sidebar', done: false },
-      { name: 'Node toolbar (copy, delete, edit)', done: false },
-      { name: 'Helper lines for alignment', done: false },
-      { name: 'Flow folder organization', done: false },
-      { name: 'Flow import / export', done: false },
-      { name: 'Unsaved changes tracking', done: false },
-      { name: 'Conflict detection', done: false },
-      { name: 'Flow analytics / performance metrics', done: false },
-      { name: 'AI flow builder interface', done: false },
-      { name: 'Template import / export', done: false },
+      // ── Canvas & Core ReactFlow ──────────────────────────────────────────
+      { name: 'ReactFlow canvas with infinite pan and zoom', done: false },
+      { name: 'Drag-and-drop nodes onto canvas', done: false },
+      { name: 'Multi-select nodes (shift-click / drag-box)', done: false },
+      { name: 'Helper lines / snap-to-align when dragging nodes', done: false },
+      { name: 'Minimap in canvas corner', done: false },
+      { name: 'Fit-view / zoom-to-fit button', done: false },
+      { name: 'Keyboard shortcuts: copy, paste, delete, undo, redo', done: false },
+      { name: 'Copy-paste selected nodes (with edges, preserving layout)', done: false },
+      { name: 'Undo / redo history stack', done: false },
+      { name: 'Auto-layout (reset / re-arrange nodes)', done: false },
+      { name: 'Canvas background (dots / grid pattern)', done: false },
+      { name: 'Node drag-handle (dedicated grip area per node)', done: false },
+
+      // ── Node Types ───────────────────────────────────────────────────────
+      // Trigger node
+      { name: 'Trigger node — keyword match (exact / contains / regex)', done: false },
+      { name: 'Trigger node — event trigger (new contact, order, webhook, etc.)', done: false },
+      { name: 'Trigger node — trigger frequency (always / once per contact / throttle interval)', done: false },
+      { name: 'Trigger node — audience filter (include / exclude contact lists)', done: false },
+      { name: 'Trigger node — time window (only fire between hours / days)', done: false },
+      { name: 'Trigger node — timezone setting per trigger', done: false },
+      { name: 'Trigger node — channel selector (which WhatsApp number to listen on)', done: false },
+      { name: 'Trigger node — multiple keywords per trigger', done: false },
+
+      // Message node
+      { name: 'Message node — plain text message', done: false },
+      { name: 'Message node — image attachment', done: false },
+      { name: 'Message node — video attachment', done: false },
+      { name: 'Message node — audio attachment', done: false },
+      { name: 'Message node — document / file attachment', done: false },
+      { name: 'Message node — interactive button list (up to 10 buttons)', done: false },
+      { name: 'Message node — interactive list message (sections + rows)', done: false },
+      { name: 'Message node — location message', done: false },
+      { name: 'Message node — WhatsApp template (HSM) message', done: false },
+      { name: 'Message node — template variable mapping', done: false },
+      { name: 'Message node — dynamic variable injection ({{contact.name}}, custom fields)', done: false },
+      { name: 'Message node — assign chat to agent / team after send', done: false },
+      { name: 'Message node — add / remove tags after send', done: false },
+      { name: 'Message node — update contact field after send', done: false },
+      { name: 'Message node — send delay before this message (seconds)', done: false },
+      { name: 'Message node — rich text editor with formatting toolbar', done: false },
+
+      // Condition node
+      { name: 'Condition node — AND / OR logic groups', done: false },
+      { name: 'Condition node — contact field operators (equals, contains, starts with, regex, empty, not empty)', done: false },
+      { name: 'Condition node — numeric operators (greater than, less than, between)', done: false },
+      { name: 'Condition node — date / time operators (before, after, within last N days)', done: false },
+      { name: 'Condition node — tag presence condition', done: false },
+      { name: 'Condition node — custom attribute condition', done: false },
+      { name: 'Condition node — True / False output edges', done: false },
+      { name: 'Condition node — nested condition groups', done: false },
+
+      // Delay node
+      { name: 'Delay node — fixed duration (minutes / hours / days)', done: false },
+      { name: 'Delay node — delay until specific date-time', done: false },
+      { name: 'Delay node — delay until next weekday (Mon–Fri)', done: false },
+      { name: 'Delay node — delay until contact's local business hours', done: false },
+      { name: 'Delay node — timezone-aware scheduling', done: false },
+
+      // Input / data collection node
+      { name: 'Input node — free-text reply capture', done: false },
+      { name: 'Input node — number / phone / email validation on reply', done: false },
+      { name: 'Input node — save reply to contact custom field', done: false },
+      { name: 'Input node — save reply to conversation attribute', done: false },
+      { name: 'Input node — invalid input branch (retry or fallback)', done: false },
+      { name: 'Input node — timeout branch (no reply within N minutes)', done: false },
+      { name: 'Input node — max retries before fallback', done: false },
+      { name: 'Input node — button-choice reply capture', done: false },
+
+      // Webhook / URL node
+      { name: 'Webhook node — HTTP GET / POST / PUT / DELETE', done: false },
+      { name: 'Webhook node — custom headers and auth', done: false },
+      { name: 'Webhook node — JSON body with variable interpolation', done: false },
+      { name: 'Webhook node — response mapping (store fields to contact attributes)', done: false },
+      { name: 'Webhook node — success / failure output edges', done: false },
+      { name: 'Webhook node — test request from builder', done: false },
+
+      // Email node
+      { name: 'Email node — subject / body template', done: false },
+      { name: 'Email node — dynamic variable injection in email', done: false },
+      { name: 'Email node — sender name and reply-to config', done: false },
+      { name: 'Email node — HTML vs plain-text toggle', done: false },
+
+      // Form embed node
+      { name: 'Form node — link to internal ChatDaddy form', done: false },
+      { name: 'Form node — send form link as message', done: false },
+      { name: 'Form node — listen for form submission to continue flow', done: false },
+
+      // Bot target node
+      { name: 'Bot target node — jump to another flow / bot', done: false },
+      { name: 'Bot target node — pass context variables to target flow', done: false },
+      { name: 'Bot target node — return-to-parent after target completes', done: false },
+
+      // App integration nodes
+      { name: 'Integration node — Shopify: create / update order', done: false },
+      { name: 'Integration node — Shopify: look up order status', done: false },
+      { name: 'Integration node — Google Sheets: append / update row', done: false },
+      { name: 'Integration node — Google Calendar: create event', done: false },
+      { name: 'Integration node — Calendly: get availability / create booking', done: false },
+      { name: 'Integration node — Stripe: create payment link', done: false },
+      { name: 'Integration node — OpenAI / AI response node', done: false },
+      { name: 'Integration node — custom API integration (generic)', done: false },
+
+      // Shape / annotation nodes
+      { name: 'Note / comment node (sticky note on canvas)', done: false },
+      { name: 'Group / frame node (visual grouping of nodes)', done: false },
+
+      // ── Edges & Connections ──────────────────────────────────────────────
+      { name: 'Animated edges (dashed animation showing flow direction)', done: false },
+      { name: 'Edge labels', done: false },
+      { name: 'Edge delete on click', done: false },
+      { name: 'Reconnect edge by dragging endpoint', done: false },
+      { name: 'Self-loop edges (node connects back to itself)', done: false },
+      { name: 'Multiple output edges from one node handle', done: false },
+
+      // ── Node Editor Sidebar ──────────────────────────────────────────────
+      { name: 'Sidebar opens on node click (slide-in panel)', done: false },
+      { name: 'Sidebar — node name / label editor', done: false },
+      { name: 'Sidebar — node-specific property form (dynamic per node type)', done: false },
+      { name: 'Sidebar — live preview of message as WhatsApp bubble', done: false },
+      { name: 'Sidebar — media upload (image / video / audio / document)', done: false },
+      { name: 'Sidebar — emoji picker in message editor', done: false },
+      { name: 'Sidebar — variable picker (insert {{variable}} from dropdown)', done: false },
+      { name: 'Sidebar — close / collapse sidebar button', done: false },
+
+      // ── Node Toolbar (context menu on node) ─────────────────────────────
+      { name: 'Node toolbar — duplicate node', done: false },
+      { name: 'Node toolbar — delete node', done: false },
+      { name: 'Node toolbar — add note / comment to node', done: false },
+      { name: 'Node toolbar — enable / disable node (bypass in flow)', done: false },
+
+      // ── Toolbar & Top Bar ────────────────────────────────────────────────
+      { name: 'Flow name editable in top bar', done: false },
+      { name: 'Save button (manual save)', done: false },
+      { name: 'Publish / activate flow toggle', done: false },
+      { name: 'Unsaved changes indicator (dirty state badge)', done: false },
+      { name: 'Conflict detection — warn when another user edited the flow', done: false },
+      { name: 'Back button (return to flow list)', done: false },
+      { name: 'Test flow button (send test to self)', done: false },
+      { name: 'Flow settings button (opens meta panel)', done: false },
+
+      // ── Flow Management (list page) ──────────────────────────────────────
+      { name: 'Flow list page with search', done: false },
+      { name: 'Flow list — folder / category organization', done: false },
+      { name: 'Flow list — create new flow', done: false },
+      { name: 'Flow list — duplicate existing flow', done: false },
+      { name: 'Flow list — delete flow (with confirmation)', done: false },
+      { name: 'Flow list — rename flow inline', done: false },
+      { name: 'Flow list — active / inactive status badge', done: false },
+      { name: 'Flow list — last modified timestamp', done: false },
+      { name: 'Flow list — flow analytics summary (sent / delivered counts)', done: false },
+      { name: 'Flow import from JSON file', done: false },
+      { name: 'Flow export to JSON file', done: false },
+      { name: 'Flow share via template link', done: false },
+
+      // ── Template Library ─────────────────────────────────────────────────
+      { name: 'Template gallery / browse page', done: false },
+      { name: 'Template preview before import', done: false },
+      { name: 'Import template into flow builder', done: false },
+      { name: 'Export flow as reusable template', done: false },
+      { name: 'Community / marketplace templates', done: false },
+
+      // ── Flow Analytics ───────────────────────────────────────────────────
+      { name: 'Flow analytics — total contacts entered', done: false },
+      { name: 'Flow analytics — contacts at each node (funnel view)', done: false },
+      { name: 'Flow analytics — node-level sent / delivered / read rates', done: false },
+      { name: 'Flow analytics — button click-through rates per button', done: false },
+      { name: 'Flow analytics — drop-off points / exit nodes', done: false },
+      { name: 'Flow analytics — date-range filter', done: false },
+      { name: 'Flow analytics — export analytics CSV', done: false },
+      { name: 'Flow analytics — heatmap overlay on canvas (color nodes by volume)', done: false },
+
+      // ── AI Flow Builder ──────────────────────────────────────────────────
+      { name: 'AI builder — prompt input ("describe your flow in plain language")', done: false },
+      { name: 'AI builder — generate flow from description', done: false },
+      { name: 'AI builder — review / edit generated nodes before applying', done: false },
+      { name: 'AI builder — iterate / refine with follow-up prompts', done: false },
+
+      // ── Bot / Flow Settings ──────────────────────────────────────────────
+      { name: 'Flow settings — description / notes field', done: false },
+      { name: 'Flow settings — default timezone', done: false },
+      { name: 'Flow settings — stop on agent reply (pause bot when human responds)', done: false },
+      { name: 'Flow settings — opt-out keyword (stop word exits flow)', done: false },
+      { name: 'Flow settings — error / fallback message', done: false },
+      { name: 'Flow settings — assign label / tag on flow entry', done: false },
+
+      // ── Audience / Contact Targeting ─────────────────────────────────────
+      { name: 'Audience filter on trigger — include contact lists', done: false },
+      { name: 'Audience filter on trigger — exclude contact lists', done: false },
+      { name: 'Audience filter — filter by tag', done: false },
+      { name: 'Audience filter — filter by custom attribute', done: false },
+      { name: 'Audience filter — estimated audience size preview', done: false },
+
+      // ── Condition Logic Operators ─────────────────────────────────────────
+      { name: 'Condition operator — equals / not equals', done: false },
+      { name: 'Condition operator — contains / not contains', done: false },
+      { name: 'Condition operator — starts with / ends with', done: false },
+      { name: 'Condition operator — regex match', done: false },
+      { name: 'Condition operator — is empty / is not empty', done: false },
+      { name: 'Condition operator — greater than / less than / between', done: false },
+      { name: 'Condition operator — before date / after date / within N days', done: false },
+
+      // ── Message Content Types (inside Message node) ───────────────────────
+      { name: 'Message content — text with emoji support', done: false },
+      { name: 'Message content — image with caption', done: false },
+      { name: 'Message content — video with caption', done: false },
+      { name: 'Message content — audio (voice note style)', done: false },
+      { name: 'Message content — PDF / document with filename', done: false },
+      { name: 'Message content — location pin (lat/lon + label)', done: false },
+      { name: 'Message content — contact card (vCard)', done: false },
+      { name: 'Message content — catalog message (product)', done: false },
+      { name: 'Message content — multi-product message', done: false },
+      { name: 'Message content — CTA URL button', done: false },
+      { name: 'Message content — quick reply buttons', done: false },
+
+      // ── Delay Types (inside Delay node) ──────────────────────────────────
+      { name: 'Delay type — wait N seconds / minutes / hours', done: false },
+      { name: 'Delay type — wait until specific date-time (absolute)', done: false },
+      { name: 'Delay type — wait until next occurrence of weekday', done: false },
+      { name: 'Delay type — wait until business hours window opens', done: false },
+
+      // ── Demo / Preview Mode ───────────────────────────────────────────────
+      { name: 'Demo mode — simulate flow execution step by step', done: false },
+      { name: 'Demo mode — highlight active node as simulation progresses', done: false },
+      { name: 'Demo mode — show simulated message output per node', done: false },
+      { name: 'Test send — send flow to a real phone number for live test', done: false },
+
+      // ── Data Models / Variable System ─────────────────────────────────────
+      { name: 'Variable system — built-in contact variables (name, phone, email)', done: false },
+      { name: 'Variable system — custom contact fields as variables', done: false },
+      { name: 'Variable system — flow-scoped variables (set / get within flow)', done: false },
+      { name: 'Variable system — webhook response fields as variables', done: false },
+      { name: 'Variable system — input node capture → variable', done: false },
+      { name: 'Variable system — date/time helper variables (today, now)', done: false },
+
+      // ── Mobile / Responsive ───────────────────────────────────────────────
+      { name: 'Mobile — canvas is scrollable and zoomable on touch', done: false },
+      { name: 'Mobile — sidebar stacks below canvas on small screens', done: false },
+      { name: 'Mobile — touch-drag to move nodes', done: false },
     ],
-    notes: 'Intentionally deferred (P3). Largest old module (198 files). Empty stub only in v2.',
+    notes: 'P3 deferred — largest old module (198 files). Needs full rebuild from scratch using ReactFlow v11+. Full detail inventory: 27 categories, 150+ sub-features.',
   },
 
   notifications: {
