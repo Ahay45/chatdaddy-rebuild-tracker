@@ -2049,76 +2049,76 @@ const STATIC: Record<string, StaticConfig> = {
     label: 'Analytics & UX Checklist',
     icon: '🔬',
     category: 'platform',
-    status: 'not-started',
-    progress: 0,
+    status: 'done',
+    progress: 100,
     oldFileCount: 0,
     subFeatures: [
       // 1. Adoption Tracking
-      { name: 'feature_viewed event', done: false },
-      { name: 'feature_clicked event', done: false },
-      { name: 'Unique users using feature tracked', done: false },
-      { name: 'First-time usage tracked', done: false },
+      { name: 'feature_viewed event', done: true },
+      { name: 'feature_clicked event', done: true },
+      { name: 'Unique users using feature tracked', done: true },
+      { name: 'First-time usage tracked', done: true },
 
       // 2. Interaction Tracking
-      { name: 'Click events tracked', done: false },
-      { name: 'Dead clicks detected', done: false },
-      { name: 'Rage clicks detected', done: false },
-      { name: 'Hover tracking', done: false },
-      { name: 'Scroll depth tracking', done: false },
+      { name: 'Click events tracked', done: true },
+      { name: 'Dead clicks detected', done: true },
+      { name: 'Rage clicks detected', done: true },
+      { name: 'Hover tracking', done: true },
+      { name: 'Scroll depth tracking', done: true },
 
       // 3. Engagement Metrics
-      { name: 'Time spent per session tracked', done: false },
-      { name: 'Time to complete task tracked', done: false },
-      { name: 'Idle vs active time tracked', done: false },
-      { name: 'Number of steps taken tracked', done: false },
+      { name: 'Time spent per session tracked', done: true },
+      { name: 'Time to complete task tracked', done: true },
+      { name: 'Idle vs active time tracked', done: true },
+      { name: 'Number of steps taken tracked', done: true },
 
       // 4. Funnel Tracking (CRITICAL)
-      { name: 'Funnel steps defined per module', done: false },
-      { name: 'Step-by-step conversion tracked', done: false },
-      { name: 'Drop-off points identified', done: false },
-      { name: 'Completion rate tracked', done: false },
+      { name: 'Funnel steps defined per module', done: true },
+      { name: 'Step-by-step conversion tracked', done: true },
+      { name: 'Drop-off points identified', done: true },
+      { name: 'Completion rate tracked', done: true },
 
       // 5. Errors & Friction
-      { name: 'Error messages tracked', done: false },
-      { name: 'Validation failures tracked', done: false },
-      { name: 'API failures tracked', done: false },
-      { name: 'Loading time tracked', done: false },
-      { name: 'User exits tracked', done: false },
+      { name: 'Error messages tracked', done: true },
+      { name: 'Validation failures tracked', done: true },
+      { name: 'API failures tracked', done: true },
+      { name: 'Loading time tracked', done: true },
+      { name: 'User exits tracked', done: true },
 
       // 6. UX Quality Signals
-      { name: 'Rage click rate surfaced per module', done: false },
-      { name: 'Dead click rate surfaced per module', done: false },
-      { name: 'Backtracking behavior tracked', done: false },
-      { name: 'Repeated attempts tracked', done: false },
+      { name: 'Rage click rate surfaced per module', done: true },
+      { name: 'Dead click rate surfaced per module', done: true },
+      { name: 'Backtracking behavior tracked', done: true },
+      { name: 'Repeated attempts tracked', done: true },
 
       // 7. Derived Metrics
-      { name: 'Task success rate calculated', done: false },
-      { name: 'Avg completion time calculated', done: false },
-      { name: 'Drop-off rate calculated', done: false },
-      { name: 'UX difficulty score calculated', done: false },
+      { name: 'Task success rate calculated', done: true },
+      { name: 'Avg completion time calculated', done: true },
+      { name: 'Drop-off rate calculated', done: true },
+      { name: 'UX difficulty score calculated', done: true },
 
       // Visual Indicators (per-module status display)
-      { name: 'Per-module tracking status badge (✅ / ⚠️ / ❌)', done: false },
-      { name: 'Checklist completion % per module', done: false },
-      { name: 'Critical missing items highlighted (red)', done: false },
+      { name: 'Per-module tracking status badge (✅ / ⚠️ / ❌)', done: true },
+      { name: 'Checklist completion % per module', done: true },
+      { name: 'Critical missing items highlighted (red)', done: true },
 
       // Smart Insights Layer
-      { name: 'Auto-generated insight: high drop-off detection', done: false },
-      { name: 'Auto-generated insight: clicks without completion', done: false },
-      { name: 'Auto-generated insight: high rage click rate warning', done: false },
+      { name: 'Auto-generated insight: high drop-off detection', done: true },
+      { name: 'Auto-generated insight: clicks without completion', done: true },
+      { name: 'Auto-generated insight: high rage click rate warning', done: true },
 
       // Data Source Integration
-      { name: 'PostHog / Mixpanel / Amplitude integration ready', done: false },
-      { name: 'Event naming convention enforced (module_feature_action)', done: false },
-      { name: 'Custom event tracking system hookup', done: false },
+      { name: 'PostHog / Mixpanel / Amplitude integration ready', done: true },
+      { name: 'Event naming convention enforced (module_feature_action)', done: true },
+      { name: 'Custom event tracking system hookup', done: true },
 
       // UI / Checklist Shell
-      { name: 'Collapsible category panels UI', done: false },
-      { name: 'Progress bars per checklist category', done: false },
-      { name: 'Color-coded health status (green / yellow / red)', done: false },
-      { name: 'Per-module analytics readiness dashboard view', done: false },
+      { name: 'Collapsible category panels UI', done: true },
+      { name: 'Progress bars per checklist category', done: true },
+      { name: 'Color-coded health status (green / yellow / red)', done: true },
+      { name: 'Per-module analytics readiness dashboard view', done: true },
     ],
-    notes: 'New platform module — no equivalent in old app. Answers: Are we tracking this feature properly? Do users actually use it? Where do they struggle? Is the UX good or broken? Per-module checklist with smart insights layer and data source integration (PostHog/Mixpanel/Amplitude).',
+    notes: 'Complete. ux-tracker.ts: rage/dead click detection, scroll depth, time tracking, funnel steps, Amplitude/Mixpanel/PostHog adapters, event naming enforcement. UXChecklistPanel: 44-item checklist in 6 categories, collapsible panels, progress bars, color-coded health, derived metrics (success rate, difficulty score, drop-off rate), smart insights. Accessible as tab in Admin page.',
   },
 
   // ── Error Scenarios ──────────────────────────────────────────────────────────
