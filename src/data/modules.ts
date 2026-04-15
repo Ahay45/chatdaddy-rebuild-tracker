@@ -1805,9 +1805,9 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Empty state — no notifications/webhooks', done: true },
       { name: 'Empty state — no orders', done: true },
       { name: 'Empty state — no products', done: true },
-      { name: 'Empty state — no assignee filters yet', done: false },
-      { name: 'Empty state — no tag filters yet', done: false },
-      { name: 'Empty state — no pinned filters yet', done: false },
+      { name: 'Empty state — no assignee filters yet', done: true },
+      { name: 'Empty state — no tag filters yet', done: true },
+      { name: 'Empty state — no pinned filters yet', done: true },
 
       // ── 3. API / Network Error States ─────────────────────────────────────
       { name: 'Error message parser — "Network Error" → friendly message', done: true },
@@ -1864,7 +1864,7 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Connection broken — "Data may be stale" message', done: true },
       { name: 'Connection broken — Refresh button to reload', done: true },
       { name: 'WebSocket reconnecting state — spinner / connecting indicator', done: true },
-      { name: 'WebSocket JSON parse error — silent recovery (no crash)', done: false },
+      { name: 'WebSocket JSON parse error — silent recovery (no crash)', done: true },
 
       // ── 7. File Upload Errors ─────────────────────────────────────────────
       { name: 'Upload — file too large toast with max MB in message', done: true },
