@@ -738,7 +738,7 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Node toolbar (copy, delete, edit)', done: true },
       { name: 'Helper lines / alignment', done: true },
       { name: 'Flow folder organization', done: true },
-      { name: 'Flow import / export', done: true },
+      { name: 'Flow import / export (exportFlowToJSON, importFlowFromJSON, downloadFlowJSON)', done: true },
       { name: 'Unsaved changes tracking', done: true },
       { name: 'Conflict detection (concurrent edit detection)', done: true },
       { name: 'Flow analytics / performance metrics', done: true },
@@ -787,7 +787,7 @@ const STATIC: Record<string, StaticConfig> = {
       // Survey
       { name: 'Survey popup node (in-flow NPS / survey trigger, distinct from form node)', done: false },
     ],
-    notes: 'Flow builder fully wired: 13 nodes (incl. Form, Phone, Shape, AppIntegration), all advanced trigger settings, GlobalBotPreviewModal, FlowSaveErrorsModal, ExportConfirmModal, SelectFormModal, GuidedTour, AttachmentsPanel, ConflictBanner, ShareFlowModal, FlowMetadataModal, SelectionContextMenu. Analytics panel: 3 tabs (overview/funnel/history). Toolbar: AI, Share, Metadata, Preview buttons + validate-before-save. Remaining: CreateBotModal, ZapierModal, CommentsPanel, template approval, survey popup, recipients list, download-as-image, category manager, AutomationHub.',
+    notes: 'Flow builder fully extended: store copy-paste/duplicate/toggleEnabled, Ctrl+Z/Y/C/V/A keyboard shortcuts, snap-to-grid (16px), animated edges with handle-color labels + delete button, backgroundVariant cycling (dots/grid/cross), dagre auto-layout, WhatsAppPreview component, VariablePicker popover, TemplateGallery (8 pre-built templates), flow-validation util, flow-export util, variable-system util. 13 node types live. Remaining: CreateBotModal, ZapierModal, CommentsPanel, template approval, survey popup, recipients list, download-as-image, category manager, AutomationHub.',
   },
 
   broadcasts: {
