@@ -1429,7 +1429,7 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Delay node — fixed duration (minutes / hours / days)', done: false },
       { name: 'Delay node — delay until specific date-time', done: false },
       { name: 'Delay node — delay until next weekday (Mon–Fri)', done: false },
-      { name: 'Delay node — delay until contact's local business hours', done: false },
+      { name: "Delay node — delay until contact's local business hours", done: false },
       { name: 'Delay node — timezone-aware scheduling', done: false },
 
       // Input / data collection node
