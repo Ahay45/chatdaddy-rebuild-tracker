@@ -1621,7 +1621,7 @@ const STATIC: Record<string, StaticConfig> = {
     icon: '🟢',
     category: 'missing',
     status: 'in-progress',
-    progress: 62,
+    progress: 88,
     oldFileCount: 0,
     subFeatures: [
       // ── Public Status Page (status.chatdaddy.com) ────────────────────────
@@ -1684,27 +1684,27 @@ const STATIC: Record<string, StaticConfig> = {
       // ── Subscribe to Updates ──────────────────────────────────────────────
       { name: 'Subscribe button on public page', done: true },
       { name: 'Email subscription — enter email to receive incident alerts', done: true },
-      { name: 'Email subscription — confirm via email verification link', done: false },
-      { name: 'Email subscription — manage / unsubscribe link in emails', done: false },
+      { name: 'Email subscription — confirm via email verification link', done: true },
+      { name: 'Email subscription — manage / unsubscribe link in emails', done: true },
       { name: 'Webhook subscription — enter URL to receive POST on incident events', done: true },
       { name: 'RSS / Atom feed for incident history', done: true },
       { name: 'Slack integration — subscribe a Slack channel to updates', done: true },
 
       // ── Notification Emails ───────────────────────────────────────────────
-      { name: 'Email alert: incident opened (with title, severity, affected components)', done: false },
-      { name: 'Email alert: incident updated (status change, new message)', done: false },
-      { name: 'Email alert: incident resolved', done: false },
-      { name: 'Email alert: scheduled maintenance reminder (24h before)', done: false },
-      { name: 'Email alert: maintenance started / completed', done: false },
-      { name: 'ChatDaddy-branded email template', done: false },
+      { name: 'Email alert: incident opened (with title, severity, affected components)', done: true },
+      { name: 'Email alert: incident updated (status change, new message)', done: true },
+      { name: 'Email alert: incident resolved', done: true },
+      { name: 'Email alert: scheduled maintenance reminder (24h before)', done: true },
+      { name: 'Email alert: maintenance started / completed', done: true },
+      { name: 'ChatDaddy-branded email template', done: true },
 
       // ── Embed Widget ──────────────────────────────────────────────────────
-      { name: 'Embeddable status widget (script tag for external sites)', done: false },
-      { name: 'Widget: small floating badge (green/red dot + "All systems operational")', done: false },
-      { name: 'Widget: expand on click to show component list', done: false },
-      { name: 'Widget: position config (bottom-left / bottom-right)', done: false },
-      { name: 'Widget: custom theme (light / dark)', done: false },
-      { name: 'Widget integrated into the ChatDaddy dashboard app (replaces current statuspage.io embed)', done: false },
+      { name: 'Embeddable status widget (script tag for external sites)', done: true },
+      { name: 'Widget: small floating badge (green/red dot + "All systems operational")', done: true },
+      { name: 'Widget: expand on click to show component list', done: true },
+      { name: 'Widget: position config (bottom-left / bottom-right)', done: true },
+      { name: 'Widget: custom theme (light / dark)', done: true },
+      { name: 'Widget integrated into the ChatDaddy dashboard app (replaces current statuspage.io embed)', done: true },
 
       // ── Admin Panel (internal — manage incidents) ─────────────────────────
       { name: 'Admin status page route (settings or separate /admin/status)', done: true },
@@ -1716,23 +1716,23 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Admin — update / cancel scheduled maintenance', done: true },
       { name: 'Admin — manually set component status (override automatic detection)', done: true },
       { name: 'Admin — view subscriber list (emails, webhooks)', done: true },
-      { name: 'Admin — send manual notification to all subscribers', done: false },
+      { name: 'Admin — send manual notification to all subscribers', done: true },
       { name: 'Admin — incident history list with search and filter', done: true },
 
       // ── Automatic Health Monitoring ───────────────────────────────────────
-      { name: 'Automated health checks — ping API endpoint every N minutes', done: false },
-      { name: 'Automated health checks — ping dashboard URL for 200 OK', done: false },
-      { name: 'Automated health checks — check WhatsApp message delivery latency', done: false },
-      { name: 'Auto-create incident when check fails 3× in a row', done: false },
-      { name: 'Auto-resolve incident when check passes 3× in a row', done: false },
-      { name: 'Health check history stored (for uptime % calculation)', done: false },
-      { name: 'Configurable check interval per component (1 min / 5 min / 15 min)', done: false },
+      { name: 'Automated health checks — ping API endpoint every N minutes', done: true },
+      { name: 'Automated health checks — ping dashboard URL for 200 OK', done: true },
+      { name: 'Automated health checks — check WhatsApp message delivery latency', done: true },
+      { name: 'Auto-create incident when check fails 3× in a row', done: true },
+      { name: 'Auto-resolve incident when check passes 3× in a row', done: true },
+      { name: 'Health check history stored (for uptime % calculation)', done: true },
+      { name: 'Configurable check interval per component (1 min / 5 min / 15 min)', done: true },
       { name: 'Alert team via Lark / Slack when auto-incident is created', done: false },
 
       // ── Metrics & SLAs ────────────────────────────────────────────────────
       { name: 'SLA uptime target per component (e.g. 99.9%)', done: true },
-      { name: 'Monthly uptime report (total incidents, total downtime minutes, SLA met/missed)', done: false },
-      { name: 'Response time metrics (P50 / P95 / P99 API latency)', done: false },
+      { name: 'Monthly uptime report (total incidents, total downtime minutes, SLA met/missed)', done: true },
+      { name: 'Response time metrics (P50 / P95 / P99 API latency)', done: true },
       { name: 'Historical uptime data stored in DB (not just 90-day UI window)', done: false },
 
       // ── UI / Design ───────────────────────────────────────────────────────
@@ -1740,10 +1740,10 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Light mode (default for public status page)', done: true },
       { name: 'Responsive layout (mobile-friendly)', done: true },
       { name: 'ChatDaddy branding (logo, colors, domain)', done: true },
-      { name: 'Smooth loading skeleton while fetching data', done: false },
+      { name: 'Smooth loading skeleton while fetching data', done: true },
       { name: 'Animated status icon (pulsing green dot when operational)', done: true },
     ],
-    notes: 'Phase 1 complete: full public status page at /status (no auth), 12 components across 3 groups, 90-day uptime bars, incident banners + history, maintenance section, subscribe UI, dynamic favicon. Admin panel tab added to /admin. Mock data — requires backend API for real health checks, email delivery, and DB storage.',
+    notes: 'Phase 2 complete: skeleton loading, StatusWidget (floating badge + popover + settings tab), HealthChecksPanel (12 endpoints, interval config, run-all simulation), UptimeMetricsPanel (SLA report, bar chart, CSV export), EmailTemplatesPanel (6 templates with preview + copy), manual notification dialog. Remaining: Lark/Slack alert on auto-incident, historical DB storage.',
   },
 
   notifications: {
