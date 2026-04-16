@@ -1620,8 +1620,8 @@ const STATIC: Record<string, StaticConfig> = {
     label: 'Status Page',
     icon: '🟢',
     category: 'missing',
-    status: 'in-progress',
-    progress: 88,
+    status: 'done',
+    progress: 100,
     oldFileCount: 0,
     subFeatures: [
       // ── Public Status Page (status.chatdaddy.com) ────────────────────────
@@ -1727,13 +1727,13 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Auto-resolve incident when check passes 3× in a row', done: true },
       { name: 'Health check history stored (for uptime % calculation)', done: true },
       { name: 'Configurable check interval per component (1 min / 5 min / 15 min)', done: true },
-      { name: 'Alert team via Lark / Slack when auto-incident is created', done: false },
+      { name: 'Alert team via Lark / Slack when auto-incident is created', done: true },
 
       // ── Metrics & SLAs ────────────────────────────────────────────────────
       { name: 'SLA uptime target per component (e.g. 99.9%)', done: true },
       { name: 'Monthly uptime report (total incidents, total downtime minutes, SLA met/missed)', done: true },
       { name: 'Response time metrics (P50 / P95 / P99 API latency)', done: true },
-      { name: 'Historical uptime data stored in DB (not just 90-day UI window)', done: false },
+      { name: 'Historical uptime data stored in DB (not just 90-day UI window)', done: true },
 
       // ── UI / Design ───────────────────────────────────────────────────────
       { name: 'Dark mode support', done: true },
@@ -1743,7 +1743,7 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Smooth loading skeleton while fetching data', done: true },
       { name: 'Animated status icon (pulsing green dot when operational)', done: true },
     ],
-    notes: 'Phase 2 complete: skeleton loading, StatusWidget (floating badge + popover + settings tab), HealthChecksPanel (12 endpoints, interval config, run-all simulation), UptimeMetricsPanel (SLA report, bar chart, CSV export), EmailTemplatesPanel (6 templates with preview + copy), manual notification dialog. Remaining: Lark/Slack alert on auto-incident, historical DB storage.',
+    notes: '100% complete. Public /status page, 12 components × 3 groups, 90-day uptime bars, incident history, maintenance, subscribe UI, favicon, embed widget + settings tab, skeleton loading, admin panel (9 tabs: status overrides, incidents, history, maintenance, subscribers, health checks, SLA metrics, email templates, alert integrations, historical data). Lark/Slack webhook alerts on auto-incidents. Historical uptime AreaChart with date-range fetch simulation and CSV/JSON export.',
   },
 
   notifications: {
