@@ -11,8 +11,10 @@ import {
   ToggleButton,
   alpha,
   useTheme,
+  Tab,
+  Tabs,
 } from '@mui/material'
-import { ChevronDown, ChevronUp, ChevronLeft, ChevronRight, GitCommit, RefreshCw, Clock, Zap } from 'lucide-react'
+import { ChevronDown, ChevronUp, ChevronLeft, ChevronRight, GitCommit, RefreshCw, Clock, Zap, MapPin, CheckCircle2, Circle } from 'lucide-react'
 import {
   TRACKED_MODULES,
   getOverallStats,
@@ -21,6 +23,16 @@ import {
   type ModuleStatus,
   type RecentCommit,
 } from './data/modules'
+import {
+  ENHANCEMENT_MODULES,
+  PHASE_CONFIG,
+  PRIORITY_CONFIG,
+  EFFORT_LABEL,
+  getEnhancementStats,
+  type Enhancement,
+  type EnhancementModule,
+  type EnhancementPhase,
+} from './data/enhancements'
 
 // ─── Status config ────────────────────────────────────────────────────────────
 
@@ -735,10 +747,282 @@ const ModuleCard = memo(function ModuleCard({ module: m, todayCount }: { module:
   )
 })
 
+// ─── Enhancement Roadmap ──────────────────────────────────────────────────────
+
+const EnhancementItem = memo(function EnhancementItem({ item }: { item: Enhancement }) {
+  const { palette } = useTheme()
+  const priorityCfg = PRIORITY_CONFIG[item.priority]
+  const phaseCfg = PHASE_CONFIG[item.phase]
+
+  return (
+    <Box
+      sx={{
+        display: 'flex', alignItems: 'flex-start', gap: 1.25, px: 1.75, py: 1.25,
+        borderBottom: `1px solid ${alpha(palette.divider, 0.5)}`,
+        '&:last-child': { borderBottom: 'none' },
+        opacity: item.done ? 0.55 : 1,
+        transition: 'opacity 150ms',
+      }}
+    >
+      <Box sx={{ pt: '2px', flexShrink: 0, color: item.done ? '#10B981' : alpha('#6B7280', 0.5) }}>
+        {item.done ? <CheckCircle2 size={16} /> : <Circle size={16} />}
+      </Box>
+      <Box sx={{ flex: 1, minWidth: 0 }}>
+        <Typography sx={{ fontSize: '0.8125rem', fontWeight: item.done ? 400 : 600, color: 'text.primary', textDecoration: item.done ? 'line-through' : 'none', lineHeight: 1.4 }}>
+          {item.title}
+        </Typography>
+        {item.description && (
+          <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', mt: 0.25, lineHeight: 1.5 }}>
+            {item.description}
+          </Typography>
+        )}
+        <Box sx={{ display: 'flex', gap: 0.625, mt: 0.75, flexWrap: 'wrap', alignItems: 'center' }}>
+          <Chip
+            label={priorityCfg.label}
+            size="small"
+            sx={{ height: 17, fontSize: '0.5625rem', fontWeight: 700, bgcolor: alpha(priorityCfg.color, 0.1), color: priorityCfg.color, borderRadius: '4px' }}
+          />
+          <Chip
+            label={phaseCfg.label}
+            size="small"
+            sx={{ height: 17, fontSize: '0.5625rem', fontWeight: 700, bgcolor: alpha(phaseCfg.color, 0.1), color: phaseCfg.color, borderRadius: '4px' }}
+          />
+          <Chip
+            label={EFFORT_LABEL[item.effort]}
+            size="small"
+            sx={{ height: 17, fontSize: '0.5625rem', fontWeight: 600, bgcolor: alpha('#6B7280', 0.08), color: '#6B7280', borderRadius: '4px' }}
+          />
+          {item.tags?.map((tag) => (
+            <Chip
+              key={tag}
+              label={tag}
+              size="small"
+              sx={{ height: 17, fontSize: '0.5625rem', fontWeight: 600, bgcolor: alpha('#0F5BFF', 0.07), color: '#0F5BFF', borderRadius: '4px' }}
+            />
+          ))}
+        </Box>
+      </Box>
+    </Box>
+  )
+})
+
+const EnhancementModuleCard = memo(function EnhancementModuleCard({ module: m }: { module: EnhancementModule }) {
+  const { palette } = useTheme()
+  const [expanded, setExpanded] = useState(false)
+  const [phaseFilter, setPhaseFilter] = useState<EnhancementPhase | 'all'>('all')
+
+  const totalItems = m.enhancements.length
+  const doneItems = m.enhancements.filter((e) => e.done).length
+  const progress = totalItems === 0 ? 0 : Math.round((doneItems / totalItems) * 100)
+
+  const phases = ([1, 2, 3] as EnhancementPhase[]).filter((p) => m.enhancements.some((e) => e.phase === p))
+
+  const visible = phaseFilter === 'all'
+    ? m.enhancements
+    : m.enhancements.filter((e) => e.phase === phaseFilter)
+
+  const sorted = [...visible].sort((a, b) => {
+    const pOrder = { critical: 0, high: 1, medium: 2, low: 3 }
+    if (a.phase !== b.phase) return a.phase - b.phase
+    return pOrder[a.priority] - pOrder[b.priority]
+  })
+
+  const hasCritical = m.enhancements.some((e) => e.priority === 'critical' && !e.done)
+
+  if (totalItems === 0) return null
+
+  return (
+    <Box
+      sx={{
+        borderRadius: '16px',
+        border: `1.5px solid ${hasCritical ? alpha('#EF4444', 0.35) : palette.divider}`,
+        bgcolor: palette.background.paper,
+        overflow: 'hidden',
+        transition: 'box-shadow 150ms ease, border-color 150ms ease',
+        '&:hover': { boxShadow: '0 4px 20px rgba(0,0,0,0.06)', borderColor: alpha('#0F5BFF', 0.3) },
+      }}
+    >
+      <Box sx={{ height: 3, bgcolor: progress === 100 ? '#10B981' : hasCritical ? '#EF4444' : '#0F5BFF', opacity: 0.8 }} />
+
+      <Box sx={{ p: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25, mb: 1.5 }}>
+          <Typography sx={{ fontSize: '1.375rem', lineHeight: 1, flexShrink: 0 }}>{m.icon}</Typography>
+          <Typography sx={{ flex: 1, fontWeight: 700, fontSize: '0.9375rem', letterSpacing: '-0.02em', color: 'text.primary' }}>
+            {m.label}
+          </Typography>
+          {hasCritical && (
+            <Chip label="Critical" size="small" sx={{ height: 20, fontSize: '0.5625rem', fontWeight: 800, bgcolor: '#EF4444', color: '#fff', borderRadius: '6px', flexShrink: 0 }} />
+          )}
+          <Chip
+            label={`${doneItems}/${totalItems}`}
+            size="small"
+            sx={{ height: 22, fontSize: '0.6875rem', fontWeight: 700, bgcolor: alpha(progress === 100 ? '#10B981' : '#0F5BFF', 0.1), color: progress === 100 ? '#10B981' : '#0F5BFF', borderRadius: '6px', flexShrink: 0 }}
+          />
+        </Box>
+
+        <Box sx={{ mb: 1.25 }}>
+          <LinearProgress
+            variant="determinate"
+            value={progress}
+            sx={{ height: 6, borderRadius: 99, bgcolor: alpha('#0F5BFF', 0.1), '& .MuiLinearProgress-bar': { borderRadius: 99, bgcolor: progress === 100 ? '#10B981' : '#0F5BFF' } }}
+          />
+        </Box>
+
+        <Box
+          sx={{ display: 'flex', alignItems: 'center', gap: 0.5, cursor: 'pointer', color: 'text.secondary', '&:hover': { color: 'text.primary' } }}
+          onClick={() => setExpanded((v) => !v)}
+        >
+          <Typography sx={{ fontSize: '0.75rem', fontWeight: 600 }}>
+            {expanded ? 'Hide enhancements' : `Show ${totalItems} enhancements`}
+          </Typography>
+          <IconButton size="small" sx={{ p: 0.25 }}>
+            {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          </IconButton>
+        </Box>
+      </Box>
+
+      <Collapse in={expanded}>
+        <Box sx={{ borderTop: `1px solid ${palette.divider}`, bgcolor: alpha(palette.background.default, 0.4) }}>
+          {phases.length > 1 && (
+            <Box sx={{ px: 1.75, pt: 1.25, pb: 0.75, display: 'flex', gap: 0.625, flexWrap: 'wrap' }}>
+              {(['all', ...phases] as (EnhancementPhase | 'all')[]).map((p) => (
+                <Chip
+                  key={p}
+                  label={p === 'all' ? 'All phases' : PHASE_CONFIG[p].label}
+                  size="small"
+                  onClick={() => setPhaseFilter(p)}
+                  sx={{
+                    height: 22, fontSize: '0.6875rem', fontWeight: 700, cursor: 'pointer',
+                    borderRadius: '6px',
+                    bgcolor: phaseFilter === p ? (p === 'all' ? alpha('#0F5BFF', 0.12) : alpha(PHASE_CONFIG[p].color, 0.12)) : 'transparent',
+                    color: phaseFilter === p ? (p === 'all' ? '#0F5BFF' : PHASE_CONFIG[p].color) : 'text.secondary',
+                    border: `1px solid ${phaseFilter === p ? (p === 'all' ? alpha('#0F5BFF', 0.3) : alpha(PHASE_CONFIG[p].color, 0.3)) : 'transparent'}`,
+                    '&:hover': { bgcolor: alpha('#0F5BFF', 0.06) },
+                  }}
+                />
+              ))}
+            </Box>
+          )}
+          {sorted.map((item) => <EnhancementItem key={item.id} item={item} />)}
+        </Box>
+      </Collapse>
+    </Box>
+  )
+})
+
+const EnhancementRoadmap = memo(function EnhancementRoadmap() {
+  const { palette } = useTheme()
+  const stats = getEnhancementStats()
+  const modulesWithItems = ENHANCEMENT_MODULES.filter((m) => m.enhancements.length > 0)
+
+  if (modulesWithItems.length === 0) {
+    return (
+      <Box sx={{ py: 10, textAlign: 'center' }}>
+        <Typography sx={{ fontSize: '2.5rem', mb: 1 }}>📋</Typography>
+        <Typography sx={{ fontWeight: 700, fontSize: '1.125rem', color: 'text.primary', mb: 0.75 }}>
+          Roadmap is empty
+        </Typography>
+        <Typography sx={{ fontSize: '0.875rem', color: 'text.secondary', maxWidth: 420, mx: 'auto', lineHeight: 1.6 }}>
+          Drop your enhancement items per module into <strong>src/data/enhancements.ts</strong> and they'll appear here, auto-prioritized by phase and severity.
+        </Typography>
+      </Box>
+    )
+  }
+
+  const overallPct = stats.total === 0 ? 0 : Math.round((stats.done / stats.total) * 100)
+
+  return (
+    <Box>
+      {/* Summary card */}
+      <Box sx={{ p: 3, borderRadius: '20px', border: `1px solid ${palette.divider}`, bgcolor: palette.background.paper, mb: 3 }}>
+        <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2.5, flexWrap: 'wrap', gap: 1.5 }}>
+          <Box>
+            <Typography sx={{ fontSize: '0.6875rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#8B5CF6', mb: 0.5 }}>
+              V2 Enhancement Phase
+            </Typography>
+            <Typography sx={{ fontSize: '1.5rem', fontWeight: 800, letterSpacing: '-0.03em', color: 'text.primary', lineHeight: 1.1 }}>
+              Post-Rebuild Roadmap
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+              {stats.done} of {stats.total} enhancements shipped · {modulesWithItems.length} modules
+            </Typography>
+          </Box>
+          <Box sx={{ textAlign: 'right' }}>
+            <Typography
+              sx={{
+                fontSize: '3rem', fontWeight: 900, letterSpacing: '-0.05em', lineHeight: 1,
+                background: 'linear-gradient(135deg, #8B5CF6 0%, #C084FC 100%)',
+                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+              }}
+            >
+              {overallPct}%
+            </Typography>
+            <Typography sx={{ fontSize: '0.75rem', fontWeight: 600, color: 'text.secondary' }}>
+              shipped
+            </Typography>
+          </Box>
+        </Box>
+
+        <LinearProgress
+          variant="determinate"
+          value={overallPct}
+          sx={{
+            height: 10, borderRadius: 99, mb: 2.5,
+            bgcolor: alpha('#8B5CF6', 0.1),
+            '& .MuiLinearProgress-bar': { borderRadius: 99, background: 'linear-gradient(90deg, #8B5CF6 0%, #C084FC 100%)' },
+          }}
+        />
+
+        {/* Phase breakdown */}
+        <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
+          {stats.byPhase.map(({ phase, total, done }) => {
+            if (total === 0) return null
+            const cfg = PHASE_CONFIG[phase as EnhancementPhase]
+            const pct = Math.round((done / total) * 100)
+            return (
+              <Box
+                key={phase}
+                sx={{
+                  flex: '1 1 140px', p: 1.5, borderRadius: '12px',
+                  bgcolor: alpha(cfg.color, 0.06), border: `1px solid ${alpha(cfg.color, 0.18)}`,
+                }}
+              >
+                <Typography sx={{ fontSize: '0.625rem', fontWeight: 700, color: cfg.color, letterSpacing: '0.06em', textTransform: 'uppercase', mb: 0.25 }}>
+                  {cfg.label}
+                </Typography>
+                <Typography sx={{ fontSize: '0.6875rem', color: 'text.secondary', mb: 0.75 }}>
+                  {cfg.description}
+                </Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                  <Typography sx={{ fontSize: '0.6875rem', color: 'text.secondary' }}>{done}/{total}</Typography>
+                  <Typography sx={{ fontSize: '0.6875rem', fontWeight: 700, color: cfg.color }}>{pct}%</Typography>
+                </Box>
+                <LinearProgress
+                  variant="determinate"
+                  value={pct}
+                  sx={{ height: 4, borderRadius: 99, bgcolor: alpha(cfg.color, 0.12), '& .MuiLinearProgress-bar': { borderRadius: 99, bgcolor: cfg.color } }}
+                />
+              </Box>
+            )
+          })}
+        </Box>
+      </Box>
+
+      {/* Module cards */}
+      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 1.5 }}>
+        {modulesWithItems.map((m) => (
+          <EnhancementModuleCard key={m.id} module={m} />
+        ))}
+      </Box>
+    </Box>
+  )
+})
+
 // ─── App ──────────────────────────────────────────────────────────────────────
 
 export default function App() {
   const { palette } = useTheme()
+  const [activeTab, setActiveTab] = useState(0)
   const [filter, setFilter] = useState<FilterValue>('all')
 
   const filtered = useMemo(
@@ -764,73 +1048,110 @@ export default function App() {
             Internal · ChatDaddy
           </Typography>
           <Typography sx={{ fontSize: { xs: '1.75rem', md: '2.25rem' }, fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.1, color: 'text.primary' }}>
-            V2 Rebuild Tracker<Box component="span" sx={{ color: '#0F5BFF' }}>.</Box>
+            V2 Dashboard<Box component="span" sx={{ color: '#0F5BFF' }}>.</Box>
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 0.75, maxWidth: 520, lineHeight: 1.6 }}>
             Auto-synced from <strong>chatdaddy/frontend-dashboard-v2@{liveMeta.branch}</strong> every 30 minutes.
-            File counts and module detection are live. Sub-feature status is updated manually.
           </Typography>
         </Box>
 
-        {/* Live banner */}
-        <LiveBanner />
-
-        {/* EOD summary */}
-        <EodSummary />
-
-        {/* Overall stats */}
-        <OverallProgress />
-
-        {/* Filter */}
-        <Box sx={{ mb: 3 }}>
-          <ToggleButtonGroup
-            value={filter}
-            exclusive
-            onChange={(_, v) => v && setFilter(v)}
-            size="small"
+        {/* Tab switcher */}
+        <Box sx={{ mb: 3, borderBottom: `1px solid ${palette.divider}` }}>
+          <Tabs
+            value={activeTab}
+            onChange={(_, v) => setActiveTab(v)}
             sx={{
-              gap: 0.5, flexWrap: 'wrap',
-              '& .MuiToggleButton-root': {
-                border: `1px solid ${palette.divider}`,
-                borderRadius: '10px !important',
-                px: 1.75, py: 0.625,
-                fontSize: '0.8125rem', fontWeight: 600,
-                color: 'text.secondary', textTransform: 'none',
-                bgcolor: 'background.paper',
-                '&.Mui-selected': { bgcolor: alpha('#0F5BFF', 0.1), color: '#0F5BFF', borderColor: alpha('#0F5BFF', 0.3) },
-                '&:hover': { bgcolor: alpha('#0F5BFF', 0.05) },
+              minHeight: 42,
+              '& .MuiTabs-indicator': { bgcolor: activeTab === 0 ? '#0F5BFF' : '#8B5CF6', borderRadius: '2px 2px 0 0', height: 2.5 },
+              '& .MuiTab-root': {
+                minHeight: 42, fontSize: '0.8125rem', fontWeight: 600, textTransform: 'none',
+                color: 'text.secondary', px: 2.5, py: 0,
+                '&.Mui-selected': { color: activeTab === 0 ? '#0F5BFF' : '#8B5CF6' },
               },
             }}
           >
-            {filters.map((f) => (
-              <ToggleButton key={f.value} value={f.value}>{f.label}</ToggleButton>
-            ))}
-          </ToggleButtonGroup>
+            <Tab
+              label={
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+                  <Zap size={14} />
+                  Rebuild Tracker
+                </Box>
+              }
+            />
+            <Tab
+              label={
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+                  <MapPin size={14} />
+                  Enhancement Roadmap
+                </Box>
+              }
+            />
+          </Tabs>
         </Box>
 
-        {/* Cards by category */}
-        {CATEGORIES.map((cat) => {
-          const mods = filtered.filter((m) => m.category === cat.id)
-          if (!mods.length) return null
-          const avg = Math.round(mods.reduce((s, m) => s + m.progress, 0) / mods.length)
+        {/* ── Tab 0: Rebuild Tracker ── */}
+        {activeTab === 0 && (
+          <>
+            <LiveBanner />
+            <EodSummary />
+            <OverallProgress />
 
-          return (
-            <Box key={cat.id} sx={{ mb: 3.5 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.75 }}>
-                <Typography sx={{ fontSize: '1rem' }}>{cat.icon}</Typography>
-                <Typography sx={{ fontWeight: 700, fontSize: '0.875rem', color: 'text.primary', letterSpacing: '-0.01em' }}>
-                  {cat.label}
-                </Typography>
-                <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', ml: 'auto' }}>
-                  avg {avg}%
-                </Typography>
-              </Box>
-              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 1.5 }}>
-                {mods.map((m) => <ModuleCard key={m.id} module={m} todayCount={todayActivityMap.get(m.id) ?? 0} />)}
-              </Box>
+            {/* Filter */}
+            <Box sx={{ mb: 3 }}>
+              <ToggleButtonGroup
+                value={filter}
+                exclusive
+                onChange={(_, v) => v && setFilter(v)}
+                size="small"
+                sx={{
+                  gap: 0.5, flexWrap: 'wrap',
+                  '& .MuiToggleButton-root': {
+                    border: `1px solid ${palette.divider}`,
+                    borderRadius: '10px !important',
+                    px: 1.75, py: 0.625,
+                    fontSize: '0.8125rem', fontWeight: 600,
+                    color: 'text.secondary', textTransform: 'none',
+                    bgcolor: 'background.paper',
+                    '&.Mui-selected': { bgcolor: alpha('#0F5BFF', 0.1), color: '#0F5BFF', borderColor: alpha('#0F5BFF', 0.3) },
+                    '&:hover': { bgcolor: alpha('#0F5BFF', 0.05) },
+                  },
+                }}
+              >
+                {filters.map((f) => (
+                  <ToggleButton key={f.value} value={f.value}>{f.label}</ToggleButton>
+                ))}
+              </ToggleButtonGroup>
             </Box>
-          )
-        })}
+
+            {/* Cards by category */}
+            {CATEGORIES.map((cat) => {
+              const mods = filtered.filter((m) => m.category === cat.id)
+              if (!mods.length) return null
+              const avg = Math.round(mods.reduce((s, m) => s + m.progress, 0) / mods.length)
+
+              return (
+                <Box key={cat.id} sx={{ mb: 3.5 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.75 }}>
+                    <Typography sx={{ fontSize: '1rem' }}>{cat.icon}</Typography>
+                    <Typography sx={{ fontWeight: 700, fontSize: '0.875rem', color: 'text.primary', letterSpacing: '-0.01em' }}>
+                      {cat.label}
+                    </Typography>
+                    <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', ml: 'auto' }}>
+                      avg {avg}%
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 1.5 }}>
+                    {mods.map((m) => <ModuleCard key={m.id} module={m} todayCount={todayActivityMap.get(m.id) ?? 0} />)}
+                  </Box>
+                </Box>
+              )
+            })}
+          </>
+        )}
+
+        {/* ── Tab 1: Enhancement Roadmap ── */}
+        {activeTab === 1 && <EnhancementRoadmap />}
+
       </Box>
     </Box>
   )
