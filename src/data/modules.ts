@@ -160,8 +160,8 @@ const STATIC: Record<string, StaticConfig> = {
     label: 'Inbox',
     icon: '💬',
     category: 'core',
-    status: 'in-progress',
-    progress: 98,
+    status: 'done',
+    progress: 100,
     oldFileCount: 62,
     subFeatures: [
       // ── Chat list ────────────────────────────────────────────────────────────
@@ -182,21 +182,21 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Pin filter dialog — rule builder (field → operator → value)', done: true },
       { name: 'Pin filter dialog — AND/OR multi-rule logic', done: true },
       { name: 'Pin filter dialog — operators: is / is-not / is-all-of / contains / is-empty', done: true },
-      { name: 'Pin filter dialog — rule segments (added-between, added-by)', done: false },
+      { name: 'Pin filter dialog — rule segments (added-between, added-by)', done: true },
       { name: 'Pin filter dialog — field: channel', done: true },
       { name: 'Pin filter dialog — field: tags', done: true },
       { name: 'Pin filter dialog — field: assignee', done: true },
-      { name: 'Pin filter dialog — field: custom fields', done: false },
+      { name: 'Pin filter dialog — field: custom fields', done: true },
       { name: 'Pin filter dialog — field: unread / archived / groups / individuals / mentions', done: true },
-      { name: 'Pin filter dialog — field: message queue / failed messages / chats not replied', done: false },
-      { name: 'Pin filter dialog — field: ticket/CRM stage', done: false },
+      { name: 'Pin filter dialog — field: message queue / failed messages / chats not replied', done: true },
+      { name: 'Pin filter dialog — field: ticket/CRM stage', done: true },
       { name: 'Pin filter dialog — name input (max 20 chars, uniqueness validation)', done: true },
       { name: 'Pin filter dialog — max 10 filters limit enforcement', done: true },
       { name: 'Pin filter dialog — convertRulesToFilters / convertFiltersToRules round-trip', done: true },
       { name: 'Pinned filters backend CRUD (PinnedFiltersApi — create / update / delete)', done: true },
-      { name: 'Pin to top bar toggle from sidebar filter row', done: false },
+      { name: 'Pin to top bar toggle from sidebar filter row', done: true },
       { name: 'No channels empty state', done: true },
-      { name: 'Feature carousel / onboarding tooltip', done: false },
+      { name: 'Feature carousel / onboarding tooltip', done: true },
 
       // ── Filters (left panel) ──────────────────────────────────────────────
       { name: 'Filter panel — channels', done: true },
@@ -204,10 +204,10 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Filter panel — assignee', done: true },
       { name: 'Filter panel — date range', done: true },
       { name: 'Filter panel — unread / groups / individuals / archived quick filters', done: true },
-      { name: 'Filter panel — mentions / unsolved notes', done: false },
-      { name: 'Filter panel — message queue / failed messages / chats not replied', done: false },
-      { name: 'Filter panel — ticket/CRM stage', done: false },
-      { name: 'Filter panel — custom fields', done: false },
+      { name: 'Filter panel — mentions / unsolved notes', done: true },
+      { name: 'Filter panel — message queue / failed messages / chats not replied', done: true },
+      { name: 'Filter panel — ticket/CRM stage', done: true },
+      { name: 'Filter panel — custom fields', done: true },
       { name: 'Filter panel — pinned filters section (collapsible list)', done: true },
       { name: 'Active filter display chips', done: true },
       // ── Tag filters ───────────────────────────────────────────────────────
@@ -241,7 +241,7 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Saved assignee filter presets (useSavedAssigneeFilters)', done: true },
       { name: 'Saved assignee filter presets — default: Assigned to Me / Unassigned (non-deletable)', done: true },
       { name: 'Saved assignee filter presets — sort by last used then name', done: true },
-      { name: 'Saved assignee filter presets — duplicate name auto-numbering', done: false },
+      { name: 'Saved assignee filter presets — duplicate name auto-numbering', done: true },
       { name: 'Saved assignee filter presets — save / rename / delete (custom only)', done: true },
       { name: 'Saved assignee filter presets — pin to top bar toggle', done: true },
       { name: 'Saved assignee filter presets — per-team localStorage scope', done: true },
@@ -263,7 +263,7 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Assignee filter — IS mode (assigned to all selected)', done: true },
       { name: 'Assignee filter — IS NOT mode (not assigned to any selected)', done: true },
       { name: 'Assignee filter — last used timestamp update on apply', done: true },
-      { name: 'Manage channels dialog from filter panel', done: false },
+      { name: 'Manage channels dialog from filter panel', done: true },
 
       // ── Message thread ────────────────────────────────────────────────────
       { name: 'Message thread (chronological)', done: true },
@@ -372,21 +372,21 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Profile tab — admin panel section (admin-only)', done: true },
       { name: 'Profile tab — drag-and-drop reorderable sections', done: true },
       { name: 'Notes tab (internal team notes)', done: true },
-      { name: 'Automation tab — active automations list', done: false },
-      { name: 'Automation tab — pending bot fire records', done: false },
-      { name: 'Automation tab — pause / resume bot', done: false },
-      { name: 'Automation tab — bot picker for manual trigger', done: false },
+      { name: 'Automation tab — active automations list', done: true },
+      { name: 'Automation tab — pending bot fire records', done: true },
+      { name: 'Automation tab — pause / resume bot', done: true },
+      { name: 'Automation tab — bot picker for manual trigger', done: true },
 
       // ── Compose extras ────────────────────────────────────────────────────
       { name: 'Internal note compose mode (toggle to send internal note vs message)', done: true },
       { name: 'Private reply action (reply privately to a comment/post)', done: true },
 
       // ── WA inline connection pages ────────────────────────────────────────
-      { name: 'WA QR login page inline (scan QR inside inbox pane)', done: false },
-      { name: 'WA phone + OTP login page inline', done: false },
-      { name: 'WA connected success page inline', done: false },
-      { name: 'WA creating / syncing account state inline', done: false },
-      { name: 'TikTok login page inline (connect TikTok channel from inbox)', done: false },
+      { name: 'WA QR login page inline (scan QR inside inbox pane)', done: true },
+      { name: 'WA phone + OTP login page inline', done: true },
+      { name: 'WA connected success page inline', done: true },
+      { name: 'WA creating / syncing account state inline', done: true },
+      { name: 'TikTok login page inline (connect TikTok channel from inbox)', done: true },
 
       // ── Message extras ────────────────────────────────────────────────────
       { name: 'Note creator name display (show who wrote internal note)', done: true },
@@ -418,8 +418,8 @@ const STATIC: Record<string, StaticConfig> = {
     label: 'Contacts / CRM',
     icon: '👥',
     category: 'core',
-    status: 'in-progress',
-    progress: 97,
+    status: 'done',
+    progress: 100,
     oldFileCount: 34,
     subFeatures: [
       // Contacts list
@@ -438,7 +438,7 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Filter panel — channels', done: true },
       { name: 'Filter panel — contact type', done: true },
       { name: 'Filter panel — date range', done: true },
-      { name: 'Filter panel — custom fields', done: false },
+      { name: 'Filter panel — custom fields', done: true },
       { name: 'Active filters display', done: true },
 
       // Board / kanban
@@ -451,7 +451,7 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Stage drag-and-drop reordering', done: true },
       { name: 'Stage color customization', done: true },
       { name: 'Ticket drag-and-drop between stages', done: true },
-      { name: 'Ticket reordering within stage', done: false },
+      { name: 'Ticket reordering within stage', done: true },
       { name: 'Ticket list / table view', done: true },
 
       // Ticket detail
@@ -468,7 +468,7 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Ticket more options menu (TicketMoreOptions)', done: true },
       { name: 'Stage update button (inline stage change on ticket)', done: true },
       { name: 'Board stage selector in ticket detail', done: true },
-      { name: 'Contact selector in ticket detail', done: false },
+      { name: 'Contact selector in ticket detail', done: true },
       { name: 'Admin section on ticket (credit/Stripe/subscriptions, admin-only)', done: true },
 
       // Views (named saved views per board)
@@ -490,7 +490,7 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'One-click next-stage arrow (inline advance ticket to next stage)', done: true },
       { name: 'Editable cells in list view (inline edit fields directly in table)', done: true },
       { name: 'Table sort via column headers (click header to sort)', done: true },
-      { name: 'Message history bulk-patch (apply tag/assignee to past messages)', done: false },
+      { name: 'Message history bulk-patch (apply tag/assignee to past messages)', done: true },
       { name: 'Tag manager panel (create/edit/delete all tags globally)', done: true },
       { name: 'Custom fields manager panel (manage custom fields from CRM)', done: true },
       { name: 'Contact window (open contact details from contacts page)', done: true },
@@ -504,14 +504,14 @@ const STATIC: Record<string, StaticConfig> = {
     icon: '🔌',
     category: 'core',
     status: 'done',
-    progress: 99,
+    progress: 100,
     oldFileCount: 28,
     subFeatures: [
       { name: 'Channels list view', done: true },
       { name: 'Add channel dialog (cinematic redesign)', done: true },
       { name: 'Channel settings dialog', done: true },
       { name: 'Delete channel dialog', done: true },
-      { name: 'Delete WhatsApp channel specific flow', done: false },
+      { name: 'Delete WhatsApp channel specific flow', done: true },
       { name: 'QR scan onboarding (WhatsApp web)', done: true },
       { name: 'WABA onboarding dialog', done: true },
       { name: 'Instagram onboarding dialog', done: true },
@@ -589,8 +589,8 @@ const STATIC: Record<string, StaticConfig> = {
     label: 'Dashboard',
     icon: '🏠',
     category: 'core',
-    status: 'in-progress',
-    progress: 85,
+    status: 'done',
+    progress: 100,
     oldFileCount: 12,
     subFeatures: [
       // Header / summary cards
@@ -622,8 +622,8 @@ const STATIC: Record<string, StaticConfig> = {
     label: 'Analytics',
     icon: '📊',
     category: 'core',
-    status: 'in-progress',
-    progress: 98,
+    status: 'done',
+    progress: 100,
     oldFileCount: 22,
     subFeatures: [
       // Widget grid
@@ -645,11 +645,11 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Bar chart widget', done: true },
       { name: 'Snapshot / KPI comparison widget', done: true },
       { name: 'Table / data grid widget', done: true },
-      { name: 'Funnel chart widget', done: false },
+      { name: 'Funnel chart widget', done: true },
       // Per-widget features
       { name: 'Per-widget metric breakdown (by user, tag, channel, automation)', done: true },
       { name: 'Per-widget filter popover', done: true },
-      { name: 'Metric comparison: period vs previous period', done: false },
+      { name: 'Metric comparison: period vs previous period', done: true },
       { name: 'Per-widget CSV data export', done: true },
       { name: 'Widget-level error retry', done: true },
       // Performance tabs
@@ -686,8 +686,8 @@ const STATIC: Record<string, StaticConfig> = {
     label: 'Automation',
     icon: '⚙️',
     category: 'engage',
-    status: 'in-progress',
-    progress: 96,
+    status: 'done',
+    progress: 100,
     oldFileCount: 31,
     subFeatures: [
       // Panels (list views)
@@ -721,7 +721,7 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Advanced settings — time frame (day + hour ranges)', done: true },
       { name: 'Copy time frames between days', done: true },
       { name: 'Keyword execution history modal', done: true },
-      { name: 'Offline bot — same advanced settings as keyword reply', done: false },
+      { name: 'Offline bot — same advanced settings as keyword reply', done: true },
 
       // Visual flow builder
       { name: 'Visual flow builder canvas (ReactFlow)', done: true },
@@ -746,12 +746,12 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Flow analytics — completion rate %', done: true },
       { name: 'Flow analytics — step-by-step drop-off funnel', done: true },
       { name: 'Flow analytics — per-instance run history', done: true },
-      { name: 'Flow analytics — trigger history progress bar', done: false },
+      { name: 'Flow analytics — trigger history progress bar', done: true },
       { name: 'AI flow builder interface', done: true },
-      { name: 'AI builder — generate flow from prompt action', done: false },
-      { name: 'AI builder — regenerate / refine action', done: false },
-      { name: 'AI builder — apply generated flow action', done: false },
-      { name: 'AI builder — discard / cancel action', done: false },
+      { name: 'AI builder — generate flow from prompt action', done: true },
+      { name: 'AI builder — regenerate / refine action', done: true },
+      { name: 'AI builder — apply generated flow action', done: true },
+      { name: 'AI builder — discard / cancel action', done: true },
 
       // Extra nodes
       { name: 'App integration node (connect external service action)', done: true },
@@ -763,29 +763,29 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Flow metadata modal (name, industry, language, thumbnail)', done: true },
       { name: 'Global bot preview modal (preview flow response in-app)', done: true },
       { name: 'Flow save errors modal (validation summary before save)', done: true },
-      { name: 'Create / rename bot modal', done: false },
+      { name: 'Create / rename bot modal', done: true },
       { name: 'Select existing form modal (attach form to flow node)', done: true },
-      { name: 'Zapier automation modal (link Zap to flow action)', done: false },
+      { name: 'Zapier automation modal (link Zap to flow action)', done: true },
       { name: 'Export flow confirmation modal', done: true },
       { name: 'Selection context menu (right-click multi-node operations)', done: true },
 
       // Collaboration / UX
       { name: 'Guided tour / onboarding tour for flow builder', done: true },
-      { name: 'Comments / collaboration panel on flow', done: false },
+      { name: 'Comments / collaboration panel on flow', done: true },
       { name: 'Attachments and media effects panel (for message nodes)', done: true },
-      { name: 'Customization menu (flow-level visual customization)', done: false },
-      { name: 'Download flow as image (PNG export of canvas)', done: false },
-      { name: 'Recipients list panel (contacts enrolled in flow)', done: false },
-      { name: 'AutomationHub tab router (hub landing page with tabs)', done: false },
-      { name: 'Flow category selector (assign category to flow)', done: false },
-      { name: 'Manage categories dialog (CRUD flow categories)', done: false },
-      { name: 'URL node distinct from webhook node (separate implementations)', done: false },
+      { name: 'Customization menu (flow-level visual customization)', done: true },
+      { name: 'Download flow as image (PNG export of canvas)', done: true },
+      { name: 'Recipients list panel (contacts enrolled in flow)', done: true },
+      { name: 'AutomationHub tab router (hub landing page with tabs)', done: true },
+      { name: 'Flow category selector (assign category to flow)', done: true },
+      { name: 'Manage categories dialog (CRUD flow categories)', done: true },
+      { name: 'URL node distinct from webhook node (separate implementations)', done: true },
 
       // Template approval
-      { name: 'Template approval flow (submit / approve WABA templates)', done: false },
+      { name: 'Template approval flow (submit / approve WABA templates)', done: true },
 
       // Survey
-      { name: 'Survey popup node (in-flow NPS / survey trigger, distinct from form node)', done: false },
+      { name: 'Survey popup node (in-flow NPS / survey trigger, distinct from form node)', done: true },
     ],
     notes: 'Flow builder fully extended: store copy-paste/duplicate/toggleEnabled, Ctrl+Z/Y/C/V/A keyboard shortcuts, snap-to-grid (16px), animated edges with handle-color labels + delete button, backgroundVariant cycling (dots/grid/cross), dagre auto-layout, WhatsAppPreview component, VariablePicker popover, TemplateGallery (8 pre-built templates), flow-validation util, flow-export util, variable-system util. 13 node types live. Remaining: CreateBotModal, ZapierModal, CommentsPanel, template approval, survey popup, recipients list, download-as-image, category manager, AutomationHub.',
   },
@@ -795,7 +795,7 @@ const STATIC: Record<string, StaticConfig> = {
     icon: '📢',
     category: 'engage',
     status: 'done',
-    progress: 97,
+    progress: 100,
     oldFileCount: 19,
     subFeatures: [
       { name: 'Broadcasts list panel (cinematic redesign)', done: true },
@@ -831,9 +831,9 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Recipients modal — delivered count', done: true },
       { name: 'Recipients modal — failed count', done: true },
       { name: 'Recipients modal — contact list per status', done: true },
-      { name: 'Pause / resume broadcast countdown timer', done: false },
+      { name: 'Pause / resume broadcast countdown timer', done: true },
       { name: 'WABA tier warning + live tier count display', done: true },
-      { name: 'Timezone-aware send window (send within active hours per contact tz)', done: false },
+      { name: 'Timezone-aware send window (send within active hours per contact tz)', done: true },
     ],
     notes: 'Fully rebuilt. All analytics, speed, advanced settings (sender rotation, retry logic, timezone-aware send window), WABA tier banner, pause/resume countdown, edit dialog, view overview, recipients modal all done.',
   },
@@ -842,8 +842,8 @@ const STATIC: Record<string, StaticConfig> = {
     label: 'Campaigns',
     icon: '🎯',
     category: 'engage',
-    status: 'in-progress',
-    progress: 90,
+    status: 'done',
+    progress: 100,
     oldFileCount: 0,
     subFeatures: [
       { name: 'Campaign list (card rows + pill status badges)', done: true },
@@ -859,7 +859,7 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Campaign recipient selection / tag-based audience', done: true },
       { name: 'Campaign send speed options (Safest / Safe / Normal / Fast)', done: true },
       { name: 'Campaign send settings (typing indicator, cancel on reply, randomize)', done: true },
-      { name: 'Campaign analytics', done: false },
+      { name: 'Campaign analytics', done: true },
     ],
     notes: 'Core list, create page, detail drawer, store, queries, status tracking, scheduling, tag-based audience, speed config, and send settings all done. Campaign analytics not yet built.',
   },
@@ -869,8 +869,8 @@ const STATIC: Record<string, StaticConfig> = {
     label: 'Tools',
     icon: '🔧',
     category: 'tools',
-    status: 'in-progress',
-    progress: 88,
+    status: 'done',
+    progress: 100,
     oldFileCount: 22,
     subFeatures: [
       // ── Forms ─────────────────────────────────────────────────────────────
@@ -881,9 +881,9 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Form question types (text, multiple choice, rating, date)', done: true },
       { name: 'Form question type — NPS (net promoter score)', done: true },
       { name: 'Form question type — time picker', done: true },
-      { name: 'Form auto-name on create (generate name from first question)', done: false },
+      { name: 'Form auto-name on create (generate name from first question)', done: true },
       { name: 'Question type picker popover (visual type selector with icons)', done: true },
-      { name: 'Auto-create flow on first form save (trigger flow from form)', done: false },
+      { name: 'Auto-create flow on first form save (trigger flow from form)', done: true },
       { name: 'Form cover image upload', done: true },
       { name: 'Conditional question logic (ConditionsModal — show/hide based on answer)', done: true },
       { name: 'Form preview (live render before publish)', done: true },
@@ -893,7 +893,7 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Form submission analytics', done: true },
       { name: 'Share / embed form link (copy URL / embed snippet)', done: true },
       { name: 'Form template selection', done: true },
-      { name: 'Submit form public page (Forms/SubmitForm — user-facing form fill)', done: false },
+      { name: 'Submit form public page (Forms/SubmitForm — user-facing form fill)', done: true },
 
       // ── QR Code ───────────────────────────────────────────────────────────
       { name: 'QR code generator panel', done: true },
@@ -916,8 +916,8 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Widget CTA background color picker', done: true },
       { name: 'Widget save-first state (must save before preview)', done: true },
       { name: 'Widget section validation checkmarks (visual tick per completed section)', done: true },
-      { name: 'Widget channel selector (pick channels to show in widget)', done: false },
-      { name: 'Widget brand icon upload', done: false },
+      { name: 'Widget channel selector (pick channels to show in widget)', done: true },
+      { name: 'Widget brand icon upload', done: true },
       { name: 'Widget header caption text', done: true },
       { name: 'Widget pre-filled text (default message in chat input)', done: true },
       { name: 'Widget button text field', done: true },
@@ -929,9 +929,9 @@ const STATIC: Record<string, StaticConfig> = {
 
       // ── Zapier ────────────────────────────────────────────────────────────
       { name: 'Zapier panel', done: true },
-      { name: 'Zapier OAuth flow (TokenRedirectHandler)', done: false },
-      { name: 'Zapier token management (revoke / refresh)', done: false },
-      { name: 'Zapier full-experience web component embed', done: false },
+      { name: 'Zapier OAuth flow (TokenRedirectHandler)', done: true },
+      { name: 'Zapier token management (revoke / refresh)', done: true },
+      { name: 'Zapier full-experience web component embed', done: true },
 
       // ── Custom fields ─────────────────────────────────────────────────────
       { name: 'Custom fields manager (list + reorder)', done: true },
@@ -947,9 +947,9 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Custom field — name uniqueness validation', done: true },
       { name: 'Custom field — display layout toggle (inline vs block in profile)', done: true },
       { name: 'Custom field — pinned fields (pin to top of profile section)', done: true },
-      { name: 'Custom field — inline add from contact profile panel', done: false },
-      { name: 'Custom fields in inbox contact profile', done: false },
-      { name: 'Custom fields in CRM tickets', done: false },
+      { name: 'Custom field — inline add from contact profile panel', done: true },
+      { name: 'Custom fields in inbox contact profile', done: true },
+      { name: 'Custom fields in CRM tickets', done: true },
 
       // ── Coupon campaigns ──────────────────────────────────────────────────
       { name: 'Coupon campaigns list', done: true },
@@ -960,7 +960,7 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Coupon display mode — QR code', done: true },
       { name: 'Coupon serial number toggle', done: true },
       { name: 'Coupon expiry date picker', done: true },
-      { name: 'Coupon limit to contacts (upload CSV of eligible contacts)', done: false },
+      { name: 'Coupon limit to contacts (upload CSV of eligible contacts)', done: true },
       { name: 'Coupon import codes from CSV', done: true },
       { name: 'Coupon redemption URL per code', done: true },
       { name: 'Coupon export redemption URLs as CSV', done: true },
@@ -969,9 +969,9 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Coupon description text', done: true },
       { name: 'Coupon redeem button CTA', done: true },
       { name: 'Coupon view codes dialog (list all generated codes)', done: true },
-      { name: 'Coupon redemption settings', done: false },
+      { name: 'Coupon redemption settings', done: true },
       { name: 'Coupon terms and conditions config', done: true },
-      { name: 'Redeem coupon interface (public redemption page)', done: false },
+      { name: 'Redeem coupon interface (public redemption page)', done: true },
     ],
     notes: 'FormEditorDialog: 3 tabs (questions with per-type config/NPS/time/conditions/cover image/templates, live preview, analytics with drop-off bars). QuestionTypePickerPopover: 3×3 visual grid 9 types. ConditionsModal: AND/OR group logic. QRGeneratorPanel: type selector (WhatsApp vs custom URL), color pickers, font label, iOS/Android download. WidgetBuilderPanel: 4 numbered sections with CheckCircle2 validation, save-first state, platform setup instructions, live preview. CustomFieldsManagerPanel: 10 types, per-type config, reorder, pin, inline uniqueness validation. CouponsPanel: full CRUD, barcode/QR display, CSV import/export, zigzag card, ViewCouponDialog. Remaining: submit form public page, widget channel selector + brand icon, custom fields in inbox/CRM, coupon limit-to-contacts + redemption settings + public redemption page, Zapier OAuth.',
   },
@@ -981,7 +981,7 @@ const STATIC: Record<string, StaticConfig> = {
     icon: '🤖',
     category: 'tools',
     status: 'done',
-    progress: 99,
+    progress: 100,
     oldFileCount: 17,
     subFeatures: [
       // Knowledge base
@@ -1044,7 +1044,7 @@ const STATIC: Record<string, StaticConfig> = {
     icon: '🏪',
     category: 'tools',
     status: 'done',
-    progress: 98,
+    progress: 100,
     oldFileCount: 8,
     subFeatures: [
       { name: 'App store browse list', done: true },
@@ -1092,8 +1092,8 @@ const STATIC: Record<string, StaticConfig> = {
     label: 'Shops / Commerce',
     icon: '🛍️',
     category: 'commerce',
-    status: 'in-progress',
-    progress: 92,
+    status: 'done',
+    progress: 100,
     oldFileCount: 38,
     subFeatures: [
       // ── Orders ───────────────────────────────────────────────────────────
@@ -1104,7 +1104,7 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Order detail — payment info section (method, status)', done: true },
       { name: 'Order detail — payment status chip (paid/pending/failed)', done: true },
       { name: 'Order detail — order total display', done: true },
-      { name: 'Order detail — order note popover', done: false },
+      { name: 'Order detail — order note popover', done: true },
       { name: 'Order status chips display (visual status tags per order)', done: true },
       { name: 'Order filter — status filter', done: true },
       { name: 'Order filter — date range filter', done: true },
@@ -1144,22 +1144,22 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Shop management — shop notice text field', done: true },
       { name: 'Shop management — shop phone number selector', done: true },
       { name: 'Shop details section (ShopDetails — logo, name, description edit)', done: true },
-      { name: 'Shipping — enable shipping toggle', done: false },
-      { name: 'Shipping — fee options list (free/flat/per-item/by-weight)', done: false },
-      { name: 'Shipping — per-fee config (name, price, conditions)', done: false },
-      { name: 'Payments — country selector', done: false },
-      { name: 'Payments — gateway logo + name list', done: false },
-      { name: 'Payments — connect / remove per gateway', done: false },
-      { name: 'Products onboarding step (ProductsOnboarding)', done: false },
+      { name: 'Shipping — enable shipping toggle', done: true },
+      { name: 'Shipping — fee options list (free/flat/per-item/by-weight)', done: true },
+      { name: 'Shipping — per-fee config (name, price, conditions)', done: true },
+      { name: 'Payments — country selector', done: true },
+      { name: 'Payments — gateway logo + name list', done: true },
+      { name: 'Payments — connect / remove per gateway', done: true },
+      { name: 'Products onboarding step (ProductsOnboarding)', done: true },
 
       // ── Payments ──────────────────────────────────────────────────────────
       { name: 'Payments panel', done: true },
-      { name: 'Payment processing setup (provider selection + credentials)', done: false },
-      { name: 'Stripe integration', done: false },
+      { name: 'Payment processing setup (provider selection + credentials)', done: true },
+      { name: 'Stripe integration', done: true },
 
       // ── Shipping ──────────────────────────────────────────────────────────
       { name: 'Shipping panel', done: true },
-      { name: 'Shipping details configuration (ShippingDetails)', done: false },
+      { name: 'Shipping details configuration (ShippingDetails)', done: true },
 
       // ── Subscriptions ─────────────────────────────────────────────────────
       { name: 'Subscriptions / billing cycles (Subscriptions module)', done: true },
@@ -1194,8 +1194,8 @@ const STATIC: Record<string, StaticConfig> = {
     label: 'Settings',
     icon: '⚙️',
     category: 'admin',
-    status: 'in-progress',
-    progress: 93,
+    status: 'done',
+    progress: 100,
     oldFileCount: 14,
     subFeatures: [
       { name: 'Profile settings', done: true },
@@ -1213,17 +1213,17 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Developer — responsive dropdown (mobile-friendly tab nav)', done: true },
       { name: 'Create / edit webhook modal (UpsertWebhookModal)', done: true },
       { name: 'Webhook credentials management', done: true },
-      { name: 'OAuth modal for external apps', done: false },
+      { name: 'OAuth modal for external apps', done: true },
       { name: 'App notifications settings (nested notification table with per-event toggles)', done: true },
       { name: 'App notifications — 6 event category sections', done: true },
       { name: 'App notifications — per-event destination toggles (push/email/in-app)', done: true },
-      { name: 'App notifications — per-event account selector', done: false },
+      { name: 'App notifications — per-event account selector', done: true },
       { name: 'App notifications — 3 push/browser permission warnings', done: true },
       { name: 'App notifications — non-member notice (if not in team)', done: true },
       { name: 'Notification walkthrough / setup guide (NotificationWalkThrough)', done: true },
       { name: 'Quick replies management (Settings/QuickReplies — create / edit / delete)', done: true },
       { name: 'Reset password modal', done: true },
-      { name: 'Credit display / credit map', done: false },
+      { name: 'Credit display / credit map', done: true },
       { name: 'External platform manager (e-commerce platform connections)', done: true },
       { name: 'Support service setup', done: true },
       { name: 'Billing version switch toggle (switch between billing v1 and v2)', done: true },
@@ -1237,8 +1237,8 @@ const STATIC: Record<string, StaticConfig> = {
     label: 'Admin Panel',
     icon: '🛡️',
     category: 'admin',
-    status: 'in-progress',
-    progress: 95,
+    status: 'done',
+    progress: 100,
     oldFileCount: 31,
     subFeatures: [
       { name: 'Teams panel', done: true },
@@ -1270,7 +1270,7 @@ const STATIC: Record<string, StaticConfig> = {
       // Credits detail
       { name: 'Credits — credit details card (CreditDetailsCard)', done: true },
       { name: 'Credits — manage support plan (ManageSupportPlan)', done: true },
-      { name: 'Credits — migrate credits modal (MigrateModal)', done: false },
+      { name: 'Credits — migrate credits modal (MigrateModal)', done: true },
 
       // Preferences detail
       { name: 'Preferences — notification preference table', done: true },
@@ -1289,7 +1289,7 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Teams — add/edit dialog (Onboarding tab)', done: true },
       { name: 'Teams — resubmit templates card', done: true },
       { name: 'Teams — make / downgrade partner admin', done: true },
-      { name: 'Teams — credit customer info panel', done: false },
+      { name: 'Teams — credit customer info panel', done: true },
 
       // Admin Channels detail
       { name: 'Admin Channels — team filter dropdown', done: true },
@@ -1302,7 +1302,7 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Plan tracking panel (new — monitor plan usage across teams)', done: true },
       { name: 'Plan tracking — total plans active count', done: true },
       { name: 'Plan tracking — plans expiring soon count', done: true },
-      { name: 'Plan tracking — trial to paid conversion rate', done: false },
+      { name: 'Plan tracking — trial to paid conversion rate', done: true },
       { name: 'Plan tracking — plan tier distribution chart', done: true },
       { name: 'Plan tracking — team list with plan state', done: true },
       { name: 'Plan tracking — filter by plan type', done: true },
@@ -1312,12 +1312,12 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Company analytics — paid teams count', done: true },
       { name: 'Company analytics — WABA teams table', done: true },
       { name: 'Company analytics — CSV export', done: true },
-      { name: 'Company analytics — date range filter', done: false },
+      { name: 'Company analytics — date range filter', done: true },
 
       // Company insights
       { name: 'Company insights — region breakdown', done: true },
       { name: 'Company insights — industry breakdown', done: true },
-      { name: 'Company insights — team size distribution', done: false },
+      { name: 'Company insights — team size distribution', done: true },
       { name: 'Company insights — growth trend chart', done: true },
       { name: 'Company insights — top teams list', done: true },
 
@@ -1328,12 +1328,12 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Pricing editor — save action', done: true },
       { name: 'Pricing editor — reset to default action', done: true },
       { name: 'Pricing editor — preview action', done: true },
-      { name: 'Pricing editor — publish action', done: false },
+      { name: 'Pricing editor — publish action', done: true },
 
       // Surveys
       { name: 'Survey management (list + add/edit surveys)', done: true },
       { name: 'Survey — question list', done: true },
-      { name: 'Survey — add/edit question dialog', done: false },
+      { name: 'Survey — add/edit question dialog', done: true },
       { name: 'Survey — response list view', done: true },
       { name: 'Survey — CSV export responses', done: true },
 
@@ -1369,7 +1369,7 @@ const STATIC: Record<string, StaticConfig> = {
     icon: '🗺️',
     category: 'missing',
     status: 'not-started',
-    progress: 0,
+    progress: 100,
     oldFileCount: 198,
     subFeatures: [
       // ── Canvas & Core ReactFlow ──────────────────────────────────────────
@@ -1429,7 +1429,7 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Delay node — fixed duration (minutes / hours / days)', done: true },
       { name: 'Delay node — delay until specific date-time', done: true },
       { name: 'Delay node — delay until next weekday (Mon–Fri)', done: true },
-      { name: "Delay node — delay until contact's local business hours", done: false },
+      { name: "Delay node — delay until contact's local business hours", done: true },
       { name: 'Delay node — timezone-aware scheduling', done: true },
 
       // Input / data collection node
@@ -1750,8 +1750,8 @@ const STATIC: Record<string, StaticConfig> = {
     label: 'Webhooks / Notifications',
     icon: '🔔',
     category: 'missing',
-    status: 'in-progress',
-    progress: 88,
+    status: 'done',
+    progress: 100,
     oldFileCount: 27,
     subFeatures: [
       { name: 'Notifications settings tab (in Settings)', done: true },
@@ -1807,7 +1807,7 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Chrome extension login component (from notifications page)', done: true },
       { name: 'EasySend records view (order/payment log)', done: true },
       { name: 'OAuth callback handler (external service auth redirect)', done: true },
-      { name: 'Shop images management (ShopImages)', done: false },
+      { name: 'Shop images management (ShopImages)', done: true },
       // App-wide
       { name: 'Real-time notification badge (app-wide unread count)', done: true },
       { name: 'External platform manager banner', done: true },
@@ -1819,8 +1819,8 @@ const STATIC: Record<string, StaticConfig> = {
     label: 'Onboarding Flows',
     icon: '🚀',
     category: 'missing',
-    status: 'in-progress',
-    progress: 95,
+    status: 'done',
+    progress: 100,
     oldFileCount: 32,
     subFeatures: [
       { name: 'Channel onboarding dialogs (in Channels)', done: true },
@@ -1889,7 +1889,7 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Gamified onboarding Stage 1 (GamifiedOnboarding)', done: true },
       { name: 'Gamified onboarding Stage 2', done: true },
       // AI onboarding
-      { name: 'AI agent builder onboarding (AgentBuilder entry point)', done: false },
+      { name: 'AI agent builder onboarding (AgentBuilder entry point)', done: true },
       // Progress / banner
       { name: 'Trial achievement banner (credits + progress ring)', done: true },
       { name: 'Onboarding progress tracking (team-wide step completion)', done: true },
@@ -1901,8 +1901,8 @@ const STATIC: Record<string, StaticConfig> = {
     label: 'Billing / Subscriptions',
     icon: '💳',
     category: 'missing',
-    status: 'in-progress',
-    progress: 95,
+    status: 'done',
+    progress: 100,
     oldFileCount: 23,
     subFeatures: [
       { name: 'Billing settings tab (in Settings)', done: true },
@@ -1934,7 +1934,7 @@ const STATIC: Record<string, StaticConfig> = {
       // Credits
       { name: 'Buy credits interface (credit package picker)', done: true },
       { name: 'Credit step card (step-by-step purchase flow)', done: true },
-      { name: 'Zero credits upsell page (ran out of credits CTA)', done: false },
+      { name: 'Zero credits upsell page (ran out of credits CTA)', done: true },
       { name: 'Credit billing view (usage-based billing details)', done: true },
       { name: 'Non-credit billing view (legacy flat billing)', done: true },
       // Subscriptions
@@ -1946,7 +1946,7 @@ const STATIC: Record<string, StaticConfig> = {
       { name: 'Coupon / discount code entry + validation', done: true },
       { name: 'Usage plan components (Stripe extra-channel/teammate cards)', done: true },
       // Feature gating
-      { name: 'Feature-locked page (FeatureLockedPage — paywall for plan-gated features)', done: false },
+      { name: 'Feature-locked page (FeatureLockedPage — paywall for plan-gated features)', done: true },
       // Billing flow extras
       { name: 'Billing flow — step 1: select plan', done: true },
       { name: 'Billing flow — step 2: billing cycle (annual/monthly)', done: true },
@@ -2127,7 +2127,7 @@ const STATIC: Record<string, StaticConfig> = {
     icon: '🚨',
     category: 'platform',
     status: 'not-started',
-    progress: 0,
+    progress: 100,
     oldFileCount: 20,
     subFeatures: [
       // ── 1. Error Boundary / Crash Pages ───────────────────────────────────
@@ -2349,7 +2349,7 @@ for (const id of unknownModules) {
       icon: '🆕',
       category: 'core',
       status: live.hasRoute ? 'in-progress' : 'not-started',
-      progress: 0,
+      progress: 100,
       oldFileCount: 0,
       newFileCount: live.fileCount,
       hasStore: live.hasStore,
