@@ -3,7 +3,7 @@ name: Sync & Deploy
 on:
   push:
     branches: [main]
-  # Triggered instantly via webhook from chatdaddy/frontend-dashboard-v2 on push to feat/settings-billing-rebuild
+  # Triggered instantly via webhook from chatdaddy/frontend-dashboard-v2 on push to main
   repository_dispatch:
     types: [v2-push]
   schedule:
@@ -37,7 +37,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Fetch live data from chatdaddy/frontend-dashboard-v2@feat/settings-billing-rebuild
+      - name: Fetch live data from chatdaddy/frontend-dashboard-v2@main
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
         # continue-on-error so the build still works if PAT is missing

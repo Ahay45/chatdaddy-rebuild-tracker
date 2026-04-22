@@ -1,7 +1,7 @@
 /**
  * fetch-live-data.mjs
  *
- * Fetches the live module structure from chatdaddy/frontend-dashboard-v2@feat/settings-billing-rebuild
+ * Fetches the live module structure from chatdaddy/frontend-dashboard-v2@main
  * via the GitHub REST API and writes src/data/live-data.json.
  *
  * Requires: GITHUB_PAT env var with read access to the repo.
@@ -16,7 +16,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const OWNER = 'chatdaddy'
 const REPO = 'frontend-dashboard-v2'
-const BRANCH = 'feat/settings-billing-rebuild'
+const BRANCH = 'main'
 const TOKEN = process.env.GH_PAT
 
 if (!TOKEN) {
