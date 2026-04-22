@@ -56,7 +56,7 @@ export const PHASE2_TIMELINE = {
   // Kicks off right after Phase 1 wraps
   estStartDate: '2026-04-22',
   // Estimated weeks: ~37 items, ~4 devs, mixed effort — Phase 1 quick wins ~3w, Phase 2 ~5w, Phase 3 ongoing
-  estWeeks: 14,
+  estWeeks: 2,
   actualEndDate: null as string | null,
 }
 
