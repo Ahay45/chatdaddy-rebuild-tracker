@@ -42,6 +42,24 @@ export const PRIORITY_CONFIG: Record<EnhancementPriority, { label: string; color
   low:      { label: 'Low',      color: '#6B7280' },
 }
 
+// ─── Phase timeline config ────────────────────────────────────────────────────
+
+export const PHASE1_TIMELINE = {
+  startDate: '2026-04-06',
+  // Estimated completion — update when Phase 1 ships
+  estEndDate: '2026-05-07',
+  // Flip to actual date when done
+  actualEndDate: null as string | null,
+}
+
+export const PHASE2_TIMELINE = {
+  // Kicks off right after Phase 1 wraps
+  estStartDate: '2026-05-07',
+  // Estimated weeks to complete — recalculate once items are defined
+  estWeeks: 10,
+  actualEndDate: null as string | null,
+}
+
 // ─── Roadmap data ─────────────────────────────────────────────────────────────
 // Drop enhancement items per module below. Each item needs:
 //   id        — unique slug (kebab-case)

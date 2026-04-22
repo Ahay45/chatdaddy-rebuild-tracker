@@ -28,6 +28,8 @@ import {
   PHASE_CONFIG,
   PRIORITY_CONFIG,
   EFFORT_LABEL,
+  PHASE1_TIMELINE,
+  PHASE2_TIMELINE,
   getEnhancementStats,
   type Enhancement,
   type EnhancementModule,
@@ -747,6 +749,201 @@ const ModuleCard = memo(function ModuleCard({ module: m, todayCount }: { module:
   )
 })
 
+// ─── Phase Timeline Banner ────────────────────────────────────────────────────
+
+function parseDateUtc(dateStr: string): Date {
+  const [y, m, d] = dateStr.split('-').map(Number)
+  return new Date(Date.UTC(y, m - 1, d))
+}
+
+function formatDate(dateStr: string): string {
+  return parseDateUtc(dateStr).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })
+}
+
+function daysBetween(a: string, b: string): number {
+  return Math.round((parseDateUtc(b).getTime() - parseDateUtc(a).getTime()) / 86400000)
+}
+
+function weeksStr(days: number): string {
+  const w = Math.round(days / 7)
+  return w <= 1 ? `${days} day${days !== 1 ? 's' : ''}` : `${w} week${w !== 1 ? 's' : ''}`
+}
+
+const Phase1Timeline = memo(function Phase1Timeline() {
+  const { palette } = useTheme()
+  const today = new Date().toISOString().slice(0, 10)
+  const { startDate, estEndDate, actualEndDate } = PHASE1_TIMELINE
+
+  const endDate = actualEndDate ?? estEndDate
+  const isComplete = !!actualEndDate
+  const elapsed = daysBetween(startDate, today)
+  const totalEst = daysBetween(startDate, endDate)
+  const remaining = daysBetween(today, endDate)
+  const pct = Math.min(100, Math.round((elapsed / totalEst) * 100))
+  const color = isComplete ? '#10B981' : remaining <= 7 ? '#EF4444' : '#0F5BFF'
+
+  return (
+    <Box
+      sx={{
+        p: 2.5, mb: 3, borderRadius: '16px',
+        border: `1px solid ${alpha(color, 0.25)}`,
+        bgcolor: alpha(color, 0.04),
+      }}
+    >
+      <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1, mb: 1.75 }}>
+        <Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.35 }}>
+            <Chip
+              label={isComplete ? 'Shipped' : 'In Progress'}
+              size="small"
+              sx={{ height: 20, fontSize: '0.5625rem', fontWeight: 800, letterSpacing: '0.06em', bgcolor: isComplete ? '#10B981' : alpha(color, 0.12), color: isComplete ? '#fff' : color, borderRadius: '6px' }}
+            />
+            <Typography sx={{ fontWeight: 700, fontSize: '0.9375rem', color: 'text.primary' }}>
+              Phase 1 — Rebuild
+            </Typography>
+          </Box>
+          <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
+            Ground-up rewrite of the entire ChatDaddy frontend in V2
+          </Typography>
+        </Box>
+        <Box sx={{ textAlign: 'right' }}>
+          <Typography sx={{ fontSize: '1.75rem', fontWeight: 900, letterSpacing: '-0.04em', lineHeight: 1, color }}>
+            {weeksStr(elapsed)}
+          </Typography>
+          <Typography sx={{ fontSize: '0.625rem', fontWeight: 600, color: 'text.secondary' }}>
+            {isComplete ? 'total build time' : 'elapsed so far'}
+          </Typography>
+        </Box>
+      </Box>
+
+      {/* Progress bar */}
+      <LinearProgress
+        variant="determinate"
+        value={pct}
+        sx={{
+          height: 6, borderRadius: 99, mb: 1.5,
+          bgcolor: alpha(color, 0.1),
+          '& .MuiLinearProgress-bar': { borderRadius: 99, bgcolor: color },
+        }}
+      />
+
+      {/* Date row */}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
+        <Box>
+          <Typography sx={{ fontSize: '0.5625rem', fontWeight: 700, color: 'text.secondary', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Started</Typography>
+          <Typography sx={{ fontSize: '0.8125rem', fontWeight: 700, color: 'text.primary' }}>{formatDate(startDate)}</Typography>
+        </Box>
+        <Box sx={{ flex: 1, height: 1, bgcolor: palette.divider, minWidth: 24 }} />
+        {!isComplete && (
+          <>
+            <Box sx={{ textAlign: 'center' }}>
+              <Typography sx={{ fontSize: '0.5625rem', fontWeight: 700, color: 'text.secondary', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Today</Typography>
+              <Typography sx={{ fontSize: '0.8125rem', fontWeight: 700, color: 'text.primary' }}>{formatDate(today)}</Typography>
+            </Box>
+            <Box sx={{ flex: 1, height: 1, bgcolor: alpha(color, 0.25), minWidth: 24, borderStyle: 'dashed', borderTopWidth: 1, borderColor: alpha(color, 0.35) }} />
+          </>
+        )}
+        <Box sx={{ textAlign: 'right' }}>
+          <Typography sx={{ fontSize: '0.5625rem', fontWeight: 700, color: 'text.secondary', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+            {isComplete ? 'Completed' : 'Est. Complete'}
+          </Typography>
+          <Typography sx={{ fontSize: '0.8125rem', fontWeight: 700, color }}>
+            {formatDate(endDate)}
+            {!isComplete && <Box component="span" sx={{ fontSize: '0.6875rem', fontWeight: 400, color: 'text.secondary', ml: 0.5 }}>({remaining > 0 ? `${weeksStr(remaining)} left` : 'overdue'})</Box>}
+          </Typography>
+        </Box>
+      </Box>
+
+      <Box sx={{ mt: 1.5, pt: 1.5, borderTop: `1px solid ${alpha(palette.divider, 0.6)}`, display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+        <Typography sx={{ fontSize: '0.6875rem', color: 'text.secondary' }}>
+          <Box component="span" sx={{ fontWeight: 700, color: 'text.primary' }}>Est. total</Box> {weeksStr(totalEst)} ({Math.round(totalEst / 7)} weeks)
+        </Typography>
+        <Typography sx={{ fontSize: '0.6875rem', color: 'text.secondary' }}>
+          <Box component="span" sx={{ fontWeight: 700, color: 'text.primary' }}>Timeline pct</Box> {pct}% elapsed
+        </Typography>
+        <Typography sx={{ fontSize: '0.6875rem', color: 'text.secondary' }}>
+          <Box component="span" sx={{ fontWeight: 700, color: 'text.primary' }}>Team</Box> 1 dev · 234 commits
+        </Typography>
+      </Box>
+    </Box>
+  )
+})
+
+const Phase2Timeline = memo(function Phase2Timeline() {
+  const { palette } = useTheme()
+  const { estStartDate, estWeeks, actualEndDate } = PHASE2_TIMELINE
+  const estEndDate = (() => {
+    const d = parseDateUtc(estStartDate)
+    d.setUTCDate(d.getUTCDate() + estWeeks * 7)
+    return d.toISOString().slice(0, 10)
+  })()
+  const isComplete = !!actualEndDate
+  const color = '#8B5CF6'
+  const today = new Date().toISOString().slice(0, 10)
+  const hasStarted = today >= estStartDate
+
+  return (
+    <Box
+      sx={{
+        p: 2.5, mb: 3, borderRadius: '16px',
+        border: `1px solid ${alpha(color, 0.25)}`,
+        bgcolor: alpha(color, 0.04),
+      }}
+    >
+      <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1, mb: 1.75 }}>
+        <Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.35 }}>
+            <Chip
+              label={isComplete ? 'Shipped' : hasStarted ? 'In Progress' : 'Upcoming'}
+              size="small"
+              sx={{ height: 20, fontSize: '0.5625rem', fontWeight: 800, letterSpacing: '0.06em', bgcolor: isComplete ? '#10B981' : alpha(color, 0.12), color: isComplete ? '#fff' : color, borderRadius: '6px' }}
+            />
+            <Typography sx={{ fontWeight: 700, fontSize: '0.9375rem', color: 'text.primary' }}>
+              Phase 2 — Enhancements
+            </Typography>
+          </Box>
+          <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
+            Post-rebuild UX improvements, performance, and advanced features
+          </Typography>
+        </Box>
+        <Box sx={{ textAlign: 'right' }}>
+          <Typography sx={{ fontSize: '1.75rem', fontWeight: 900, letterSpacing: '-0.04em', lineHeight: 1, color }}>
+            {estWeeks}w
+          </Typography>
+          <Typography sx={{ fontSize: '0.625rem', fontWeight: 600, color: 'text.secondary' }}>
+            estimated duration
+          </Typography>
+        </Box>
+      </Box>
+
+      {/* Date row */}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap', mb: 1.5 }}>
+        <Box>
+          <Typography sx={{ fontSize: '0.5625rem', fontWeight: 700, color: 'text.secondary', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Est. Start</Typography>
+          <Typography sx={{ fontSize: '0.8125rem', fontWeight: 700, color: 'text.primary' }}>{formatDate(estStartDate)}</Typography>
+        </Box>
+        <Box sx={{ flex: 1, height: 0, borderTop: `1px dashed ${alpha(color, 0.35)}`, minWidth: 24 }} />
+        <Box sx={{ textAlign: 'right' }}>
+          <Typography sx={{ fontSize: '0.5625rem', fontWeight: 700, color: 'text.secondary', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Est. Complete</Typography>
+          <Typography sx={{ fontSize: '0.8125rem', fontWeight: 700, color }}>{formatDate(estEndDate)}</Typography>
+        </Box>
+      </Box>
+
+      <Box sx={{ pt: 1.25, borderTop: `1px solid ${alpha(palette.divider, 0.6)}`, display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+        <Typography sx={{ fontSize: '0.6875rem', color: 'text.secondary' }}>
+          <Box component="span" sx={{ fontWeight: 700, color: 'text.primary' }}>Est. total</Box> ~{estWeeks} weeks
+        </Typography>
+        <Typography sx={{ fontSize: '0.6875rem', color: 'text.secondary' }}>
+          <Box component="span" sx={{ fontWeight: 700, color: 'text.primary' }}>Scope</Box> Updates as enhancement items are defined
+        </Typography>
+        <Typography sx={{ fontSize: '0.6875rem', color: 'text.secondary' }}>
+          <Box component="span" sx={{ fontWeight: 700, color: 'text.primary' }}>Kicks off</Box> once Phase 1 ships
+        </Typography>
+      </Box>
+    </Box>
+  )
+})
+
 // ─── Enhancement Roadmap ──────────────────────────────────────────────────────
 
 const EnhancementItem = memo(function EnhancementItem({ item }: { item: Enhancement }) {
@@ -1092,6 +1289,7 @@ export default function App() {
         {/* ── Tab 0: Rebuild Tracker ── */}
         {activeTab === 0 && (
           <>
+            <Phase1Timeline />
             <LiveBanner />
             <EodSummary />
             <OverallProgress />
@@ -1150,7 +1348,12 @@ export default function App() {
         )}
 
         {/* ── Tab 1: Enhancement Roadmap ── */}
-        {activeTab === 1 && <EnhancementRoadmap />}
+        {activeTab === 1 && (
+          <>
+            <Phase2Timeline />
+            <EnhancementRoadmap />
+          </>
+        )}
 
       </Box>
     </Box>
