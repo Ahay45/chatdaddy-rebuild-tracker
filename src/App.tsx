@@ -1351,6 +1351,8 @@ export default function App() {
         {activeTab === 1 && (
           <>
             <Phase2Timeline />
+            <LiveBanner />
+            <EodSummary />
             <EnhancementRoadmap />
           </>
         )}
