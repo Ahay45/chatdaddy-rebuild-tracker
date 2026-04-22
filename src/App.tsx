@@ -545,7 +545,7 @@ const OverallProgress = memo(function OverallProgress() {
       <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2.5, flexWrap: 'wrap', gap: 1.5 }}>
         <Box>
           <Typography sx={{ fontSize: '0.6875rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#0F5BFF', mb: 0.5 }}>
-            ChatDaddy V2
+            Phase 1
           </Typography>
           <Typography sx={{ fontSize: '1.5rem', fontWeight: 800, letterSpacing: '-0.03em', color: 'text.primary', lineHeight: 1.1 }}>
             Rebuild Progress Tracker
@@ -938,10 +938,10 @@ const EnhancementRoadmap = memo(function EnhancementRoadmap() {
         <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2.5, flexWrap: 'wrap', gap: 1.5 }}>
           <Box>
             <Typography sx={{ fontSize: '0.6875rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#8B5CF6', mb: 0.5 }}>
-              V2 Enhancement Phase
+              Phase 2
             </Typography>
             <Typography sx={{ fontSize: '1.5rem', fontWeight: 800, letterSpacing: '-0.03em', color: 'text.primary', lineHeight: 1.1 }}>
-              Post-Rebuild Roadmap
+              Enhancement Roadmap
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
               {stats.done} of {stats.total} enhancements shipped · {modulesWithItems.length} modules
@@ -1074,7 +1074,7 @@ export default function App() {
               label={
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
                   <Zap size={14} />
-                  Rebuild Tracker
+                  Phase 1 — Rebuild
                 </Box>
               }
             />
@@ -1082,7 +1082,7 @@ export default function App() {
               label={
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
                   <MapPin size={14} />
-                  Enhancement Roadmap
+                  Phase 2 — Enhancements
                 </Box>
               }
             />
