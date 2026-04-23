@@ -1702,7 +1702,27 @@ export default function App() {
 
         {/* ── Tab 2: Future Roadmap ── */}
         {activeTab === 2 && (
-          <FutureRoadmap />
+          <>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+              <Box
+                component="a"
+                href="/chatdaddy-rebuild-tracker/roadmap.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{
+                  display: 'inline-flex', alignItems: 'center', gap: 0.75,
+                  px: 2, py: 1, borderRadius: '10px', textDecoration: 'none', fontSize: '0.8125rem', fontWeight: 700,
+                  background: 'linear-gradient(135deg, #EF4444, #F97316)',
+                  color: '#fff', boxShadow: '0 4px 16px rgba(239,68,68,0.3)',
+                  '&:hover': { opacity: 0.88 }, transition: 'opacity 0.15s ease',
+                }}
+              >
+                <Target size={14} />
+                Open Cinematic View ↗
+              </Box>
+            </Box>
+            <FutureRoadmap />
+          </>
         )}
 
       </Box>
