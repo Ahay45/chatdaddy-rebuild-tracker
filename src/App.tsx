@@ -14,7 +14,7 @@ import {
   Tab,
   Tabs,
 } from '@mui/material'
-import { ChevronDown, ChevronUp, ChevronLeft, ChevronRight, GitCommit, RefreshCw, Clock, Zap, MapPin, CheckCircle2, Circle } from 'lucide-react'
+import { ChevronDown, ChevronUp, ChevronLeft, ChevronRight, GitCommit, RefreshCw, Clock, Zap, MapPin, CheckCircle2, Circle, Target, TrendingUp, AlertTriangle } from 'lucide-react'
 import {
   TRACKED_MODULES,
   getOverallStats,
@@ -35,6 +35,14 @@ import {
   type EnhancementModule,
   type EnhancementPhase,
 } from './data/enhancements'
+import {
+  ROADMAP_PILLARS,
+  PRIORITY_LABEL,
+  HORIZON_CONFIG,
+  getRoadmapStats,
+  type RoadmapPillar,
+  type RoadmapHorizon,
+} from './data/roadmap'
 
 // ─── Status config ────────────────────────────────────────────────────────────
 
@@ -1215,6 +1223,328 @@ const EnhancementRoadmap = memo(function EnhancementRoadmap() {
   )
 })
 
+// ─── Roadmap Components ───────────────────────────────────────────────────────
+
+const HORIZON_ORDER: RoadmapHorizon[] = ['now', 'next', 'later', 'future']
+
+const ImpactBar = memo(function ImpactBar({ value, color }: { value: number; color: string }) {
+  return (
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+      {[...Array(10)].map((_, i) => (
+        <Box
+          key={i}
+          sx={{
+            width: 6, height: 6, borderRadius: '2px', flexShrink: 0,
+            bgcolor: i < value ? color : alpha(color, 0.15),
+            transition: 'background-color 150ms',
+          }}
+        />
+      ))}
+    </Box>
+  )
+})
+
+const RoadmapPillarCard = memo(function RoadmapPillarCard({ pillar }: { pillar: RoadmapPillar }) {
+  const { palette } = useTheme()
+  const [expanded, setExpanded] = useState(false)
+  const priorityCfg = PRIORITY_LABEL[pillar.priority]
+  const horizonCfg = HORIZON_CONFIG[pillar.horizon]
+  const doneCount = pillar.initiatives.filter((i) => i.done).length
+  const totalCount = pillar.initiatives.length
+  const progress = totalCount === 0 ? 0 : Math.round((doneCount / totalCount) * 100)
+  const isCritical = pillar.priority === 'p0'
+
+  return (
+    <Box
+      sx={{
+        borderRadius: '16px',
+        border: `1.5px solid ${isCritical ? alpha('#EF4444', 0.35) : palette.divider}`,
+        bgcolor: palette.background.paper,
+        overflow: 'hidden',
+        transition: 'box-shadow 150ms ease, border-color 150ms ease',
+        '&:hover': { boxShadow: '0 4px 20px rgba(0,0,0,0.06)', borderColor: alpha(priorityCfg.color, 0.4) },
+      }}
+    >
+      <Box sx={{ height: 3, bgcolor: priorityCfg.color }} />
+
+      <Box sx={{ p: 2 }}>
+        {/* Header */}
+        <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.25, mb: 1.25 }}>
+          <Typography sx={{ fontSize: '1.5rem', lineHeight: 1, flexShrink: 0, mt: '2px' }}>{pillar.icon}</Typography>
+          <Box sx={{ flex: 1, minWidth: 0 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mb: 0.25, flexWrap: 'wrap' }}>
+              <Typography sx={{ fontWeight: 700, fontSize: '0.9375rem', letterSpacing: '-0.02em', color: 'text.primary' }}>
+                {pillar.label}
+              </Typography>
+              {isCritical && (
+                <Chip label="Critical" size="small" sx={{ height: 18, fontSize: '0.5rem', fontWeight: 800, bgcolor: '#EF4444', color: '#fff', borderRadius: '5px', flexShrink: 0 }} />
+              )}
+            </Box>
+            <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', lineHeight: 1.4, fontStyle: 'italic' }}>
+              {pillar.tagline}
+            </Typography>
+          </Box>
+        </Box>
+
+        {/* Chips row */}
+        <Box sx={{ display: 'flex', gap: 0.625, mb: 1.5, flexWrap: 'wrap', alignItems: 'center' }}>
+          <Chip
+            label={priorityCfg.label}
+            size="small"
+            sx={{ height: 20, fontSize: '0.5625rem', fontWeight: 700, bgcolor: alpha(priorityCfg.color, 0.1), color: priorityCfg.color, borderRadius: '5px' }}
+          />
+          <Chip
+            label={horizonCfg.label}
+            size="small"
+            sx={{ height: 20, fontSize: '0.5625rem', fontWeight: 700, bgcolor: alpha(horizonCfg.color, 0.1), color: horizonCfg.color, borderRadius: '5px' }}
+          />
+          <Chip
+            label={pillar.duration}
+            size="small"
+            sx={{ height: 20, fontSize: '0.5625rem', fontWeight: 600, bgcolor: alpha('#6B7280', 0.08), color: '#6B7280', borderRadius: '5px' }}
+          />
+          <Chip
+            label={pillar.owner}
+            size="small"
+            sx={{ height: 20, fontSize: '0.5625rem', fontWeight: 600, bgcolor: alpha('#0F5BFF', 0.07), color: '#0F5BFF', borderRadius: '5px', ml: 'auto' }}
+          />
+        </Box>
+
+        {/* Impact / Effort */}
+        <Box sx={{ display: 'flex', gap: 2.5, mb: 1.5 }}>
+          <Box>
+            <Typography sx={{ fontSize: '0.5625rem', fontWeight: 700, color: 'text.secondary', textTransform: 'uppercase', letterSpacing: '0.06em', mb: 0.4 }}>
+              Impact {pillar.impact}/10
+            </Typography>
+            <ImpactBar value={pillar.impact} color="#10B981" />
+          </Box>
+          <Box>
+            <Typography sx={{ fontSize: '0.5625rem', fontWeight: 700, color: 'text.secondary', textTransform: 'uppercase', letterSpacing: '0.06em', mb: 0.4 }}>
+              Effort {pillar.effort}/10
+            </Typography>
+            <ImpactBar value={pillar.effort} color="#F59E0B" />
+          </Box>
+        </Box>
+
+        {/* Initiatives progress */}
+        <Box sx={{ mb: 1.25 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+            <Typography sx={{ fontSize: '0.6875rem', fontWeight: 600, color: 'text.secondary' }}>
+              {doneCount}/{totalCount} initiatives
+            </Typography>
+            <Typography sx={{ fontSize: '0.6875rem', fontWeight: 700, color: progress === 100 ? '#10B981' : priorityCfg.color }}>
+              {progress}%
+            </Typography>
+          </Box>
+          <LinearProgress
+            variant="determinate"
+            value={progress}
+            sx={{ height: 6, borderRadius: 99, bgcolor: alpha(priorityCfg.color, 0.1), '& .MuiLinearProgress-bar': { borderRadius: 99, bgcolor: priorityCfg.color } }}
+          />
+        </Box>
+
+        {/* Expand toggle */}
+        <Box
+          sx={{ display: 'flex', alignItems: 'center', gap: 0.5, cursor: 'pointer', color: 'text.secondary', '&:hover': { color: 'text.primary' } }}
+          onClick={() => setExpanded((v) => !v)}
+        >
+          <Typography sx={{ fontSize: '0.75rem', fontWeight: 600 }}>
+            {expanded ? 'Collapse details' : 'Show full breakdown'}
+          </Typography>
+          <IconButton size="small" sx={{ p: 0.25 }}>
+            {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          </IconButton>
+        </Box>
+      </Box>
+
+      {/* Expanded detail */}
+      <Collapse in={expanded}>
+        <Box sx={{ px: 2, pb: 2, pt: 1.5, borderTop: `1px solid ${palette.divider}`, bgcolor: alpha(palette.background.default, 0.5) }}>
+
+          {/* Problem */}
+          <Box sx={{ mb: 1.75, p: 1.25, borderRadius: '10px', bgcolor: alpha('#EF4444', 0.05), border: `1px solid ${alpha('#EF4444', 0.15)}` }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.5 }}>
+              <AlertTriangle size={11} color="#EF4444" />
+              <Typography sx={{ fontSize: '0.5625rem', fontWeight: 700, color: '#EF4444', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Problem</Typography>
+            </Box>
+            <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', lineHeight: 1.6 }}>
+              {pillar.problem}
+            </Typography>
+          </Box>
+
+          {/* Root causes */}
+          <Box sx={{ mb: 1.75 }}>
+            <Typography sx={{ fontSize: '0.5625rem', fontWeight: 700, color: 'text.secondary', textTransform: 'uppercase', letterSpacing: '0.06em', mb: 0.75 }}>Root Causes</Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.4 }}>
+              {pillar.rootCauses.map((cause, i) => (
+                <Box key={i} sx={{ display: 'flex', alignItems: 'flex-start', gap: 0.75 }}>
+                  <Box sx={{ width: 4, height: 4, borderRadius: '50%', bgcolor: alpha(priorityCfg.color, 0.6), flexShrink: 0, mt: '6px' }} />
+                  <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', lineHeight: 1.5 }}>{cause}</Typography>
+                </Box>
+              ))}
+            </Box>
+          </Box>
+
+          {/* Initiatives */}
+          <Box sx={{ mb: 1.75 }}>
+            <Typography sx={{ fontSize: '0.5625rem', fontWeight: 700, color: 'text.secondary', textTransform: 'uppercase', letterSpacing: '0.06em', mb: 0.75 }}>Initiatives</Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+              {pillar.initiatives.map((init) => (
+                <Box key={init.id} sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
+                  <Box
+                    sx={{
+                      width: 14, height: 14, borderRadius: '4px', flexShrink: 0, mt: '1px',
+                      bgcolor: init.done ? '#10B981' : alpha('#6B7280', 0.15),
+                      border: `1.5px solid ${init.done ? '#10B981' : alpha('#6B7280', 0.3)}`,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    }}
+                  >
+                    {init.done && (
+                      <svg width="8" height="8" viewBox="0 0 10 10" fill="none">
+                        <path d="M2 5l2.5 2.5L8 3" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    )}
+                  </Box>
+                  <Typography sx={{ fontSize: '0.8125rem', color: init.done ? 'text.secondary' : 'text.primary', textDecoration: init.done ? 'line-through' : 'none', lineHeight: 1.5 }}>
+                    {init.title}
+                  </Typography>
+                </Box>
+              ))}
+            </Box>
+          </Box>
+
+          {/* Success metrics */}
+          <Box sx={{ p: 1.25, borderRadius: '10px', bgcolor: alpha('#10B981', 0.05), border: `1px solid ${alpha('#10B981', 0.15)}` }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.5 }}>
+              <TrendingUp size={11} color="#10B981" />
+              <Typography sx={{ fontSize: '0.5625rem', fontWeight: 700, color: '#10B981', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Success Metrics</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.35 }}>
+              {pillar.successMetrics.map((m, i) => (
+                <Box key={i} sx={{ display: 'flex', alignItems: 'flex-start', gap: 0.75 }}>
+                  <Box sx={{ width: 4, height: 4, borderRadius: '50%', bgcolor: '#10B981', flexShrink: 0, mt: '6px' }} />
+                  <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', lineHeight: 1.5 }}>{m}</Typography>
+                </Box>
+              ))}
+            </Box>
+          </Box>
+
+        </Box>
+      </Collapse>
+    </Box>
+  )
+})
+
+const FutureRoadmap = memo(function FutureRoadmap() {
+  const { palette } = useTheme()
+  const stats = getRoadmapStats()
+  const overallPct = stats.totalInitiatives === 0 ? 0 : Math.round((stats.doneInitiatives / stats.totalInitiatives) * 100)
+
+  return (
+    <Box>
+      {/* Summary card */}
+      <Box sx={{ p: 3, borderRadius: '20px', border: `1px solid ${palette.divider}`, bgcolor: palette.background.paper, mb: 3 }}>
+        <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2.5, flexWrap: 'wrap', gap: 1.5 }}>
+          <Box>
+            <Typography sx={{ fontSize: '0.6875rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#EF4444', mb: 0.5 }}>
+              Phase 3
+            </Typography>
+            <Typography sx={{ fontSize: '1.5rem', fontWeight: 800, letterSpacing: '-0.03em', color: 'text.primary', lineHeight: 1.1 }}>
+              Future Product Roadmap
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+              {stats.doneInitiatives} of {stats.totalInitiatives} initiatives shipped · {stats.totalPillars} strategic pillars
+            </Typography>
+          </Box>
+          <Box sx={{ textAlign: 'right' }}>
+            <Typography
+              sx={{
+                fontSize: '3rem', fontWeight: 900, letterSpacing: '-0.05em', lineHeight: 1,
+                background: 'linear-gradient(135deg, #EF4444 0%, #F97316 100%)',
+                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+              }}
+            >
+              {overallPct}%
+            </Typography>
+            <Typography sx={{ fontSize: '0.75rem', fontWeight: 600, color: 'text.secondary' }}>
+              in progress
+            </Typography>
+          </Box>
+        </Box>
+
+        <LinearProgress
+          variant="determinate"
+          value={overallPct}
+          sx={{
+            height: 10, borderRadius: 99, mb: 2.5,
+            bgcolor: alpha('#EF4444', 0.1),
+            '& .MuiLinearProgress-bar': { borderRadius: 99, background: 'linear-gradient(90deg, #EF4444 0%, #F97316 100%)' },
+          }}
+        />
+
+        {/* Horizon breakdown */}
+        <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
+          {stats.byHorizon.map(({ horizon, pillars, totalInit, doneInit }) => {
+            if (pillars === 0) return null
+            const cfg = HORIZON_CONFIG[horizon as RoadmapHorizon]
+            const pct = totalInit === 0 ? 0 : Math.round((doneInit / totalInit) * 100)
+            return (
+              <Box
+                key={horizon}
+                sx={{ flex: '1 1 120px', p: 1.5, borderRadius: '12px', bgcolor: alpha(cfg.color, 0.06), border: `1px solid ${alpha(cfg.color, 0.18)}` }}
+              >
+                <Typography sx={{ fontSize: '0.625rem', fontWeight: 700, color: cfg.color, letterSpacing: '0.06em', textTransform: 'uppercase', mb: 0.15 }}>
+                  {cfg.label}
+                </Typography>
+                <Typography sx={{ fontSize: '0.6rem', color: 'text.secondary', mb: 0.15 }}>{cfg.range}</Typography>
+                <Typography sx={{ fontSize: '0.625rem', color: 'text.secondary', mb: 0.75 }}>
+                  {pillars} pillar{pillars !== 1 ? 's' : ''} · {totalInit} initiatives
+                </Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                  <Typography sx={{ fontSize: '0.6875rem', color: 'text.secondary' }}>{doneInit}/{totalInit}</Typography>
+                  <Typography sx={{ fontSize: '0.6875rem', fontWeight: 700, color: cfg.color }}>{pct}%</Typography>
+                </Box>
+                <LinearProgress
+                  variant="determinate"
+                  value={pct}
+                  sx={{ height: 4, borderRadius: 99, bgcolor: alpha(cfg.color, 0.12), '& .MuiLinearProgress-bar': { borderRadius: 99, bgcolor: cfg.color } }}
+                />
+              </Box>
+            )
+          })}
+        </Box>
+      </Box>
+
+      {/* Pillars by horizon */}
+      {HORIZON_ORDER.map((horizon) => {
+        const pillars = ROADMAP_PILLARS.filter((p) => p.horizon === horizon)
+        if (!pillars.length) return null
+        const cfg = HORIZON_CONFIG[horizon]
+        return (
+          <Box key={horizon} sx={{ mb: 4 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25, mb: 2 }}>
+              <Box sx={{ width: 10, height: 10, borderRadius: '3px', bgcolor: cfg.color, flexShrink: 0 }} />
+              <Typography sx={{ fontWeight: 700, fontSize: '0.9375rem', color: 'text.primary', letterSpacing: '-0.01em' }}>
+                {cfg.label} — {cfg.description}
+              </Typography>
+              <Chip
+                label={cfg.range}
+                size="small"
+                sx={{ height: 20, fontSize: '0.5625rem', fontWeight: 700, bgcolor: alpha(cfg.color, 0.1), color: cfg.color, borderRadius: '5px', ml: 'auto' }}
+              />
+            </Box>
+            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 1.5 }}>
+              {pillars.map((p) => (
+                <RoadmapPillarCard key={p.id} pillar={p} />
+              ))}
+            </Box>
+          </Box>
+        )
+      })}
+    </Box>
+  )
+})
+
 // ─── App ──────────────────────────────────────────────────────────────────────
 
 export default function App() {
@@ -1259,11 +1589,16 @@ export default function App() {
             onChange={(_, v) => setActiveTab(v)}
             sx={{
               minHeight: 42,
-              '& .MuiTabs-indicator': { bgcolor: activeTab === 0 ? '#0F5BFF' : '#8B5CF6', borderRadius: '2px 2px 0 0', height: 2.5 },
+              '& .MuiTabs-indicator': {
+                bgcolor: activeTab === 0 ? '#0F5BFF' : activeTab === 1 ? '#8B5CF6' : '#EF4444',
+                borderRadius: '2px 2px 0 0', height: 2.5,
+              },
               '& .MuiTab-root': {
                 minHeight: 42, fontSize: '0.8125rem', fontWeight: 600, textTransform: 'none',
                 color: 'text.secondary', px: 2.5, py: 0,
-                '&.Mui-selected': { color: activeTab === 0 ? '#0F5BFF' : '#8B5CF6' },
+                '&.Mui-selected': {
+                  color: activeTab === 0 ? '#0F5BFF' : activeTab === 1 ? '#8B5CF6' : '#EF4444',
+                },
               },
             }}
           >
@@ -1280,6 +1615,14 @@ export default function App() {
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
                   <MapPin size={14} />
                   Phase 2 — Enhancements
+                </Box>
+              }
+            />
+            <Tab
+              label={
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+                  <Target size={14} />
+                  Phase 3 — Future Roadmap
                 </Box>
               }
             />
@@ -1355,6 +1698,11 @@ export default function App() {
             <EodSummary />
             <EnhancementRoadmap />
           </>
+        )}
+
+        {/* ── Tab 2: Future Roadmap ── */}
+        {activeTab === 2 && (
+          <FutureRoadmap />
         )}
 
       </Box>
