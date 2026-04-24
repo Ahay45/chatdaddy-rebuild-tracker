@@ -86,7 +86,7 @@ export const ENHANCEMENT_MODULES: EnhancementModule[] = [
         priority: 'high',
         effort: 'xs',
         phase: 1,
-        done: false,
+        done: true,
         tags: ['Chat', 'UX'],
       },
       {
@@ -96,7 +96,7 @@ export const ENHANCEMENT_MODULES: EnhancementModule[] = [
         priority: 'high',
         effort: 's',
         phase: 1,
-        done: false,
+        done: true,
         tags: ['Filter', 'UX'],
       },
       {
@@ -106,7 +106,7 @@ export const ENHANCEMENT_MODULES: EnhancementModule[] = [
         priority: 'high',
         effort: 's',
         phase: 1,
-        done: false,
+        done: true,
         tags: ['Chat', 'Export'],
       },
       {
@@ -116,7 +116,7 @@ export const ENHANCEMENT_MODULES: EnhancementModule[] = [
         priority: 'medium',
         effort: 's',
         phase: 1,
-        done: false,
+        done: true,
         tags: ['Chat', 'CRM'],
       },
       {
@@ -126,7 +126,7 @@ export const ENHANCEMENT_MODULES: EnhancementModule[] = [
         priority: 'high',
         effort: 'xs',
         phase: 1,
-        done: false,
+        done: true,
         tags: ['Bug', 'Chat'],
       },
       {
@@ -146,7 +146,7 @@ export const ENHANCEMENT_MODULES: EnhancementModule[] = [
         priority: 'medium',
         effort: 'xs',
         phase: 1,
-        done: false,
+        done: true,
         tags: ['Settings', 'Safety'],
       },
       {
@@ -156,7 +156,7 @@ export const ENHANCEMENT_MODULES: EnhancementModule[] = [
         priority: 'low',
         effort: 'xs',
         phase: 1,
-        done: false,
+        done: true,
         tags: ['Settings', 'UX'],
       },
       {
