@@ -186,7 +186,7 @@ export const ENHANCEMENT_MODULES: EnhancementModule[] = [
         priority: 'critical',
         effort: 's',
         phase: 1,
-        done: false,
+        done: true,
         tags: ['Bug', 'Global'],
       },
       {
@@ -206,7 +206,7 @@ export const ENHANCEMENT_MODULES: EnhancementModule[] = [
         priority: 'critical',
         effort: 'm',
         phase: 1,
-        done: false,
+        done: true,
         tags: ['Bug', 'Instagram', 'OAuth'],
       },
       {
@@ -216,7 +216,7 @@ export const ENHANCEMENT_MODULES: EnhancementModule[] = [
         priority: 'critical',
         effort: 'm',
         phase: 1,
-        done: false,
+        done: true,
         tags: ['Bug', 'Facebook', 'OAuth'],
       },
       {
