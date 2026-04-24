@@ -196,7 +196,7 @@ export const ENHANCEMENT_MODULES: EnhancementModule[] = [
         priority: 'critical',
         effort: 's',
         phase: 1,
-        done: false,
+        done: true,
         tags: ['Bug', 'WABA'],
       },
       {
@@ -226,7 +226,7 @@ export const ENHANCEMENT_MODULES: EnhancementModule[] = [
         priority: 'high',
         effort: 'xs',
         phase: 1,
-        done: false,
+        done: true,
         tags: ['UX', 'Empty State'],
       },
       {
@@ -236,7 +236,7 @@ export const ENHANCEMENT_MODULES: EnhancementModule[] = [
         priority: 'high',
         effort: 's',
         phase: 1,
-        done: false,
+        done: true,
         tags: ['Email', 'Validation'],
       },
     ],
@@ -256,7 +256,7 @@ export const ENHANCEMENT_MODULES: EnhancementModule[] = [
         priority: 'high',
         effort: 's',
         phase: 1,
-        done: false,
+        done: true,
         tags: ['Calls', 'Notes', 'Audit'],
       },
       {
@@ -266,7 +266,7 @@ export const ENHANCEMENT_MODULES: EnhancementModule[] = [
         priority: 'high',
         effort: 'xs',
         phase: 1,
-        done: false,
+        done: true,
         tags: ['Bug', 'Calls'],
       },
       {
@@ -276,7 +276,7 @@ export const ENHANCEMENT_MODULES: EnhancementModule[] = [
         priority: 'medium',
         effort: 'l',
         phase: 3,
-        done: false,
+        done: true,
         tags: ['AI', 'Calls', 'Insights'],
       },
     ],
