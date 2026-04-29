@@ -1,6 +1,6 @@
 // ─── ChatDaddy Future Roadmap ─────────────────────────────────────────────────
 // Authored as Senior PM / PO strategic breakdown
-// Last updated: 2026-04-23
+// Last updated: 2026-04-29
 
 export type RoadmapPriority = 'p0' | 'p1' | 'p2' | 'p3'
 export type RoadmapHorizon = 'now' | 'next' | 'later' | 'future'
@@ -121,14 +121,14 @@ export const ROADMAP_PILLARS: RoadmapPillar[] = [
     ],
     initiatives: [
       { id: 'perf-1', title: 'Audit and fix top 5 slowest pages with React Profiler + Lighthouse CI baseline', done: false },
-      { id: 'perf-2', title: 'Implement TanStack Query in V2 — automatic caching, background refetch, stale-while-revalidate', done: false },
+      { id: 'perf-2', title: 'Implement TanStack Query in V2 — automatic caching, background refetch, stale-while-revalidate', done: true },
       { id: 'perf-3', title: 'Add virtual scrolling (TanStack Virtual) to Inbox chat list and message thread', done: false },
       { id: 'perf-4', title: 'Implement skeleton loaders on Inbox, Dashboard, CRM — eliminate blank flash', done: false },
       { id: 'perf-5', title: 'Bundle analysis: identify and code-split heavy third-party libs (Twilio, Stripe, PDF.js)', done: false },
       { id: 'perf-6', title: 'Image lazy loading + WebP conversion for media attachments in Inbox', done: false },
       { id: 'perf-7', title: 'Add React.memo and useMemo to top 10 most frequently re-rendering components', done: false },
       { id: 'perf-8', title: 'Lighthouse CI gate in GitHub Actions — fail PR if LCP > 3s or TTI > 5s', done: false },
-      { id: 'perf-9', title: 'Incremental WebSocket state sync — diff updates instead of full re-fetch on reconnect', done: false },
+      { id: 'perf-9', title: 'Incremental WebSocket state sync — diff updates instead of full re-fetch on reconnect', done: true },
       { id: 'perf-10', title: 'CDN edge caching for static assets via Cloudflare or AWS CloudFront', done: false },
     ],
     successMetrics: [
@@ -163,12 +163,12 @@ export const ROADMAP_PILLARS: RoadmapPillar[] = [
     ],
     initiatives: [
       { id: 'sync-1', title: 'Fix WABAStore.ts:280 and AiCrmProfileStore.ts:91 — wrap all WebSocket parse in try-catch', done: false },
-      { id: 'sync-2', title: 'Implement message deduplication by messageId before inserting into store', done: false },
+      { id: 'sync-2', title: 'Implement message deduplication by messageId before inserting into store', done: true },
       { id: 'sync-3', title: 'Add sequence numbers / timestamps to WebSocket events for deterministic ordering', done: false },
-      { id: 'sync-4', title: 'Read-status confirmed ACK flow — only mark read when backend confirms', done: false },
+      { id: 'sync-4', title: 'Read-status confirmed ACK flow — only mark read when backend confirms', done: true },
       { id: 'sync-5', title: 'Incremental contact sync via webhook — update store on new WABA contact event', done: false },
       { id: 'sync-6', title: 'Offline send queue with IndexedDB — retry on reconnect, show pending status badge', done: false },
-      { id: 'sync-7', title: 'Inbox scroll anchor preservation during WebSocket inserts', done: false },
+      { id: 'sync-7', title: 'Inbox scroll anchor preservation during WebSocket inserts', done: true },
       { id: 'sync-8', title: 'Add "last sync time" indicator in Inbox header — surface sync health to user', done: false },
       { id: 'sync-9', title: 'Automated sync accuracy test: send message via WhatsApp API, assert it appears in inbox within 2s', done: false },
     ],
@@ -284,7 +284,7 @@ export const ROADMAP_PILLARS: RoadmapPillar[] = [
     ],
     initiatives: [
       { id: 'ai-1', title: 'AI reply suggestions in Inbox — one-click suggested responses based on conversation context', done: false },
-      { id: 'ai-2', title: 'AI flow generator — describe automation in plain English, AI creates the flow', done: false },
+      { id: 'ai-2', title: 'AI flow generator — describe automation in plain English, AI creates the flow (AiChatbotNode + AiChatbotV2Node added to FlowBuilder)', done: false },
       { id: 'ai-3', title: 'AI broadcast copywriter — generate personalized message variants from a brief', done: false },
       { id: 'ai-4', title: 'Smart contact segmentation — AI-powered auto-tagging and audience creation from behavior', done: false },
       { id: 'ai-5', title: 'AI analytics insights — plain-English summary of dashboard data with actionable recommendations', done: false },
