@@ -496,6 +496,207 @@ function DotsRow({ label, value, color }: { label: string; value: number; color:
   )
 }
 
+// ─── Shipped This Week ────────────────────────────────────────────────────────
+
+const SHIPPED_UPDATES = [
+  {
+    date: 'Apr 24',
+    pr: 'PR #20',
+    module: 'Flow Builder',
+    icon: '⚡',
+    color: '#a78bfa',
+    title: 'Cinematic UI rebuild — canvas, sidebar & palette',
+    detail: 'Full visual overhaul of node canvas, sidebar palette, and toolbar. Real bot actions now load directly onto canvas. Breadcrumb navigation + empty canvas hint added.',
+  },
+  {
+    date: 'Apr 24',
+    pr: 'PR #18',
+    module: 'Calls',
+    icon: '📞',
+    color: '#4f8cff',
+    title: 'Call statistics & agent handling enhanced',
+    detail: 'Richer call stats breakdown per agent. Improved handling of ongoing/missed/answered states.',
+  },
+  {
+    date: 'Apr 24',
+    pr: 'PR #19',
+    module: 'Inbox + Channels',
+    icon: '💬',
+    color: '#22d17a',
+    title: 'Date range filter + channel empty state',
+    detail: 'Inline calendar with presets (Today, 7d, 30d, Custom) for Inbox date filter. NoChannelEmptyState component added for teams with no connected channels.',
+  },
+  {
+    date: 'Apr 24',
+    pr: 'PR #16–17',
+    module: 'Channels',
+    icon: '📡',
+    color: '#f5a623',
+    title: 'Email registration + onboarding error handling',
+    detail: 'Email channel onboarding now supports registration with full error display. Channel setup dialogs show inline validation instead of silent failures.',
+  },
+  {
+    date: 'Apr 24',
+    pr: 'hotfix',
+    module: 'Inbox',
+    icon: '🔧',
+    color: '#ff7a2f',
+    title: 'Chat list lazy loading + speed boost',
+    detail: 'Chat list pagination now lazy-loads. Chat opening speed significantly improved. Chat sort order fixed (old → new).',
+  },
+  {
+    date: 'Apr 27',
+    pr: 'commit',
+    module: 'Flow Builder',
+    icon: '🤖',
+    color: '#a78bfa',
+    title: 'AI chatbot nodes + 7 new action node types',
+    detail: 'AiChatbotNode and AiChatbotV2Node added. Also: ActionNode, CreateTicketNode, UpdateTicketNode, StopTicketTimerNode, NotifyTeamNode, ForkNode. Node duplicate/delete actions wired.',
+  },
+  {
+    date: 'Apr 28',
+    pr: 'PR #23',
+    module: 'Inbox',
+    icon: '🔄',
+    color: '#22d17a',
+    title: 'Live inbox — real-time WebSocket sync',
+    detail: 'Full live inbox: message dedup, scroll anchor on new messages, debounced read-ACK, slide-in animation for live arrivals. useLiveEvents + useLiveInbox hooks.',
+  },
+  {
+    date: 'Apr 28',
+    pr: 'commit',
+    module: 'Inbox',
+    icon: '↩️',
+    color: '#ff7a2f',
+    title: 'Double-tap to reply + scroll to reply',
+    detail: 'Double-tap any message bubble to quote-reply. Tapping a quoted message scrolls to the original in the thread.',
+  },
+  {
+    date: 'Apr 29',
+    pr: 'PR #24',
+    module: 'CRM + Inbox',
+    icon: '👤',
+    color: '#4f8cff',
+    title: 'ContactAvatar component across modules',
+    detail: 'Unified ContactAvatar with picture queue and lazy-load. Integrated into ChatRow, ChatDetail, CRM BoardView, TicketCard, CreateTicketDialog, GlobalSearchDrawer.',
+  },
+]
+
+function ShippedThisWeek() {
+  const [expanded, setExpanded] = useState<number | null>(null)
+
+  return (
+    <section style={{ padding: '80px 0', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px' }}>
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16, marginBottom: 48 }}>
+          <div>
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              padding: '4px 12px', borderRadius: 99, marginBottom: 14,
+              background: 'rgba(34,209,122,0.1)', border: '1px solid rgba(34,209,122,0.25)',
+            }}>
+              <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22d17a', boxShadow: '0 0 6px #22d17a' }} />
+              <span style={{ fontSize: 11, fontWeight: 700, color: '#22d17a', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                Shipped · Apr 24–29
+              </span>
+            </div>
+            <h2 style={{
+              fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', fontWeight: 800, color: '#fff',
+              letterSpacing: '-0.03em', lineHeight: 1.1,
+            }}>
+              What we shipped<br />this week.
+            </h2>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ fontSize: 28, fontWeight: 900, color: '#22d17a', letterSpacing: '-0.04em', lineHeight: 1 }}>
+              {SHIPPED_UPDATES.length}
+            </div>
+            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginTop: 4, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+              updates
+            </div>
+          </div>
+        </div>
+
+        {/* Update cards */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {SHIPPED_UPDATES.map((u, i) => {
+            const isOpen = expanded === i
+            return (
+              <div
+                key={i}
+                onClick={() => setExpanded(isOpen ? null : i)}
+                style={{
+                  borderRadius: 14,
+                  background: isOpen ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.025)',
+                  border: `1px solid ${isOpen ? `${u.color}55` : 'rgba(255,255,255,0.07)'}`,
+                  overflow: 'hidden', cursor: 'pointer',
+                  transition: 'border-color 0.25s ease, background 0.25s ease',
+                  boxShadow: isOpen ? `0 0 32px ${u.color}14` : 'none',
+                }}
+              >
+                {/* Row */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 18px' }}>
+                  {/* Icon */}
+                  <div style={{
+                    width: 36, height: 36, borderRadius: 10, flexShrink: 0,
+                    background: `${u.color}18`, border: `1px solid ${u.color}33`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18,
+                  }}>
+                    {u.icon}
+                  </div>
+
+                  {/* Text */}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3, flexWrap: 'wrap' }}>
+                      <span style={{
+                        fontSize: 10, fontWeight: 700, color: u.color, letterSpacing: '0.06em',
+                        textTransform: 'uppercase', padding: '2px 7px', borderRadius: 6,
+                        background: `${u.color}18`, border: `1px solid ${u.color}30`,
+                      }}>
+                        {u.module}
+                      </span>
+                      <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', fontWeight: 500 }}>
+                        {u.pr}
+                      </span>
+                    </div>
+                    <div style={{ fontSize: 13.5, fontWeight: 600, color: '#fff', lineHeight: 1.3 }}>
+                      {u.title}
+                    </div>
+                  </div>
+
+                  {/* Date + chevron */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
+                    <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', fontWeight: 500 }}>{u.date}</span>
+                    <svg
+                      width="14" height="14" viewBox="0 0 14 14" fill="none"
+                      style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.25s ease', opacity: 0.35 }}
+                    >
+                      <path d="M2.5 5l4.5 4.5L11.5 5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                </div>
+
+                {/* Expanded detail */}
+                {isOpen && (
+                  <div style={{
+                    padding: '0 18px 16px 68px',
+                    fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.65,
+                    borderTop: `1px solid ${u.color}20`,
+                    paddingTop: 12,
+                  }}>
+                    {u.detail}
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 // ─── Timeline strip ───────────────────────────────────────────────────────────
 
 function TimelineStrip() {
@@ -630,6 +831,7 @@ export default function RoadmapPresentation() {
       <GrainOverlay />
       <Nav active={activeHorizon} onSelect={handleSelect} />
       <Hero />
+      <ShippedThisWeek />
       <TimelineStrip />
       {HORIZON_ORDER.map(h => (
         <HorizonSection key={h} horizon={h} onVisible={setActiveHorizon} />
