@@ -498,6 +498,8 @@ function DotsRow({ label, value, color }: { label: string; value: number; color:
 
 // ─── Shipped This Week ────────────────────────────────────────────────────────
 
+const BASE = '/chatdaddy-rebuild-tracker/images/shipped/'
+
 const SHIPPED_UPDATES = [
   {
     date: 'Apr 24',
@@ -507,6 +509,7 @@ const SHIPPED_UPDATES = [
     color: '#a78bfa',
     title: 'Cinematic UI rebuild — canvas, sidebar & palette',
     detail: 'Full visual overhaul of node canvas, sidebar palette, and toolbar. Real bot actions now load directly onto canvas. Breadcrumb navigation + empty canvas hint added.',
+    images: [`${BASE}Cinematic UI rebuild — canvas, sidebar & palette.png`],
   },
   {
     date: 'Apr 24',
@@ -516,6 +519,10 @@ const SHIPPED_UPDATES = [
     color: '#4f8cff',
     title: 'Call statistics & agent handling enhanced',
     detail: 'Richer call stats breakdown per agent. Improved handling of ongoing/missed/answered states.',
+    images: [
+      `${BASE}Call statistics & agent handling enhanced.png`,
+      `${BASE}Call statistics & agent handling enhanced 2.png`,
+    ],
   },
   {
     date: 'Apr 24',
@@ -525,6 +532,10 @@ const SHIPPED_UPDATES = [
     color: '#22d17a',
     title: 'Date range filter + channel empty state',
     detail: 'Inline calendar with presets (Today, 7d, 30d, Custom) for Inbox date filter. NoChannelEmptyState component added for teams with no connected channels.',
+    images: [
+      `${BASE}Date range filter.png`,
+      `${BASE}channel empty state.png`,
+    ],
   },
   {
     date: 'Apr 24',
@@ -534,6 +545,7 @@ const SHIPPED_UPDATES = [
     color: '#f5a623',
     title: 'Email registration + onboarding error handling',
     detail: 'Email channel onboarding now supports registration with full error display. Channel setup dialogs show inline validation instead of silent failures.',
+    images: [`${BASE}Email registration + onboarding error handling.png`],
   },
   {
     date: 'Apr 24',
@@ -543,6 +555,7 @@ const SHIPPED_UPDATES = [
     color: '#ff7a2f',
     title: 'Chat list lazy loading + speed boost',
     detail: 'Chat list pagination now lazy-loads. Chat opening speed significantly improved. Chat sort order fixed (old → new).',
+    images: [] as string[],
   },
   {
     date: 'Apr 27',
@@ -552,6 +565,7 @@ const SHIPPED_UPDATES = [
     color: '#a78bfa',
     title: 'AI chatbot nodes + 7 new action node types',
     detail: 'AiChatbotNode and AiChatbotV2Node added. Also: ActionNode, CreateTicketNode, UpdateTicketNode, StopTicketTimerNode, NotifyTeamNode, ForkNode. Node duplicate/delete actions wired.',
+    images: [`${BASE}AI chatbot nodes + 7 new action node types.png`],
   },
   {
     date: 'Apr 28',
@@ -561,6 +575,7 @@ const SHIPPED_UPDATES = [
     color: '#22d17a',
     title: 'Live inbox — real-time WebSocket sync',
     detail: 'Full live inbox: message dedup, scroll anchor on new messages, debounced read-ACK, slide-in animation for live arrivals. useLiveEvents + useLiveInbox hooks.',
+    images: [] as string[],
   },
   {
     date: 'Apr 28',
@@ -570,6 +585,7 @@ const SHIPPED_UPDATES = [
     color: '#ff7a2f',
     title: 'Double-tap to reply + scroll to reply',
     detail: 'Double-tap any message bubble to quote-reply. Tapping a quoted message scrolls to the original in the thread.',
+    images: [] as string[],
   },
   {
     date: 'Apr 29',
@@ -579,11 +595,88 @@ const SHIPPED_UPDATES = [
     color: '#4f8cff',
     title: 'ContactAvatar component across modules',
     detail: 'Unified ContactAvatar with picture queue and lazy-load. Integrated into ChatRow, ChatDetail, CRM BoardView, TicketCard, CreateTicketDialog, GlobalSearchDrawer.',
+    images: [`${BASE}ContactAvatar component across modules.png`],
   },
 ]
 
+// ─── Image Lightbox ───────────────────────────────────────────────────────────
+
+function ImageLightbox({ images, startIndex, onClose }: { images: string[]; startIndex: number; onClose: () => void }) {
+  const [idx, setIdx] = useState(startIndex)
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+      if (e.key === 'ArrowRight') setIdx(i => (i + 1) % images.length)
+      if (e.key === 'ArrowLeft') setIdx(i => (i - 1 + images.length) % images.length)
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [images.length, onClose])
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: 'fixed', inset: 0, zIndex: 9998,
+        background: 'rgba(0,0,0,0.88)', backdropFilter: 'blur(12px)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: 24,
+      }}
+    >
+      {/* Image container */}
+      <div onClick={e => e.stopPropagation()} style={{ position: 'relative', maxWidth: '90vw', maxHeight: '88vh', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+        {/* Close */}
+        <button
+          onClick={onClose}
+          style={{
+            position: 'absolute', top: -16, right: -16, zIndex: 1,
+            width: 32, height: 32, borderRadius: '50%', border: 'none', cursor: 'pointer',
+            background: 'rgba(255,255,255,0.12)', color: '#fff', fontSize: 16, lineHeight: 1,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}
+        >✕</button>
+
+        {/* Image */}
+        <img
+          src={images[idx]}
+          alt=""
+          style={{
+            maxWidth: '90vw', maxHeight: '80vh',
+            borderRadius: 16, objectFit: 'contain',
+            boxShadow: '0 32px 80px rgba(0,0,0,0.6)',
+            border: '1px solid rgba(255,255,255,0.08)',
+          }}
+        />
+
+        {/* Multi-image nav */}
+        {images.length > 1 && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <button
+              onClick={() => setIdx(i => (i - 1 + images.length) % images.length)}
+              style={{
+                padding: '6px 16px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.15)',
+                background: 'rgba(255,255,255,0.08)', color: '#fff', cursor: 'pointer', fontSize: 13,
+              }}
+            >← Prev</button>
+            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>{idx + 1} / {images.length}</span>
+            <button
+              onClick={() => setIdx(i => (i + 1) % images.length)}
+              style={{
+                padding: '6px 16px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.15)',
+                background: 'rgba(255,255,255,0.08)', color: '#fff', cursor: 'pointer', fontSize: 13,
+              }}
+            >Next →</button>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
 function ShippedThisWeek() {
   const [expanded, setExpanded] = useState<number | null>(null)
+  const [lightbox, setLightbox] = useState<{ images: string[]; idx: number } | null>(null)
 
   return (
     <section style={{ padding: '80px 0', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
@@ -622,6 +715,7 @@ function ShippedThisWeek() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {SHIPPED_UPDATES.map((u, i) => {
             const isOpen = expanded === i
+            const hasImages = u.images.length > 0
             return (
               <div
                 key={i}
@@ -659,6 +753,14 @@ function ShippedThisWeek() {
                       <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', fontWeight: 500 }}>
                         {u.pr}
                       </span>
+                      {hasImages && (
+                        <span style={{
+                          fontSize: 10, color: 'rgba(255,255,255,0.3)', fontWeight: 500,
+                          display: 'flex', alignItems: 'center', gap: 3,
+                        }}>
+                          🖼 {u.images.length} screenshot{u.images.length > 1 ? 's' : ''}
+                        </span>
+                      )}
                     </div>
                     <div style={{ fontSize: 13.5, fontWeight: 600, color: '#fff', lineHeight: 1.3 }}>
                       {u.title}
@@ -679,13 +781,42 @@ function ShippedThisWeek() {
 
                 {/* Expanded detail */}
                 {isOpen && (
-                  <div style={{
-                    padding: '0 18px 16px 68px',
-                    fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.65,
-                    borderTop: `1px solid ${u.color}20`,
-                    paddingTop: 12,
-                  }}>
-                    {u.detail}
+                  <div
+                    onClick={e => e.stopPropagation()}
+                    style={{
+                      padding: '12px 18px 16px 68px',
+                      borderTop: `1px solid ${u.color}20`,
+                    }}
+                  >
+                    <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.65, marginBottom: hasImages ? 14 : 0 }}>
+                      {u.detail}
+                    </p>
+
+                    {/* Image thumbnails */}
+                    {hasImages && (
+                      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                        {u.images.map((src, imgIdx) => (
+                          <button
+                            key={imgIdx}
+                            onClick={() => setLightbox({ images: u.images, idx: imgIdx })}
+                            style={{
+                              padding: 0, border: `1.5px solid ${u.color}40`, borderRadius: 10,
+                              background: 'transparent', cursor: 'zoom-in', overflow: 'hidden',
+                              transition: 'border-color 0.2s, transform 0.2s',
+                              width: 120, height: 76, flexShrink: 0,
+                            }}
+                            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = u.color; (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1.04)' }}
+                            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = `${u.color}40`; (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1)' }}
+                          >
+                            <img
+                              src={src}
+                              alt={`Screenshot ${imgIdx + 1}`}
+                              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', borderRadius: 8 }}
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -693,6 +824,9 @@ function ShippedThisWeek() {
           })}
         </div>
       </div>
+
+      {/* Lightbox */}
+      {lightbox && <ImageLightbox images={lightbox.images} startIndex={lightbox.idx} onClose={() => setLightbox(null)} />}
     </section>
   )
 }
