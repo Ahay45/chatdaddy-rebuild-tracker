@@ -285,7 +285,7 @@ function renderPrCard(pr) {
   return '<div class="kanban-card col-pr">' +
     '<div class="kc-number">PR #' + pr.number + '</div>' +
     '<div class="kc-title">' + escHtml(pr.title) + '</div>' +
-    '<a class="kc-branch" href="' + BRANCH_BASE + encodeURIComponent(pr.branch) + '" target="_blank">branch: ' + branchShort + '</a>' +
+    '<a class="kc-branch" href="' + pr.url + '" target="_blank">branch: ' + branchShort + '</a>' +
     '<div class="kc-footer">' +
     '<a class="kc-pr-btn" href="' + pr.url + '" target="_blank">View PR</a>' +
     '<span class="ci ' + ci[0] + '">' + ci[1] + '</span>' +
@@ -367,7 +367,7 @@ function render(prs) {
     return '<div style="background:#0d1424;border:1px solid #1e2d40;border-radius:10px;padding:14px 18px;margin-bottom:10px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">' +
       '<span style="font-size:11px;color:#475569;font-family:monospace;flex-shrink:0">#' + pr.number + '</span>' +
       '<span style="font-size:13px;font-weight:600;flex:1;min-width:200px">' + escHtml(pr.title) + '</span>' +
-      '<a class="kc-branch" href="' + BRANCH_BASE + encodeURIComponent(pr.branch) + '" target="_blank" style="flex-shrink:0">branch: ' + branchShort + '</a>' +
+      '<a class="kc-branch" href="' + pr.url + '" target="_blank" style="flex-shrink:0">branch: ' + branchShort + '</a>' +
       '<span class="ci ' + ci[0] + '" style="flex-shrink:0">' + ci[1] + '</span>' +
       '<a class="kc-pr-btn" href="' + pr.url + '" target="_blank" style="flex-shrink:0">View PR</a>' +
       '</div>';
