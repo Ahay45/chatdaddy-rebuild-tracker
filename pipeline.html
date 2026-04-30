@@ -10,10 +10,12 @@ body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0a0f1a; colo
 
 header { background: #0d1424; border-bottom: 1px solid #1e2d40; padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
 header h1 { font-size: 17px; font-weight: 700; color: #00d4ff; }
-.header-meta { display: flex; align-items: center; gap: 16px; }
+.header-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .repo-link { font-size: 11px; color: #475569; text-decoration: none; padding: 4px 10px; border: 1px solid #1e2d40; border-radius: 6px; }
 .repo-link:hover { color: #94a3b8; border-color: #2d4060; }
 .updated { font-size: 11px; color: #3d5068; }
+.btn-refresh { font-size: 11px; color: #94a3b8; padding: 4px 10px; background: #1e2d40; border: none; border-radius: 6px; cursor: pointer; }
+.btn-refresh:hover { background: #263d55; }
 
 .tabs { display: flex; gap: 2px; padding: 16px 28px 0; border-bottom: 1px solid #1e2d40; background: #0d1424; overflow-x: auto; }
 .tab { padding: 8px 18px; font-size: 13px; font-weight: 600; color: #475569; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s; white-space: nowrap; }
@@ -36,12 +38,20 @@ header h1 { font-size: 17px; font-weight: 700; color: #00d4ff; }
 
 .kanban-board { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 16px; align-items: flex-start; }
 .kanban-col { background: #0b1320; border: 1px solid #1e2d40; border-radius: 12px; min-width: 260px; flex: 0 0 260px; }
-.kanban-col-header { padding: 12px 16px; border-bottom: 1px solid #1e2d40; display: flex; align-items: center; justify-content: space-between; }
+.kanban-col-header { padding: 12px 16px 8px; border-bottom: 1px solid #1e2d40; }
+.kanban-col-header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
 .kanban-col-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; }
 .kanban-col-count { font-size: 11px; background: #1e2d40; color: #64748b; border-radius: 20px; padding: 1px 8px; }
 .col-missing  .kanban-col-title { color: #475569; }
 .col-pr       .kanban-col-title { color: #7c3aed; }
 .col-done     .kanban-col-title { color: #10b981; }
+
+.col-action-btn { width: 100%; font-size: 11px; padding: 5px 10px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; transition: all 0.15s; text-align: center; display: block; }
+.col-action-btn.discover { background: rgba(0,212,255,0.07); color: #64748b; border: 1px solid rgba(0,212,255,0.15); }
+.col-action-btn.discover:hover { background: rgba(0,212,255,0.12); color: #00d4ff; border-color: rgba(0,212,255,0.35); }
+.col-action-btn.fix { background: rgba(124,58,237,0.08); color: #7c6aaf; border: 1px solid rgba(124,58,237,0.2); }
+.col-action-btn.fix:hover { background: rgba(124,58,237,0.15); color: #a78bfa; border-color: rgba(124,58,237,0.35); }
+
 .kanban-cards { padding: 10px; display: flex; flex-direction: column; gap: 8px; min-height: 80px; }
 
 .kanban-card { background: #0d1828; border: 1px solid #1e2d40; border-radius: 10px; padding: 12px 14px; }
@@ -87,6 +97,14 @@ header h1 { font-size: 17px; font-weight: 700; color: #00d4ff; }
 .loading { color: #334155; font-size: 13px; padding: 40px; text-align: center; }
 .error-msg { color: #ef4444; font-size: 12px; padding: 20px; text-align: center; background: rgba(239,68,68,0.06); border-radius: 10px; border: 1px solid rgba(239,68,68,0.15); }
 
+/* Toast */
+#toast-container { position: fixed; bottom: 24px; right: 24px; display: flex; flex-direction: column; gap: 8px; z-index: 999; }
+.toast { background: #0d1828; border: 1px solid #1e2d40; border-radius: 10px; padding: 10px 16px; font-size: 12px; color: #94a3b8; box-shadow: 0 4px 16px rgba(0,0,0,0.4); animation: slideIn 0.2s ease; max-width: 340px; }
+.toast.success { border-color: rgba(16,185,129,0.4); color: #10b981; }
+.toast.error   { border-color: rgba(239,68,68,0.4); color: #ef4444; }
+.toast.info    { border-color: rgba(0,212,255,0.3); color: #00d4ff; }
+
+@keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -96,24 +114,26 @@ header h1 { font-size: 17px; font-weight: 700; color: #00d4ff; }
 <body>
 
 <header>
-  <h1>⚡ V2 Agentic Pipeline — ChatDaddy Frontend Rebuild</h1>
+  <h1>&#9889; V2 Agentic Pipeline &#8212; ChatDaddy</h1>
   <div class="header-meta">
-    <a class="repo-link" href="https://github.com/chatdaddy/frontend-dashboard-v2/pulls" target="_blank">↗ GitHub PRs</a>
-    <span class="updated" id="last-updated">Loading…</span>
+    <a class="repo-link" href="https://github.com/chatdaddy/frontend-dashboard-v2/pulls" target="_blank">&#8599; GitHub PRs</a>
+    <a class="repo-link" href="https://github.com/Ahay45/chatdaddy-rebuild-tracker/actions" target="_blank">&#8599; CI Actions</a>
+    <button class="btn-refresh" onclick="load()">&#8635; Refresh</button>
+    <span class="updated" id="last-updated">Loading&#8230;</span>
   </div>
 </header>
 
 <div class="tabs">
-  <div class="tab active" onclick="showTab('kanban')">🗂 Kanban</div>
-  <div class="tab" onclick="showTab('prs')">📤 All PRs</div>
-  <div class="tab" onclick="showTab('gap')">🔍 Gap Tracker</div>
+  <div class="tab active" onclick="showTab('kanban')">Kanban</div>
+  <div class="tab" onclick="showTab('prs')">All PRs</div>
+  <div class="tab" onclick="showTab('gap')">Gap Tracker</div>
 </div>
 
 <div class="container">
-  <div class="stats-bar" id="stats-bar"><div class="loading">Fetching from GitHub…</div></div>
+  <div class="stats-bar" id="stats-bar"><div class="loading">Fetching from GitHub&#8230;</div></div>
 
   <div id="tab-kanban" class="section active">
-    <div class="kanban-board" id="kanban-board"><div class="loading">Loading PRs…</div></div>
+    <div class="kanban-board" id="kanban-board"><div class="loading">Loading PRs&#8230;</div></div>
   </div>
 
   <div id="tab-prs" class="section">
@@ -125,12 +145,14 @@ header h1 { font-size: 17px; font-weight: 700; color: #00d4ff; }
   </div>
 </div>
 
-<script>
-const BRANCH_BASE = 'https://github.com/chatdaddy/frontend-dashboard-v2/tree/';
-const PR_BASE     = 'https://github.com/chatdaddy/frontend-dashboard-v2/pull/';
+<div id="toast-container"></div>
 
-// Current gap status — updated by CI or manually
-const GAP = {
+<script>
+var BRANCH_BASE = 'https://github.com/chatdaddy/frontend-dashboard-v2/tree/';
+var PR_BASE     = 'https://github.com/chatdaddy/frontend-dashboard-v2/pull/';
+var ACTIONS_URL = 'https://github.com/Ahay45/chatdaddy-rebuild-tracker/actions/workflows/deploy.yml';
+
+var GAP = {
   'contact-vcard': true,
   'variable-chips': true,
   'pinned-filters': true,
@@ -148,192 +170,234 @@ const GAP = {
   'module-team': false,
 };
 
-const FEATURE_META = {
+var FEATURE_META = {
   'contact-vcard':        { label: 'Contact vCard',           module: 'inbox' },
-  'variable-chips':       { label: 'Variable {{chips}}',      module: 'inbox' },
+  'variable-chips':       { label: 'Variable chips',          module: 'inbox' },
   'pinned-filters':       { label: 'Pinned Filters Bar',      module: 'inbox' },
-  'admin-panel':          { label: 'Admin Panel',             module: 'inbox' },
+  'admin-panel':          { label: 'Admin Panel',             module: 'admin' },
   'dashboard-charts':     { label: 'Dashboard Charts',        module: 'dashboard' },
   'no-channels-state': {
     label: 'No Channels Empty State', module: 'inbox',
     desc: 'Empty state when user has no WhatsApp channels connected',
-    position: 'Inbox sidebar → channel list area (top)',
-    flow: 'Login → no channels → illustration + "Connect Channel" CTA',
+    position: 'Inbox sidebar - channel list area (top)',
+    flow: 'Login - no channels - illustration + Connect Channel CTA',
   },
   'manage-channels': {
     label: 'Manage Channels Dialog', module: 'inbox',
     desc: 'View, rename and delete connected channels',
-    position: 'Inbox header → kebab menu → "Manage Channels"',
-    flow: 'Header menu → ManageChannelsDialog → list accounts → rename/delete',
+    position: 'Inbox header - kebab menu - Manage Channels',
+    flow: 'Header menu - ManageChannelsDialog - list accounts - rename/delete',
   },
   'crm-ticket-details': {
     label: 'CRM Ticket Details', module: 'crm',
     desc: 'Side panel: assignee, status, tags, properties',
-    position: 'CRM board → click ticket card → right panel slides in',
-    flow: 'Click ticket → TicketDetailsPanel → edit fields → save',
+    position: 'CRM board - click ticket card - right panel slides in',
+    flow: 'Click ticket - TicketDetailsPanel - edit fields - save',
   },
   'crm-property-settings': {
     label: 'CRM Property Settings', module: 'crm',
     desc: 'Show/hide and reorder CRM property columns',
-    position: 'CRM board → top-right settings icon → ViewSettings drawer',
-    flow: 'Settings icon → toggle visibility → drag to reorder',
+    position: 'CRM board - top-right settings icon - ViewSettings drawer',
+    flow: 'Settings icon - toggle visibility - drag to reorder',
   },
   'crm-custom-fields': {
     label: 'CRM Custom Fields', module: 'crm',
     desc: 'Create and manage custom fields for CRM tickets',
-    position: 'CRM → Settings → Custom Fields tab',
-    flow: 'CRM settings → Custom Fields → add/edit/delete field types',
+    position: 'CRM - Settings - Custom Fields tab',
+    flow: 'CRM settings - Custom Fields - add/edit/delete field types',
   },
   'broadcasts-analytics': {
     label: 'Broadcasts Analytics', module: 'broadcasts',
     desc: 'Campaign analytics: delivery, open, click rates',
-    position: 'Marketing → Broadcasts → campaign → Analytics tab',
-    flow: 'Click campaign → Analytics tab → metrics + timeline chart',
+    position: 'Marketing - Broadcasts - campaign - Analytics tab',
+    flow: 'Click campaign - Analytics tab - metrics + timeline chart',
   },
   'broadcasts-audience': {
     label: 'Broadcasts Audience', module: 'broadcasts',
     desc: 'Audience quality panel: contact health and opt-in rates',
-    position: 'Marketing → Broadcasts → Audience tab',
-    flow: 'New broadcast → Audience step → quality score + opt-in %',
+    position: 'Marketing - Broadcasts - Audience tab',
+    flow: 'New broadcast - Audience step - quality score + opt-in %',
   },
   'admin-team-analytics': {
     label: 'Admin Team Analytics', module: 'admin',
     desc: 'Team performance: response time, resolution rate, workload',
-    position: 'Admin → Analytics → Team tab',
-    flow: 'Admin → Analytics → Team → date picker → per-agent metrics',
+    position: 'Admin - Analytics - Team tab',
+    flow: 'Admin - Analytics - Team - date picker - per-agent metrics',
   },
   'ai-chat-testing': {
     label: 'AI Chat Testing', module: 'ai',
     desc: 'Test AI chatbot responses in simulated chat window',
-    position: 'AI Chatbot → select bot → Test tab (right panel)',
-    flow: 'Open bot → Test tab → type message → see response + confidence',
+    position: 'AI Chatbot - select bot - Test tab (right panel)',
+    flow: 'Open bot - Test tab - type message - see response + confidence',
   },
   'module-team': {
     label: 'Team Management', module: 'settings',
     desc: 'Invite members, assign roles, manage seats',
-    position: 'Settings → Team → Members list',
-    flow: 'Team settings → invite by email → assign role → remove',
+    position: 'Settings - Team - Members list',
+    flow: 'Team settings - invite by email - assign role - remove',
   },
 };
 
+function toast(msg, type) {
+  type = type || 'info';
+  var el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.textContent = msg;
+  document.getElementById('toast-container').appendChild(el);
+  setTimeout(function() { el.remove(); }, 5000);
+}
+
 function showTab(name) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.textContent.toLowerCase().includes(name)));
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.toggle('active', t.textContent.toLowerCase().includes(name)); });
+  document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
   document.getElementById('tab-' + name).classList.add('active');
 }
 
 function ciLabel(ci) {
-  if (ci === 'pass')    return ['pass',    '✅ Pass'];
-  if (ci === 'fail')    return ['fail',    '❌ Fail'];
-  if (ci === 'running') return ['running', '⏳ Running'];
-  return ['pending', '⏸ Pending'];
+  if (ci === 'pass')    return ['pass',    'CI Pass'];
+  if (ci === 'fail')    return ['fail',    'CI Fail'];
+  if (ci === 'running') return ['running', 'CI Running'];
+  return ['pending', 'CI Pending'];
+}
+
+function discoverMissing() {
+  var missing = Object.entries(GAP).filter(function(e) { return !e[1]; }).map(function(e) { return e[0]; });
+  if (missing.length === 0) {
+    toast('All features are implemented!', 'success');
+  } else {
+    toast('Missing features (' + missing.length + '): ' + missing.join(', '), 'info');
+    showTab('gap');
+  }
+}
+
+function triggerFixPrs() {
+  toast('Opening GitHub Actions to trigger fix workflow...', 'info');
+  setTimeout(function() { window.open(ACTIONS_URL, '_blank'); }, 600);
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 function renderPrCard(pr) {
-  const branchShort = pr.branch.replace(/^feat\/|^fix\//, '');
-  const ci = ciLabel(pr.ci);
+  var branchShort = pr.branch.replace(/^feat\/|^fix\//, '');
+  var ci = ciLabel(pr.ci);
   return '<div class="kanban-card col-pr">' +
     '<div class="kc-number">PR #' + pr.number + '</div>' +
     '<div class="kc-title">' + escHtml(pr.title) + '</div>' +
-    '<a class="kc-branch" href="' + BRANCH_BASE + encodeURIComponent(pr.branch) + '" target="_blank">⎇ ' + branchShort + '</a>' +
+    '<a class="kc-branch" href="' + BRANCH_BASE + encodeURIComponent(pr.branch) + '" target="_blank">branch: ' + branchShort + '</a>' +
     '<div class="kc-footer">' +
-    '<a class="kc-pr-btn" href="' + pr.url + '" target="_blank">↗ View PR</a>' +
+    '<a class="kc-pr-btn" href="' + pr.url + '" target="_blank">View PR</a>' +
     '<span class="ci ' + ci[0] + '">' + ci[1] + '</span>' +
     '</div></div>';
 }
 
 function renderMissingCard(id) {
-  const meta = FEATURE_META[id] || { label: id, module: '' };
+  var meta = FEATURE_META[id] || { label: id, module: '' };
   return '<div class="kanban-card col-missing">' +
     '<div class="kc-number">#' + id + '</div>' +
-    '<div class="kc-title">' + meta.label + '</div>' +
-    (meta.desc ? '<div class="kc-desc">' + meta.desc + '</div>' : '') +
-    (meta.position ? '<div class="kc-position"><b>📍 Where:</b> ' + meta.position + '<br><b>🔄 Flow:</b> ' + meta.flow + '</div>' : '') +
-    '<div class="kc-footer"><span style="font-size:10px;color:#475569;padding:2px 8px;border:1px solid #1e2d40;border-radius:5px">' + (meta.module || 'inbox') + '</span></div>' +
+    '<div class="kc-title">' + escHtml(meta.label) + '</div>' +
+    (meta.desc ? '<div class="kc-desc">' + escHtml(meta.desc) + '</div>' : '') +
+    (meta.position ? '<div class="kc-position"><b>Where:</b> ' + escHtml(meta.position) + '<br><b>Flow:</b> ' + escHtml(meta.flow) + '</div>' : '') +
+    '<div class="kc-footer"><span style="font-size:10px;color:#475569;padding:2px 8px;border:1px solid #1e2d40;border-radius:5px">' + escHtml(meta.module || 'inbox') + '</span></div>' +
     '</div>';
 }
 
 function renderDoneCard(id) {
-  const meta = FEATURE_META[id] || { label: id, module: '' };
+  var meta = FEATURE_META[id] || { label: id, module: '' };
   return '<div class="kanban-card col-done">' +
     '<div class="kc-number">#' + id + '</div>' +
-    '<div class="kc-title">' + meta.label + '</div>' +
-    '<div class="kc-footer"><span class="ci pass">✅ Implemented</span></div>' +
+    '<div class="kc-title">' + escHtml(meta.label) + '</div>' +
+    '<div class="kc-footer"><span class="ci pass">Implemented</span></div>' +
     '</div>';
 }
 
-function escHtml(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
 function render(prs) {
-  const passCount = prs.filter(p => p.ci === 'pass').length;
-  const failCount = prs.filter(p => p.ci === 'fail').length;
-  const doneFeatures = Object.entries(GAP).filter(([,v]) => v).length;
-  const totalFeatures = Object.keys(GAP).length;
-  const missingFeatures = Object.entries(GAP).filter(([,v]) => !v);
-  const doneFeatureIds = Object.entries(GAP).filter(([,v]) => v).map(([id]) => id);
+  var passCount = prs.filter(function(p) { return p.ci === 'pass'; }).length;
+  var failCount = prs.filter(function(p) { return p.ci === 'fail'; }).length;
+  var missingFeatures = Object.entries(GAP).filter(function(e) { return !e[1]; });
+  var doneFeatureIds  = Object.entries(GAP).filter(function(e) { return e[1]; }).map(function(e) { return e[0]; });
+  var totalFeatures = Object.keys(GAP).length;
 
   document.getElementById('stats-bar').innerHTML =
     '<div class="stat blue"><div class="stat-num">' + totalFeatures + '</div><div class="stat-label">Features</div></div>' +
-    '<div class="stat green"><div class="stat-num">' + doneFeatures + '</div><div class="stat-label">Done</div></div>' +
+    '<div class="stat green"><div class="stat-num">' + doneFeatureIds.length + '</div><div class="stat-label">Done</div></div>' +
     '<div class="stat yellow"><div class="stat-num">' + missingFeatures.length + '</div><div class="stat-label">Missing</div></div>' +
     '<div class="stat purple"><div class="stat-num">' + prs.length + '</div><div class="stat-label">PRs Open</div></div>' +
     '<div class="stat green"><div class="stat-num">' + passCount + '</div><div class="stat-label">CI Pass</div></div>' +
     '<div class="stat red"><div class="stat-num">' + failCount + '</div><div class="stat-label">CI Fail</div></div>';
 
-  const missingHtml = missingFeatures.length
-    ? missingFeatures.map(([id]) => renderMissingCard(id)).join('')
-    : '<div class="kc-empty">All features implemented! 🎉</div>';
+  var missingHtml = missingFeatures.length
+    ? missingFeatures.map(function(e) { return renderMissingCard(e[0]); }).join('')
+    : '<div class="kc-empty">All features implemented!</div>';
 
-  const prHtml = prs.length
-    ? prs.map(pr => renderPrCard(pr)).join('')
+  var prHtml = prs.length
+    ? prs.map(renderPrCard).join('')
     : '<div class="kc-empty">No open PRs</div>';
 
-  const doneHtml = doneFeatureIds.length
-    ? doneFeatureIds.map(id => renderDoneCard(id)).join('')
+  var doneHtml = doneFeatureIds.length
+    ? doneFeatureIds.map(renderDoneCard).join('')
     : '<div class="kc-empty">Nothing done yet</div>';
 
   document.getElementById('kanban-board').innerHTML =
-    '<div class="kanban-col col-missing"><div class="kanban-col-header"><span class="kanban-col-title">⬜ Missing</span><span class="kanban-col-count">' + missingFeatures.length + '</span></div><div class="kanban-cards">' + missingHtml + '</div></div>' +
-    '<div class="kanban-col col-pr" style="min-width:270px;flex:0 0 270px"><div class="kanban-col-header"><span class="kanban-col-title">📤 PR Open</span><span class="kanban-col-count">' + prs.length + '</span></div><div class="kanban-cards">' + prHtml + '</div></div>' +
-    '<div class="kanban-col col-done"><div class="kanban-col-header"><span class="kanban-col-title">✅ Done</span><span class="kanban-col-count">' + doneFeatureIds.length + '</span></div><div class="kanban-cards">' + doneHtml + '</div></div>';
+    '<div class="kanban-col col-missing">' +
+      '<div class="kanban-col-header">' +
+        '<div class="kanban-col-header-top"><span class="kanban-col-title">Missing</span><span class="kanban-col-count">' + missingFeatures.length + '</span></div>' +
+        '<button class="col-action-btn discover" onclick="discoverMissing()">Discover Missing Features</button>' +
+      '</div>' +
+      '<div class="kanban-cards">' + missingHtml + '</div>' +
+    '</div>' +
+    '<div class="kanban-col col-pr" style="min-width:270px;flex:0 0 270px">' +
+      '<div class="kanban-col-header">' +
+        '<div class="kanban-col-header-top"><span class="kanban-col-title">PR Open</span><span class="kanban-col-count">' + prs.length + '</span></div>' +
+        '<button class="col-action-btn fix" onclick="triggerFixPrs()">Fix Lint + Errors (CI)</button>' +
+      '</div>' +
+      '<div class="kanban-cards">' + prHtml + '</div>' +
+    '</div>' +
+    '<div class="kanban-col col-done">' +
+      '<div class="kanban-col-header">' +
+        '<div class="kanban-col-header-top"><span class="kanban-col-title">Done</span><span class="kanban-col-count">' + doneFeatureIds.length + '</span></div>' +
+      '</div>' +
+      '<div class="kanban-cards">' + doneHtml + '</div>' +
+    '</div>';
 
-  document.getElementById('prs-list').innerHTML = prs.map(pr => {
-    const ci = ciLabel(pr.ci);
-    const branchShort = pr.branch.replace(/^feat\/|^fix\//, '');
+  document.getElementById('prs-list').innerHTML = prs.map(function(pr) {
+    var ci = ciLabel(pr.ci);
+    var branchShort = pr.branch.replace(/^feat\/|^fix\//, '');
     return '<div style="background:#0d1424;border:1px solid #1e2d40;border-radius:10px;padding:14px 18px;margin-bottom:10px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">' +
       '<span style="font-size:11px;color:#475569;font-family:monospace;flex-shrink:0">#' + pr.number + '</span>' +
       '<span style="font-size:13px;font-weight:600;flex:1;min-width:200px">' + escHtml(pr.title) + '</span>' +
-      '<a class="kc-branch" href="' + BRANCH_BASE + encodeURIComponent(pr.branch) + '" target="_blank" style="flex-shrink:0">⎇ ' + branchShort + '</a>' +
+      '<a class="kc-branch" href="' + BRANCH_BASE + encodeURIComponent(pr.branch) + '" target="_blank" style="flex-shrink:0">branch: ' + branchShort + '</a>' +
       '<span class="ci ' + ci[0] + '" style="flex-shrink:0">' + ci[1] + '</span>' +
-      '<a class="kc-pr-btn" href="' + pr.url + '" target="_blank" style="flex-shrink:0">↗ PR</a>' +
+      '<a class="kc-pr-btn" href="' + pr.url + '" target="_blank" style="flex-shrink:0">View PR</a>' +
       '</div>';
   }).join('');
 
-  document.getElementById('gap-grid').innerHTML = Object.entries(GAP).map(([id, ok]) => {
-    const meta = FEATURE_META[id] || { label: id, module: '' };
+  document.getElementById('gap-grid').innerHTML = Object.entries(GAP).map(function(entry) {
+    var id = entry[0]; var ok = entry[1];
+    var meta = FEATURE_META[id] || { label: id, module: '' };
     return '<div class="gap-item ' + (ok ? 'ok' : 'missing') + '">' +
-      '<div class="gap-icon">' + (ok ? '✅' : '❌') + '</div>' +
-      '<div><div class="gap-label">' + meta.label + '</div>' +
+      '<div class="gap-icon">' + (ok ? 'OK' : 'X') + '</div>' +
+      '<div><div class="gap-label">' + escHtml(meta.label) + '</div>' +
       '<div class="gap-sub">' + (ok ? 'Implemented' : 'Missing') + '</div>' +
-      (meta.position && !ok ? '<div class="gap-pos">📍 ' + meta.position + '</div>' : '') +
+      (meta.position && !ok ? '<div class="gap-pos">Where: ' + escHtml(meta.position) + '</div>' : '') +
       '</div></div>';
   }).join('');
 }
 
 async function load() {
+  document.getElementById('last-updated').textContent = 'Loading...';
   try {
-    const r = await fetch('pipeline-data.json?t=' + Date.now());
+    var r = await fetch('pipeline-data.json?t=' + Date.now());
     if (!r.ok) throw new Error('pipeline-data.json not found (build may be in progress)');
-    const data = await r.json();
+    var data = await r.json();
     render(data.prs || []);
-    document.getElementById('last-updated').textContent =
-      'Data from ' + new Date(data.updatedAt).toLocaleString();
+    document.getElementById('last-updated').textContent = 'Updated ' + new Date(data.updatedAt).toLocaleString();
   } catch (e) {
     document.getElementById('kanban-board').innerHTML =
-      '<div class="error-msg">⚠️ ' + e.message + '<br><small>Dashboard data is generated during GitHub Actions build. Check back shortly.</small></div>';
+      '<div class="error-msg">Could not load data: ' + escHtml(e.message) + '<br><small>Data is generated during GitHub Actions build. Check back shortly.</small></div>';
     document.getElementById('stats-bar').innerHTML = '';
+    document.getElementById('last-updated').textContent = 'Error loading data';
   }
 }
 
