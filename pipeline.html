@@ -271,11 +271,35 @@ function discoverMissing() {
   }
 }
 
-function triggerFixPrs() {
-  toast('Claude Code agent is fixing lint + TS errors on all failing PRs. Open your local dashboard (localhost:4455) to track progress.', 'info');
-  setTimeout(function() {
-    toast('Tip: click "Fix Lint & Errors" on the local dashboard at localhost:4455 to run Claude Code automatically.', 'info');
-  }, 2000);
+async function triggerFixPrs() {
+  var token = localStorage.getItem('gh_pat') || prompt('Enter your GitHub Personal Access Token (needs repo + workflow scope):');
+  if (!token) return;
+  localStorage.setItem('gh_pat', token);
+
+  toast('Dispatching Claude Code fix agent...', 'info');
+  try {
+    var r = await fetch('https://api.github.com/repos/Ahay45/chatdaddy-rebuild-tracker/actions/workflows/fix-prs.yml/dispatches', {
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + token,
+        Accept: 'application/vnd.github+json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ ref: 'main' }),
+    });
+    if (r.status === 204) {
+      toast('Claude Code agent started! Fixing TS + lint errors on all failing PRs...', 'success');
+      setTimeout(function() {
+        toast('Check progress: github.com/Ahay45/chatdaddy-rebuild-tracker/actions', 'info');
+      }, 2000);
+    } else {
+      var err = await r.json().catch(function() { return {}; });
+      toast('Failed to start agent: ' + (err.message || r.status), 'error');
+      if (r.status === 401) localStorage.removeItem('gh_pat');
+    }
+  } catch (e) {
+    toast('Error: ' + e.message, 'error');
+  }
 }
 
 function escHtml(s) {
@@ -353,7 +377,7 @@ function render(prs) {
     '<div class="kanban-col col-pr" style="min-width:270px;flex:0 0 270px">' +
       '<div class="kanban-col-header">' +
         '<div class="kanban-col-header-top"><span class="kanban-col-title">PR Open</span><span class="kanban-col-count">' + prs.length + '</span></div>' +
-        '<button class="col-action-btn fix" onclick="triggerFixPrs()">&#129302; Fix with Claude Code</button>' +
+        '<button class="col-action-btn fix" onclick="triggerFixPrs()">&#129302; Fix Lint &amp; Errors</button>' +
       '</div>' +
       '<div class="kanban-cards">' + prHtml + '</div>' +
     '</div>' +
