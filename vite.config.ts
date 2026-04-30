@@ -11,6 +11,7 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         roadmap: resolve(__dirname, 'roadmap.html'),
+        pipeline: resolve(__dirname, 'pipeline.html'),
       },
     },
   },
