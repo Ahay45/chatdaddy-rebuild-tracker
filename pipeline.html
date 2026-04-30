@@ -126,9 +126,8 @@ header h1 { font-size: 17px; font-weight: 700; color: #00d4ff; }
 </div>
 
 <script>
-const REPO = 'chatdaddy/frontend-dashboard-v2';
-const BRANCH_BASE = 'https://github.com/' + REPO + '/tree/';
-const PR_BASE = 'https://github.com/' + REPO + '/pull/';
+const BRANCH_BASE = 'https://github.com/chatdaddy/frontend-dashboard-v2/tree/';
+const PR_BASE     = 'https://github.com/chatdaddy/frontend-dashboard-v2/pull/';
 
 // Current gap status — updated by CI or manually
 const GAP = {
@@ -223,45 +222,22 @@ function showTab(name) {
   document.getElementById('tab-' + name).classList.add('active');
 }
 
-function ciLabel(conclusion, status) {
-  if (conclusion === 'success') return ['pass', '✅ Pass'];
-  if (conclusion === 'failure') return ['fail', '❌ Fail'];
-  if (status === 'in_progress' || status === 'queued') return ['running', '⏳ Running'];
+function ciLabel(ci) {
+  if (ci === 'pass')    return ['pass',    '✅ Pass'];
+  if (ci === 'fail')    return ['fail',    '❌ Fail'];
+  if (ci === 'running') return ['running', '⏳ Running'];
   return ['pending', '⏸ Pending'];
 }
 
-async function fetchAllPrs() {
-  let all = [], page = 1;
-  while (true) {
-    const r = await fetch('https://api.github.com/repos/' + REPO + '/pulls?state=open&per_page=100&page=' + page);
-    if (!r.ok) throw new Error('GitHub API error: ' + r.status);
-    const data = await r.json();
-    all = all.concat(data);
-    if (data.length < 100) break;
-    page++;
-  }
-  return all;
-}
-
-async function fetchCiForPr(pr) {
-  try {
-    const r = await fetch('https://api.github.com/repos/' + REPO + '/commits/' + pr.head.sha + '/check-runs?per_page=10');
-    if (!r.ok) return ['pending', '⏸ Pending'];
-    const data = await r.json();
-    const build = (data.check_runs || []).find(c => c.name && c.name.toLowerCase().includes('build'));
-    if (!build) return ['pending', '⏸ Pending'];
-    return ciLabel(build.conclusion, build.status);
-  } catch { return ['pending', '⏸ Pending']; }
-}
-
-function renderPrCard(pr, ci) {
-  const branchShort = pr.head.ref.replace(/^feat\/|^fix\//, '');
+function renderPrCard(pr) {
+  const branchShort = pr.branch.replace(/^feat\/|^fix\//, '');
+  const ci = ciLabel(pr.ci);
   return '<div class="kanban-card col-pr">' +
     '<div class="kc-number">PR #' + pr.number + '</div>' +
     '<div class="kc-title">' + escHtml(pr.title) + '</div>' +
-    '<a class="kc-branch" href="' + BRANCH_BASE + encodeURIComponent(pr.head.ref) + '" target="_blank">⎇ ' + branchShort + '</a>' +
+    '<a class="kc-branch" href="' + BRANCH_BASE + encodeURIComponent(pr.branch) + '" target="_blank">⎇ ' + branchShort + '</a>' +
     '<div class="kc-footer">' +
-    '<a class="kc-pr-btn" href="' + PR_BASE + pr.number + '" target="_blank">↗ View PR</a>' +
+    '<a class="kc-pr-btn" href="' + pr.url + '" target="_blank">↗ View PR</a>' +
     '<span class="ci ' + ci[0] + '">' + ci[1] + '</span>' +
     '</div></div>';
 }
@@ -290,83 +266,78 @@ function escHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+function render(prs) {
+  const passCount = prs.filter(p => p.ci === 'pass').length;
+  const failCount = prs.filter(p => p.ci === 'fail').length;
+  const doneFeatures = Object.entries(GAP).filter(([,v]) => v).length;
+  const totalFeatures = Object.keys(GAP).length;
+  const missingFeatures = Object.entries(GAP).filter(([,v]) => !v);
+  const doneFeatureIds = Object.entries(GAP).filter(([,v]) => v).map(([id]) => id);
+
+  document.getElementById('stats-bar').innerHTML =
+    '<div class="stat blue"><div class="stat-num">' + totalFeatures + '</div><div class="stat-label">Features</div></div>' +
+    '<div class="stat green"><div class="stat-num">' + doneFeatures + '</div><div class="stat-label">Done</div></div>' +
+    '<div class="stat yellow"><div class="stat-num">' + missingFeatures.length + '</div><div class="stat-label">Missing</div></div>' +
+    '<div class="stat purple"><div class="stat-num">' + prs.length + '</div><div class="stat-label">PRs Open</div></div>' +
+    '<div class="stat green"><div class="stat-num">' + passCount + '</div><div class="stat-label">CI Pass</div></div>' +
+    '<div class="stat red"><div class="stat-num">' + failCount + '</div><div class="stat-label">CI Fail</div></div>';
+
+  const missingHtml = missingFeatures.length
+    ? missingFeatures.map(([id]) => renderMissingCard(id)).join('')
+    : '<div class="kc-empty">All features implemented! 🎉</div>';
+
+  const prHtml = prs.length
+    ? prs.map(pr => renderPrCard(pr)).join('')
+    : '<div class="kc-empty">No open PRs</div>';
+
+  const doneHtml = doneFeatureIds.length
+    ? doneFeatureIds.map(id => renderDoneCard(id)).join('')
+    : '<div class="kc-empty">Nothing done yet</div>';
+
+  document.getElementById('kanban-board').innerHTML =
+    '<div class="kanban-col col-missing"><div class="kanban-col-header"><span class="kanban-col-title">⬜ Missing</span><span class="kanban-col-count">' + missingFeatures.length + '</span></div><div class="kanban-cards">' + missingHtml + '</div></div>' +
+    '<div class="kanban-col col-pr" style="min-width:270px;flex:0 0 270px"><div class="kanban-col-header"><span class="kanban-col-title">📤 PR Open</span><span class="kanban-col-count">' + prs.length + '</span></div><div class="kanban-cards">' + prHtml + '</div></div>' +
+    '<div class="kanban-col col-done"><div class="kanban-col-header"><span class="kanban-col-title">✅ Done</span><span class="kanban-col-count">' + doneFeatureIds.length + '</span></div><div class="kanban-cards">' + doneHtml + '</div></div>';
+
+  document.getElementById('prs-list').innerHTML = prs.map(pr => {
+    const ci = ciLabel(pr.ci);
+    const branchShort = pr.branch.replace(/^feat\/|^fix\//, '');
+    return '<div style="background:#0d1424;border:1px solid #1e2d40;border-radius:10px;padding:14px 18px;margin-bottom:10px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">' +
+      '<span style="font-size:11px;color:#475569;font-family:monospace;flex-shrink:0">#' + pr.number + '</span>' +
+      '<span style="font-size:13px;font-weight:600;flex:1;min-width:200px">' + escHtml(pr.title) + '</span>' +
+      '<a class="kc-branch" href="' + BRANCH_BASE + encodeURIComponent(pr.branch) + '" target="_blank" style="flex-shrink:0">⎇ ' + branchShort + '</a>' +
+      '<span class="ci ' + ci[0] + '" style="flex-shrink:0">' + ci[1] + '</span>' +
+      '<a class="kc-pr-btn" href="' + pr.url + '" target="_blank" style="flex-shrink:0">↗ PR</a>' +
+      '</div>';
+  }).join('');
+
+  document.getElementById('gap-grid').innerHTML = Object.entries(GAP).map(([id, ok]) => {
+    const meta = FEATURE_META[id] || { label: id, module: '' };
+    return '<div class="gap-item ' + (ok ? 'ok' : 'missing') + '">' +
+      '<div class="gap-icon">' + (ok ? '✅' : '❌') + '</div>' +
+      '<div><div class="gap-label">' + meta.label + '</div>' +
+      '<div class="gap-sub">' + (ok ? 'Implemented' : 'Missing') + '</div>' +
+      (meta.position && !ok ? '<div class="gap-pos">📍 ' + meta.position + '</div>' : '') +
+      '</div></div>';
+  }).join('');
+}
+
 async function load() {
   try {
-    const prs = await fetchAllPrs();
-
-    // Fetch CI for all PRs in parallel (batched to avoid rate limit)
-    const ciResults = await Promise.all(prs.map(pr => fetchCiForPr(pr)));
-    const prWithCi = prs.map((pr, i) => ({ pr, ci: ciResults[i] }));
-
-    const passCount = prWithCi.filter(x => x.ci[0] === 'pass').length;
-    const failCount = prWithCi.filter(x => x.ci[0] === 'fail').length;
-    const doneFeatures = Object.entries(GAP).filter(([,v]) => v).length;
-    const totalFeatures = Object.keys(GAP).length;
-    const missingFeatures = Object.entries(GAP).filter(([,v]) => !v);
-
-    // Stats
-    document.getElementById('stats-bar').innerHTML =
-      '<div class="stat blue"><div class="stat-num">' + totalFeatures + '</div><div class="stat-label">Features</div></div>' +
-      '<div class="stat green"><div class="stat-num">' + doneFeatures + '</div><div class="stat-label">Done</div></div>' +
-      '<div class="stat yellow"><div class="stat-num">' + missingFeatures.length + '</div><div class="stat-label">Missing</div></div>' +
-      '<div class="stat purple"><div class="stat-num">' + prs.length + '</div><div class="stat-label">PRs Open</div></div>' +
-      '<div class="stat green"><div class="stat-num">' + passCount + '</div><div class="stat-label">CI Pass</div></div>' +
-      '<div class="stat red"><div class="stat-num">' + failCount + '</div><div class="stat-label">CI Fail</div></div>';
-
-    // Kanban: Missing | PR Open | Done
-    const missingHtml = missingFeatures.length
-      ? missingFeatures.map(([id]) => renderMissingCard(id)).join('')
-      : '<div class="kc-empty">All features implemented! 🎉</div>';
-
-    const prHtml = prWithCi.length
-      ? prWithCi.map(x => renderPrCard(x.pr, x.ci)).join('')
-      : '<div class="kc-empty">No open PRs</div>';
-
-    const doneFeatureIds = Object.entries(GAP).filter(([,v]) => v).map(([id]) => id);
-    const doneHtml = doneFeatureIds.length
-      ? doneFeatureIds.map(id => renderDoneCard(id)).join('')
-      : '<div class="kc-empty">Nothing done yet</div>';
-
-    document.getElementById('kanban-board').innerHTML =
-      '<div class="kanban-col col-missing"><div class="kanban-col-header"><span class="kanban-col-title">⬜ Missing</span><span class="kanban-col-count">' + missingFeatures.length + '</span></div><div class="kanban-cards">' + missingHtml + '</div></div>' +
-      '<div class="kanban-col col-pr" style="min-width:270px;flex:0 0 270px"><div class="kanban-col-header"><span class="kanban-col-title">📤 PR Open</span><span class="kanban-col-count">' + prs.length + '</span></div><div class="kanban-cards">' + prHtml + '</div></div>' +
-      '<div class="kanban-col col-done"><div class="kanban-col-header"><span class="kanban-col-title">✅ Done</span><span class="kanban-col-count">' + doneFeatureIds.length + '</span></div><div class="kanban-cards">' + doneHtml + '</div></div>';
-
-    // All PRs tab
-    document.getElementById('prs-list').innerHTML = prWithCi.map(x => {
-      const pr = x.pr; const ci = x.ci;
-      return '<div style="background:#0d1424;border:1px solid #1e2d40;border-radius:10px;padding:14px 18px;margin-bottom:10px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">' +
-        '<span style="font-size:11px;color:#475569;font-family:monospace;flex-shrink:0">#' + pr.number + '</span>' +
-        '<span style="font-size:13px;font-weight:600;flex:1;min-width:200px">' + escHtml(pr.title) + '</span>' +
-        '<a class="kc-branch" href="' + BRANCH_BASE + encodeURIComponent(pr.head.ref) + '" target="_blank" style="flex-shrink:0">⎇ ' + pr.head.ref.replace(/^feat\/|^fix\//, '') + '</a>' +
-        '<span class="ci ' + ci[0] + '" style="flex-shrink:0">' + ci[1] + '</span>' +
-        '<a class="kc-pr-btn" href="' + PR_BASE + pr.number + '" target="_blank" style="flex-shrink:0">↗ PR</a>' +
-        '</div>';
-    }).join('');
-
-    // Gap tracker
-    document.getElementById('gap-grid').innerHTML = Object.entries(GAP).map(([id, ok]) => {
-      const meta = FEATURE_META[id] || { label: id, module: '' };
-      return '<div class="gap-item ' + (ok ? 'ok' : 'missing') + '">' +
-        '<div class="gap-icon">' + (ok ? '✅' : '❌') + '</div>' +
-        '<div>' +
-        '<div class="gap-label">' + meta.label + '</div>' +
-        '<div class="gap-sub">' + (ok ? 'Implemented' : 'Missing') + '</div>' +
-        (meta.position && !ok ? '<div class="gap-pos">📍 ' + meta.position + '</div>' : '') +
-        '</div></div>';
-    }).join('');
-
-    document.getElementById('last-updated').textContent = 'Updated ' + new Date().toLocaleTimeString();
+    const r = await fetch('pipeline-data.json?t=' + Date.now());
+    if (!r.ok) throw new Error('pipeline-data.json not found (build may be in progress)');
+    const data = await r.json();
+    render(data.prs || []);
+    document.getElementById('last-updated').textContent =
+      'Data from ' + new Date(data.updatedAt).toLocaleString();
   } catch (e) {
-    document.getElementById('kanban-board').innerHTML = '<div class="error-msg">⚠️ GitHub API error: ' + e.message + '<br><small>May hit rate limit (60 req/hr unauthenticated). Try again in a minute.</small></div>';
+    document.getElementById('kanban-board').innerHTML =
+      '<div class="error-msg">⚠️ ' + e.message + '<br><small>Dashboard data is generated during GitHub Actions build. Check back shortly.</small></div>';
     document.getElementById('stats-bar').innerHTML = '';
-    console.error(e);
   }
 }
 
 load();
-// Refresh every 2 minutes
-setInterval(load, 2 * 60 * 1000);
 </script>
 </body>
 </html>

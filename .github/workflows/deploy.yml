@@ -40,9 +40,14 @@ jobs:
       - name: Fetch live data from chatdaddy/frontend-dashboard-v2@main
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
-        # continue-on-error so the build still works if PAT is missing
         continue-on-error: true
         run: node scripts/fetch-live-data.mjs
+
+      - name: Fetch pipeline PR + CI data
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        continue-on-error: true
+        run: node scripts/fetch-pipeline-data.mjs
 
       - name: Build
         run: npm run build
