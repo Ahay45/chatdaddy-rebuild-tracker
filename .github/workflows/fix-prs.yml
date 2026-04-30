@@ -1,4 +1,4 @@
-name: Fix Failing PRs
+name: Fix Failing PRs (Claude Code)
 
 on:
   workflow_dispatch:
@@ -6,21 +6,20 @@ on:
 jobs:
   fix:
     runs-on: ubuntu-latest
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PAT }}
 
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
 
       - name: Install Claude Code CLI
         run: npm install -g @anthropic-ai/claude-code
 
-      - name: Clone frontend-dashboard-v2
+      - name: Clone v2 repo
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
         run: |
@@ -28,10 +27,91 @@ jobs:
           cd /tmp/v2
           git config user.email "aiteam310@gmail.com"
           git config user.name "Claude Code Agent"
+          echo "machine github.com login x-access-token password ${GH_PAT}" > ~/.netrc
+          chmod 600 ~/.netrc
+          git config --global url."https://github.com/".insteadOf "git@github.com:"
 
-      - name: Run fix-prs agent
+      - name: Install v2 dependencies
+        run: cd /tmp/v2 && npm ci
+
+      - name: Fix all failing branches
         env:
-          GH_PAT: ${{ secrets.GH_PAT }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          CLAUDE_BIN: claude
-        run: node scripts/fix-prs-ci.mjs
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          cd /tmp/v2
+
+          BRANCHES=(
+            "feat/settings-team-management"
+            "feat/crm-property-settings"
+            "feat/crm-ticket-details"
+            "feat/inbox-manage-channels"
+            "fix/inbox-dropped-features"
+            "feat/automation-core-views"
+            "feat/dashboard-core-views"
+            "feat/calls-missing-features"
+            "feat/calls-core-views"
+            "feat/broadcasts-missing-features"
+            "feat/broadcasts-core-views"
+            "feat/crm-missing-features"
+            "feat/crm-core-views"
+            "feat/inbox-compose-variable-input"
+            "feat/broadcasts-analytics"
+            "feat/inbox-admin-panel"
+          )
+
+          for branch in "${BRANCHES[@]}"; do
+            echo ""
+            echo "━━━ $branch ━━━"
+
+            git fetch origin $branch 2>/dev/null || { echo "Branch not found — skip"; continue; }
+            git checkout -B $branch origin/$branch
+
+            TSC_OUT=$(npx tsc --noEmit 2>&1 || true)
+            LINT_OUT=$(npx eslint src --ext .ts,.tsx --max-warnings=9999 --format compact 2>&1 || true)
+
+            TSC_COUNT=$(echo "$TSC_OUT" | grep -c "error TS" || true)
+            LINT_COUNT=$(echo "$LINT_OUT" | grep -c "error" || true)
+
+            echo "TS errors: $TSC_COUNT  Lint errors: $LINT_COUNT"
+
+            if [ "$TSC_COUNT" -eq 0 ] && [ "$LINT_COUNT" -eq 0 ]; then
+              echo "✓ Already clean"
+              git checkout main
+              continue
+            fi
+
+            echo "Fixing with Claude Code..."
+
+            claude --print --dangerously-skip-permissions "
+          Fix all TypeScript and ESLint errors on branch \"$branch\" in chatdaddy/frontend-dashboard-v2.
+
+          TypeScript errors:
+          $(echo "$TSC_OUT" | head -100)
+
+          ESLint errors:
+          $(echo "$LINT_OUT" | head -80)
+
+          Instructions:
+          1. Fix every error listed — use optional chaining (?.), correct types, remove unused imports/vars
+          2. Run: npx eslint src --ext .ts,.tsx --fix --max-warnings=9999
+          3. Run: npx tsc --noEmit — must be 0 errors
+          4. git add -A
+          5. git commit -m 'fix: resolve TS and lint errors [claude-code]'
+          Only edit files in src/. Do NOT push. Do NOT touch main.
+          "
+
+            AHEAD=$(git log origin/$branch..HEAD --oneline 2>/dev/null | wc -l | tr -d ' ')
+            if [ "$AHEAD" -gt 0 ]; then
+              echo "Pushing $AHEAD commit(s)..."
+              git push https://x-access-token:${GH_PAT}@github.com/chatdaddy/frontend-dashboard-v2.git $branch
+              echo "✓ Pushed"
+            else
+              echo "Nothing to push"
+            fi
+
+            git checkout main
+          done
+
+          echo ""
+          echo "All branches processed."
