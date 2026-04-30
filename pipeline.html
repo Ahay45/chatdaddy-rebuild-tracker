@@ -272,9 +272,14 @@ function discoverMissing() {
 }
 
 async function triggerFixPrs() {
-  var token = localStorage.getItem('gh_pat') || prompt('Enter your GitHub Personal Access Token (needs repo + workflow scope):');
-  if (!token) return;
-  localStorage.setItem('gh_pat', token);
+  localStorage.removeItem('gh_pat'); // always re-prompt so user can paste correct token
+  var token = prompt(
+    'Paste a GitHub Personal Access Token with "workflow" scope.\n\n' +
+    'Create one at: github.com/settings/tokens/new\n' +
+    'Required scopes: repo, workflow'
+  );
+  if (!token || !token.trim()) return;
+  token = token.trim();
 
   toast('Dispatching Claude Code fix agent...', 'info');
   try {
@@ -288,17 +293,23 @@ async function triggerFixPrs() {
       body: JSON.stringify({ ref: 'main' }),
     });
     if (r.status === 204) {
+      localStorage.setItem('gh_pat', token);
       toast('Claude Code agent started! Fixing TS + lint errors on all failing PRs...', 'success');
       setTimeout(function() {
-        toast('Check progress: github.com/Ahay45/chatdaddy-rebuild-tracker/actions', 'info');
-      }, 2000);
+        window.open('https://github.com/Ahay45/chatdaddy-rebuild-tracker/actions/workflows/fix-prs.yml', '_blank');
+      }, 1500);
     } else {
       var err = await r.json().catch(function() { return {}; });
-      toast('Failed to start agent: ' + (err.message || r.status), 'error');
-      if (r.status === 401) localStorage.removeItem('gh_pat');
+      var msg = err.message || ('HTTP ' + r.status);
+      toast('Failed (' + r.status + '): ' + msg, 'error');
+      if (r.status === 403 || r.status === 422) {
+        setTimeout(function() {
+          toast('Make sure your token has "workflow" scope — create a new one at github.com/settings/tokens/new', 'error');
+        }, 1500);
+      }
     }
   } catch (e) {
-    toast('Error: ' + e.message, 'error');
+    toast('Network error: ' + e.message, 'error');
   }
 }
 
