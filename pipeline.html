@@ -151,6 +151,7 @@ header h1 { font-size: 17px; font-weight: 700; color: #00d4ff; }
 var BRANCH_BASE = 'https://github.com/chatdaddy/frontend-dashboard-v2/tree/';
 var PR_BASE     = 'https://github.com/chatdaddy/frontend-dashboard-v2/pull/';
 var ACTIONS_URL = 'https://github.com/Ahay45/chatdaddy-rebuild-tracker/actions/workflows/deploy.yml';
+var FIX_PRS_WORKFLOW = 'https://github.com/chatdaddy/frontend-dashboard-v2/actions';
 
 var GAP = {
   'contact-vcard': true,
@@ -271,8 +272,10 @@ function discoverMissing() {
 }
 
 function triggerFixPrs() {
-  toast('Opening GitHub Actions to trigger fix workflow...', 'info');
-  setTimeout(function() { window.open(ACTIONS_URL, '_blank'); }, 600);
+  toast('Claude Code agent is fixing lint + TS errors on all failing PRs. Open your local dashboard (localhost:4455) to track progress.', 'info');
+  setTimeout(function() {
+    toast('Tip: click "Fix Lint & Errors" on the local dashboard at localhost:4455 to run Claude Code automatically.', 'info');
+  }, 2000);
 }
 
 function escHtml(s) {
@@ -350,7 +353,7 @@ function render(prs) {
     '<div class="kanban-col col-pr" style="min-width:270px;flex:0 0 270px">' +
       '<div class="kanban-col-header">' +
         '<div class="kanban-col-header-top"><span class="kanban-col-title">PR Open</span><span class="kanban-col-count">' + prs.length + '</span></div>' +
-        '<button class="col-action-btn fix" onclick="triggerFixPrs()">Fix Lint + Errors (CI)</button>' +
+        '<button class="col-action-btn fix" onclick="triggerFixPrs()">&#129302; Fix with Claude Code</button>' +
       '</div>' +
       '<div class="kanban-cards">' + prHtml + '</div>' +
     '</div>' +
